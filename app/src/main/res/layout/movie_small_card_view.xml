@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="120dp"
+    android:layout_height="180dp"
+    android:clipToPadding="false"
+    android:horizontalSpacing="10dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
+    android:verticalSpacing="10dp">
+
+
+    <LinearLayout
+        android:layout_width="120dp"
+        android:layout_height="180dp"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:translationZ="3dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/movieImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/custom_profile_movies_24dp" />
+
+            <ImageView
+                android:id="@+id/popularityBox"
+                android:layout_width="70dp"
+                android:layout_height="20dp"
+                android:background="#75000000"
+                android:translationZ="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@null" />
+
+            <TextView
+                android:id="@+id/popularityValue"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:outlineProvider="none"
+                android:text="loading"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:translationZ="2.1dp"
+                app:layout_constraintBottom_toBottomOf="@+id/popularityBox"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/cartIcon"
+                android:layout_width="15sp"
+                android:layout_height="15sp"
+                android:background="@drawable/custom_ic_shopping_cart_24dp"
+                android:backgroundTint="#FFFFFF"
+                android:outlineProvider="none"
+                android:translationZ="2.1dp"
+                app:layout_constraintBottom_toBottomOf="@+id/popularityBox"
+                app:layout_constraintEnd_toStartOf="@+id/popularityValue"
+                app:layout_constraintStart_toStartOf="@+id/popularityBox"
+                app:layout_constraintTop_toTopOf="@+id/popularityBox"
+                app:srcCompat="@null" />
+
+            <ImageView
+                android:id="@+id/statusIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/circle"
+                android:backgroundTint="#00CACA"
+                android:outlineProvider="paddedBounds"
+                android:paddingHorizontal="5dp"
+                android:translationZ="2dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:srcCompat="@drawable/custom_ic_shopping_cart_24dp" />
+
+            <ProgressBar
+                android:id="@+id/movieProgressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                app:layout_constraintBottom_toBottomOf="@+id/movieImage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/selectedColor"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:translationZ="1.4dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@color/black" />
+
+            <ImageView
+                android:id="@+id/selectedTick"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/circle"
+                android:backgroundTint="#00FF88"
+                android:tint="#FFFFFF"
+                android:translationZ="1.5dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/movieProgressBar"
+                app:layout_constraintEnd_toEndOf="@+id/movieProgressBar"
+                app:layout_constraintStart_toStartOf="@+id/movieProgressBar"
+                app:layout_constraintTop_toTopOf="@+id/movieProgressBar"
+                app:srcCompat="@drawable/custom_ic_tick_24dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "644055749143",
+    "project_id": "cd-movie-rent",
+    "storage_bucket": "cd-movie-rent.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:644055749143:android:83b2f74edbe0f64dbc8252",
+        "android_client_info": {
+          "package_name": "com.example.comp4521project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "644055749143-33bgg87dn2eig7f7m006k806p2qf6g3m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.comp4521project",
+            "certificate_hash": "ce9b60e8c269f0fa0a797d3198df65758bc4c6b7"
+          }
+        },
+        {
+          "client_id": "644055749143-th1slj3pksc5ldpij5psf2ccggsa2ttv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBufaXV3RcvkzJ60Nh6IsK9w6_J42lrqAM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "644055749143-th1slj3pksc5ldpij5psf2ccggsa2ttv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
