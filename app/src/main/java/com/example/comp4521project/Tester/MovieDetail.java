@@ -27,8 +27,6 @@ import com.google.firebase.storage.StorageReference;
 
 public class MovieDetail extends AppCompatActivity {
     ImageButton playTrailer, movieDetailExitButton;
-    //Movie movie;
-    //FilePuller fp = new FilePuller();
 
     ImageView movieImage;
     Drawable image;
@@ -127,17 +125,12 @@ public class MovieDetail extends AppCompatActivity {
             }
         });
 
-
-
-        //movieImage.setImageDrawable(new BitmapDrawable(getResources(), (fp.pullImageFromDatabase(movie.getId(), getResources()))));
         pullImageFromDatabase(id);
-        //url = movie.getTrailerURL();
 
         playTrailer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String urlShort = url.substring(32, url.length()-1);
-                //Toast.makeText(getApplicationContext(), urlShort+"\n"+Integer.toString(urlShort.length()), Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:"+urlShort));
                 intent.putExtra("force_fullscreen",true);
                 startActivity(intent);
@@ -162,7 +155,6 @@ public class MovieDetail extends AppCompatActivity {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap a = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                //Drawable i = new BitmapDrawable(getResources(), a);
                 movieImage.setImageBitmap(a);
             }
         });

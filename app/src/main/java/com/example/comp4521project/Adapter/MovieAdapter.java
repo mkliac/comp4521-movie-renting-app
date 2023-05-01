@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.comp4521project.MovieData.MovieShort;
 import com.example.comp4521project.R;
-import com.example.comp4521project.MovieData.MovieShort;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -154,13 +153,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         public MyViewHolder(View itemView, onCardListener onCardListener) {
             super(itemView);
 
-            movieImage = (ImageView) itemView.findViewById(R.id.movieImage);
-            popularityValue = (TextView) itemView.findViewById(R.id.popularityValue);
-            statusIcon = (ImageView) itemView.findViewById(R.id.statusIcon);
-            movieProgressBar = (ProgressBar) itemView.findViewById(R.id.movieProgressBar);
+            movieImage = itemView.findViewById(R.id.movieImage);
+            popularityValue = itemView.findViewById(R.id.popularityValue);
+            statusIcon = itemView.findViewById(R.id.statusIcon);
+            movieProgressBar = itemView.findViewById(R.id.movieProgressBar);
             this.onCardListener = onCardListener;
-            //image = (ImageView) itemView.findViewById();
-            //imageSelector =  (ImageView) itemView.findViewById();
             itemView.setOnClickListener(this);
         }
 
@@ -176,7 +173,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 
     public void addItem(MovieShort mSingle){
         mData.add(mSingle);
-        //Toast.makeText(mContext, "aaa", Toast.LENGTH_LONG).show();
         this.notifyItemInserted(getItemCount()-1);
     }
 
@@ -189,26 +185,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
     public void changeStatus(String movie_id/*, Integer status*/){
         for(int i = 0; i < getItemCount(); i++){
             notifyItemChanged(i);
-
-            /*
-            if(status == 0){
-                holder.setImageResource(R.drawable.custom_ic_shopping_cart_24dp);
-                holder.statusIcon.setBackgroundColor(Color.parseColor("#00CACA"));
-                holder.statusIcon.setVisibility(View.VISIBLE);
-            }
-            else if(status == 1){
-                    Log.e("hello", "U UPDATE 1");
-                    holder.statusIcon.setImageResource(R.drawable.custom_ic_shopping_cart_24dp);
-                    holder.statusIcon.setBackgroundColor(Color.parseColor("#00CACA"));
-                    holder.statusIcon.setVisibility(View.VISIBLE);
-            }
-            else if(status == 2){
-                    Log.e("hello", "U UPDATE 2");
-                    holder.statusIcon.setImageResource(R.drawable.custom_ic_tick_24dp);
-                    holder.statusIcon.setBackgroundColor(Color.parseColor("#0DCA00"));
-                    holder.statusIcon.setVisibility(View.VISIBLE);
-            }
-            }*/
         }
 
     }
@@ -226,7 +202,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 
 
 
-    //credits: https://www.youtube.com/watch?v=69C1ljfDvl0
     public interface onCardListener{
         void onCardClick(int position);
     }

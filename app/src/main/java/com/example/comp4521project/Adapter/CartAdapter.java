@@ -40,24 +40,20 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference cartRef;
 
-    //private MovieAdapter.onCardListener onCardListener;
-
     public CartAdapter(CartFragment cartFragment, List<MovieShort> mData, String user /* , onCardListener onCardListener*/) {
         this.cartFragment = cartFragment;
         this.mContext = cartFragment.getContext();
         this.mData = mData;
         this.user = user;
-        //this.onCardListener = onCardListener;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //String id;
         View view;
         LayoutInflater mInflator = LayoutInflater.from(mContext);
         view = mInflator.inflate(R.layout.cart_view, parent, false);
 
-        return new MyViewHolder(view  /*, onCardListener*/);
+        return new MyViewHolder(view);
     }
 
     @Override
@@ -100,15 +96,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             @Override
             public void onClick(View v) {
                 removeCartItem(mData.get(position).getId());
-                //  removie item from the recycler view
-                //mData.remove(position);
-                //parentRecyclerView.removeViewAt(position);
-                // notifyItemRemoved(position);
-                //notifyItemRemoved(position);
-                //this line below gives you the animation and also updates the
-                //list items after the deleted item
-                //notifyItemRangeChanged(position, getItemCount());
-
             }
         });
     }
@@ -121,30 +108,23 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView movieImage;
         TextView year, title, price;
-        //ImageView statusIcon;
         FloatingActionButton remove;
-        //onCardListener onCardListener;
 
-        public MyViewHolder(View itemView   /*, onCardListener onCardListener*/) {
+        public MyViewHolder(View itemView) {
             super(itemView);
 
-            movieImage = (ImageView) itemView.findViewById(R.id.movieImage);
-            title = (TextView) itemView.findViewById(R.id.Title);
-            year = (TextView) itemView.findViewById(R.id.yearValue);
-            price = (TextView) itemView.findViewById(R.id.priceValue);
-            remove = (FloatingActionButton) itemView.findViewById(R.id.remove);
+            movieImage = itemView.findViewById(R.id.movieImage);
+            title = itemView.findViewById(R.id.Title);
+            year = itemView.findViewById(R.id.yearValue);
+            price = itemView.findViewById(R.id.priceValue);
+            remove = itemView.findViewById(R.id.remove);
 
-            //this.onCardListener = onCardListener;
-            //image = (ImageView) itemView.findViewById();
-            //imageSelector =  (ImageView) itemView.findViewById();
-            //itemView.setOnClickListener(this);
         }
     }
 
     public void addItem(MovieShort mSingle) {
 
         mData.add(mSingle);
-        //Toast.makeText(mContext, "aaa", Toast.LENGTH_LONG).show();
         this.notifyItemInserted(getItemCount() - 1);
     }
 
@@ -152,7 +132,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     {
         Log.e("hello", "removeCartItem: "+movie_id);
         FirebaseDatabase.getInstance().getReference().child("purchaseStatus").child(user).child(movie_id).removeValue();
-        //cartFragment.recalculateTotal();
     }
 
     public void removeAll(){
@@ -188,9 +167,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     }
 
     public void removeItem(String movie_id){
-        //Log.e("hello", Integer.toString(getItemCount()));
         for(int i = 0; i < getItemCount(); i++){
-            //Log.e("hello", mData.get(i).getId());
             if(mData.get(i).getId().equals(movie_id)){
                 mData.remove(i);
                 notifyItemRemoved(i);

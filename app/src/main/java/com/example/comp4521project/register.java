@@ -60,7 +60,6 @@ public class register extends AppCompatActivity {
         if(hasFocus){
             passwordError.setVisibility(View.INVISIBLE);
             password2Error.setVisibility(View.INVISIBLE);
-            //return password.getText().toString().equals(password2.getText().toString());
         }
         else if(password.getText().toString().equals("")){
             passwordError.setVisibility(View.VISIBLE);

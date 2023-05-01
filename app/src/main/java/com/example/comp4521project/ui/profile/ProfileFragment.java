@@ -104,28 +104,9 @@ public class ProfileFragment extends Fragment {
             });
         }
 
-
-
-        /*
-        usernameValue = (TextView) thisView.findViewById(R.id.usernameValue);
-        nicknameValue = (TextView) thisView.findViewById(R.id.nicknameValue);
-        nicknameValue = (TextView) thisView.findViewById(R.id.creditsValue);*/
-
         return root;
     }
 
-    /*
-    public void refreshContents(boolean hasUser){
-        if(hasUser){
-            setUsernameValue(username);
-            setNicknameValue(nickname);
-            setCreditsValue(credits);
-        }else{
-            setUsernameValue("dummyContent");
-            setNicknameValue("dummyContent");
-            setCreditsValue(0F);
-        }
-    }*/
     public void setListeners(){
 
     }
@@ -159,13 +140,4 @@ public class ProfileFragment extends Fragment {
 
     }
 
-
-    /*
-    public void setNicknameValue(String nickname){
-        this.nicknameValue.setText(nickname);
-    }
-
-    public void setCreditsValue(Float credits){
-        this.creditsValue.setText(credits.toString());
-    }*/
 }

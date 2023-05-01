@@ -44,8 +44,6 @@ public class HomeFragment extends Fragment {
             homePage = this;
             active = true;
             allLibraryPage = (AllLibrary) fm.findFragmentByTag("library");
-            //fm.beginTransaction().add(R.id.main_container, allLibraryPage, "movieDisplay").hide(allLibraryPage).commit();
-            //fmTran.add(R.id.main_container, homePage, "home").commit();
             buttonAll = (Button) root.findViewById(R.id.buttonAll);
             buttonAction = (Button) root.findViewById(R.id.buttonAction);
             buttonAdventure = (Button) root.findViewById(R.id.buttonAdventure);
@@ -67,12 +65,12 @@ public class HomeFragment extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (hidden) {   // 不在最前端显示 相当于调用了onPause();
+        if (hidden) {
             if(active){
                 //fmTran.hide(allLibraryPage).commit();
             }
-        }else{  // 在最前端显示 相当于调用了onResume();
-            //网络数据刷新
+        }else{
+
         }
     }
 
@@ -82,7 +80,6 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 active = false;
                 allLibraryPage.refreshByGenre("********");
-                //allLibraryPage.refreshByUserOrder(user.getUsername());
                 allLibraryPage.setParent("home");
                 fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
                 active = true;

@@ -37,13 +37,6 @@ import java.util.List;
 
 public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
 
-    /*
-    private AllLibraryViewModel mViewModel;
-
-    public static AllLibrary newInstance() {
-        return new AllLibrary();
-    }*/
-
     List<MovieShort> movieShortList;
     MovieAdapter myAdapter;
     //MovieShort movie;
@@ -150,7 +143,7 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
             myrv.setLayoutManager(layoutManager);
 
             addChildListener();
-            //setListener();
+
             movieRef = rootRef.child("movies");
             //add blank event listener
             DatabaseReference userRef = rootRef.child("purchaseStatus").child(user);
@@ -229,7 +222,9 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //mViewModel = ViewModelProviders.of(this).get(AllLibraryViewModel.class);
+        //mViewModel = ViewModelProviders.o
+        //
+        // f(this).get(AllLibraryViewModel.class);
         // TODO: Use the ViewModel
     }
 
@@ -336,7 +331,6 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 String genre = dataSnapshot.child("genre").getValue().toString();
-                //Log.e("hello", "onChildAdded: "+genre);
                 final String id = dataSnapshot.getKey();
                 final Integer popularity = dataSnapshot.child("popularity").getValue(Integer.class);
                 final Float price = dataSnapshot.child("price").getValue(Float.class);
@@ -379,7 +373,6 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
                         });
                     }
                 });
-                //myAdapter.addItem(new MovieShort);
             }
 
             @Override

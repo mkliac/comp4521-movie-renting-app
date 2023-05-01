@@ -53,9 +53,9 @@ public class HomePage extends AppCompatActivity {
         //hid 2 other fragment
 
 
-        setting = (FloatingActionButton) findViewById(R.id.floating_action_button);
-        dimBox = (ImageView) findViewById(R.id.dimBox);
-        logout = (ExtendedFloatingActionButton) findViewById(R.id.submit);
+        setting = findViewById(R.id.floating_action_button);
+        dimBox = findViewById(R.id.dimBox);
+        logout = findViewById(R.id.submit);
 
         dimBox.setVisibility(View.INVISIBLE);
         logout.setVisibility(View.INVISIBLE);
@@ -82,8 +82,6 @@ public class HomePage extends AppCompatActivity {
                 "Welcome! "+user.getNickname(),
                 Snackbar.LENGTH_LONG)
                 .show();
-        //Toast toast = Toast.makeText(getApplicationContext(), "Welcome! "+user.getNickname(), Toast.LENGTH_LONG);
-        //toast.show();
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -92,49 +90,6 @@ public class HomePage extends AppCompatActivity {
         fm.beginTransaction().add(R.id.main_container, profilePage, "profile").hide(profilePage).commit();
         fm.beginTransaction().add(R.id.main_container,homePage, "home").commit();
 
-        /*
-        userMonitor = rootRef.child("users").child(user.getUsername());
-        userMonitor.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                user.setNickname(dataSnapshot.child("nickname").getValue().toString());
-                user.setPassword(dataSnapshot.child("password").getValue().toString());
-                //user.setCredits(Float.parseFloat(dataSnapshot.child("credits").getValue().toString()));
-                ProfileFragment pf =(ProfileFragment) fm.findFragmentByTag("profile");
-                if (pf != null) {
-                    pf.setNicknameValue(user.getNickname());
-                    pf.setCreditsValue(user.getCredits());
-                }
-                else{
-                    Toast toast = Toast.makeText(getApplicationContext(), "null ptr occured", Toast.LENGTH_LONG);
-                    toast.show();
-                }
-                //profilePage = new ProfileFragment(user);
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        */
-
-        //setProfileActivity();
         rotateSettingBackward();
 
         setting.setOnClickListener(new View.OnClickListener() {
@@ -188,15 +143,6 @@ public class HomePage extends AppCompatActivity {
         }
     };
 
-    /*
-    //set profile activity
-    public void setProfileActivity(){
-        profilePage.setUsernameValue(user.getUsername());
-        profilePage.setNicknameValue(user.getNickname());
-        profilePage.setCreditsValue(user.getCredits());
-    }*/
-
-    //animations
     public void rotateSettingForward() {
         ViewCompat.animate(setting)
                 .rotation(-180.0F)
@@ -228,7 +174,6 @@ public class HomePage extends AppCompatActivity {
                 .withLayer()
                 .translationY(0L)
                 .setDuration(300L)
-                //.setInterpolator(new OvershootInterpolator(10.0F))
                 .start();
         ViewCompat.animate(logout)
                 .alpha(0F)

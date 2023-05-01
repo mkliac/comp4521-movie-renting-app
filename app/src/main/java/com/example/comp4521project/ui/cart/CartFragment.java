@@ -36,7 +36,6 @@ public class CartFragment extends Fragment {
     private boolean start = false;
     private String user;
     private Float price = 0F;
-    //PriceCalculator priceCal;
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference userRef;
     DatabaseReference cartRef;
@@ -77,9 +76,6 @@ public class CartFragment extends Fragment {
             myAdapter = new CartAdapter(this, cartList, user);
             myrv.setAdapter(myAdapter);
 
-            //priceCal = new PriceCalculator(priceValue);
-            //priceCal.setInitializing(true);
-
             listenToCartDatabase();
             boundUserCredits();
 
@@ -100,8 +96,6 @@ public class CartFragment extends Fragment {
                             else{
                                 final DatabaseReference movieValue = FirebaseDatabase.getInstance().getReference().child("purchaseStatus").child(user);
                                 FirebaseDatabase.getInstance().getReference().child("users").child(user).child("credits").setValue(userCredits.getValue(Float.class)-movieTotal);
-                                //Log.e("hello", "onDataChange: "+(userCredits.getValue(Float.class)-userCredits.getValue(Float.class)));
-                                //Log.e("hello", user);
                                 Toast.makeText(root.getContext(), "Purchased", Toast.LENGTH_LONG);
                                 movieValue.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
@@ -111,16 +105,10 @@ public class CartFragment extends Fragment {
                                                 FirebaseDatabase.getInstance().getReference().child("purchaseStatus").child(user).child(ds.getKey()).setValue(2);
                                             }
                                         }
-                                        /*
-                                        FirebaseDatabase.getInstance().getReference().child("users").child(user).child("credits").setValue(
-                                                userCredits.getValue(Float.class)-Float.parseFloat(priceValue.getText().toString())
-                                        );
-                                        myAdapter.removeAll();*/
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) { }
                                 });
-                                //recalculateTotal();
                             }
                         }
 
@@ -138,7 +126,6 @@ public class CartFragment extends Fragment {
     }
     public void notifyMovieAdded(){
     }
-    //public void notifyMovieRemoved(){}
     public void checkEmpty(){
         if(myAdapter.getItemCount()==0){
             emptyNotification.setVisibility(View.VISIBLE);
@@ -164,9 +151,6 @@ public class CartFragment extends Fragment {
     }
 
     public void recalculateTotal(String movie_id, final String identity){
-        //PriceCalculator setPrice = new PriceCalculator();
-        //priceValue.setText(setPrice.getTotal());
-        //priceCal.getTotal(user);
         Log.e("hello", "movies/"+movie_id+"/price");
         DatabaseReference priceRef = rootRef.child("movies").child(movie_id).child("price");
         priceRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -190,7 +174,6 @@ public class CartFragment extends Fragment {
     }
 
     public void listenToCartDatabase(){
-        //recalculateTotal();
         price = 0F;
         cartRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -201,7 +184,6 @@ public class CartFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot ds) {
                         if(ds.exists()){
                             if(dataSnapshot.getValue().toString().equals("1")){
-                                //priceCal.setCurrentNodes(priceCal.getCurrentNodes()+1);
                                 String status = dataSnapshot.getValue().toString();
                                 String id = dataSnapshot.getKey();
                                 myAdapter.addItem(id);
@@ -223,7 +205,6 @@ public class CartFragment extends Fragment {
                 Log.e("hello", "Child change detected: "+id+" "+dataSnapshot.getValue().toString());
                 if(dataSnapshot.getValue().toString().equals("1")){
                     Log.e("hello", "method 1 entered");
-                    //priceCal.setCurrentNodes(priceCal.getCurrentNodes()+1);
                     myAdapter.addItem(id);
                     recalculateTotal(id, "ADD");
                 }

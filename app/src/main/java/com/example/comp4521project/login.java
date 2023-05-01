@@ -21,8 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class login extends AppCompatActivity{
-    //establish connection to the database
-    //private FirebaseDatabase users = FirebaseDatabase.getInstance();    //represents the database itself
+
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();  //has the path of the database
 
     EditText username, password;
@@ -39,11 +38,11 @@ public class login extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        username = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.password);
-        signup = (TextView) findViewById(R.id.signup);
-        loginButton = (Button) findViewById(R.id.loginButton);
-        rememberMe = (CheckBox) findViewById(R.id.rememberMe);
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
+        signup = findViewById(R.id.signup);
+        loginButton = findViewById(R.id.loginButton);
+        rememberMe = findViewById(R.id.rememberMe);
         getSupportActionBar().hide();
 
         loginButton.setOnClickListener(new View.OnClickListener()      {

@@ -50,8 +50,6 @@ public class InitialPage extends AppCompatActivity {
         loadingBar = (ProgressBar) findViewById(R.id.loadingBar);
         loadingBar.setMax(100);
         loadingBar.setProgress(0);
-        //loadingText.setVisibility(View.INVISIBLE);
-        //loadingBar.setVisibility(View.INVISIBLE);
 
         try {
             getSupportActionBar().hide();
@@ -97,13 +95,6 @@ public class InitialPage extends AppCompatActivity {
                                     credits = Float.parseFloat(dataSnapshot.child("credits").getValue().toString());
                                     user = new Users(username, password, nickname, credits);
 
-                                    /*
-                                    getSharedPreferences("groupProjectCurrentUser",MODE_PRIVATE)
-                                            .edit()
-                                            .putString("username", username)
-                                            .putString("password", password)
-                                            .putFloat("credits", credits)
-                                            .commit();*/
                                     Intent i = new Intent();
                                     i.setClass(getApplicationContext(), HomePage.class);
                                     Bundle bundle = new Bundle();

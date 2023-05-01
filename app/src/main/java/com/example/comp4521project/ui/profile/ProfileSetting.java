@@ -26,7 +26,6 @@ public class ProfileSetting extends AppCompatActivity {
     TextView nameError, oldPwError, newPwError, newPw2Error;
     EditText name, oldPw, newPw, newPw2;
     String username, nickname, password;
-    //Users user;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference nicknameRef;
     private DatabaseReference passwordRef;
@@ -42,17 +41,17 @@ public class ProfileSetting extends AppCompatActivity {
 
         //bound views
         {
-            nameError = (TextView) findViewById(R.id.nameErrorTag);
-            oldPwError = (TextView) findViewById(R.id.oldPwErrorTag);
-            newPwError = (TextView) findViewById(R.id.newPwErrorTag);
-            newPw2Error = (TextView) findViewById(R.id.newPw2ErrorTag);
-            name = (EditText) findViewById(R.id.name);
-            oldPw = (EditText) findViewById(R.id.oldPw);
-            newPw = (EditText) findViewById(R.id.newPw);
-            newPw2 = (EditText) findViewById(R.id.newPw2);
-            nameSwitch = (Switch) findViewById(R.id.nameSwitch);
-            passwordSwitch = (Switch) findViewById(R.id.passwordSwitch);
-            submit = (ExtendedFloatingActionButton) findViewById(R.id.submit);
+            nameError = findViewById(R.id.nameErrorTag);
+            oldPwError = findViewById(R.id.oldPwErrorTag);
+            newPwError = findViewById(R.id.newPwErrorTag);
+            newPw2Error = findViewById(R.id.newPw2ErrorTag);
+            name = findViewById(R.id.name);
+            oldPw = findViewById(R.id.oldPw);
+            newPw = findViewById(R.id.newPw);
+            newPw2 = findViewById(R.id.newPw2);
+            nameSwitch = findViewById(R.id.nameSwitch);
+            passwordSwitch = findViewById(R.id.passwordSwitch);
+            submit = findViewById(R.id.submit);
         }
 
         nicknameRef.addValueEventListener(new ValueEventListener() {
