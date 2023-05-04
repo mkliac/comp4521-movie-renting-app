@@ -157,6 +157,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                     String id = dataSnapshot.child("id").getValue().toString();
                     Float price = dataSnapshot.child("price").getValue(Float.class);
                     mData.add(new MovieShort(id, price));
+                    notifyItemRangeChanged(0, getItemCount());
                 }
 
                 @Override
@@ -165,6 +166,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                 }
             });
         }
+
     }
 
     public void removeItem(String movie_id){
