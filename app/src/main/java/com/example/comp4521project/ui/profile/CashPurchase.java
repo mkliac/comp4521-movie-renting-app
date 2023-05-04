@@ -23,7 +23,6 @@ public class CashPurchase extends AppCompatActivity {
     String username;
     TextView mocking;
     EditText cash;
-    Button increaser;
     ExtendedFloatingActionButton submit;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference creditsRef;
@@ -53,13 +52,6 @@ public class CashPurchase extends AppCompatActivity {
                     }
                 }
                 else mocking.setVisibility(View.INVISIBLE);
-            }
-        });
-        increaser = (Button)findViewById(R.id.increaser);
-        ((Button)findViewById(R.id.increaser)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                increaser.setText((Integer.parseInt(increaser.getText().toString())+1)+"");
             }
         });
 
