@@ -107,10 +107,6 @@ public class ProfileFragment extends Fragment {
         return root;
     }
 
-    public void setListeners(){
-
-    }
-
     public void setNicknameMonitor(String username){
         nicknameMonitor = rootRef.child("users").child(username).child("nickname");
         nicknameMonitor.addValueEventListener(new ValueEventListener() {

@@ -16,9 +16,9 @@ public class Users implements Parcelable {
         this.credits = credits;
     }
     public Users(){
-        username = "dummyAccount";
+        username = "";
         password = "";
-        nickname = "Dummy01";
+        nickname = "";
         credits = 0F;
     }
 

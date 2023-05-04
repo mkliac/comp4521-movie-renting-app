@@ -38,7 +38,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     private List<MovieShort> mData;
     private String currentCategory = "none";
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference cartRef;
 
     public CartAdapter(CartFragment cartFragment, List<MovieShort> mData, String user /* , onCardListener onCardListener*/) {
         this.cartFragment = cartFragment;
@@ -57,7 +56,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         final String id = mData.get(position).getId();
         String path = "movies/" + id + "/" + id + ".jpg";
@@ -82,7 +81,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                 public void onSuccess(byte[] bytes) {
                     String content = new String(bytes);
                     String[] stringArray = content.split(System.getProperty("line.separator"));
-                    Log.d("debug", String.valueOf(stringArray));
                     holder.title.setText(stringArray[0]);
                     holder.year.setText(stringArray[1]);
                     if(getItemCount()!=0){
@@ -113,7 +111,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
         public MyViewHolder(View itemView) {
             super(itemView);
-
             movieImage = itemView.findViewById(R.id.movieImage);
             title = itemView.findViewById(R.id.Title);
             year = itemView.findViewById(R.id.yearValue);
@@ -131,7 +128,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
     public void removeCartItem(String movie_id)
     {
-        Log.e("hello", "removeCartItem: "+movie_id);
         FirebaseDatabase.getInstance().getReference().child("purchaseStatus").child(user).child(movie_id).removeValue();
     }
 

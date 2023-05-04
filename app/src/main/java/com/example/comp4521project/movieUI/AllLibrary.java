@@ -174,58 +174,9 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
                 }
             });
 
-            /*
-            DatabaseReference movieRef = rootRef.child("movies");
-            movieRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                        final String key = ds.getKey();
-                        final String id = ds.child("id").getValue(String.class);
-                        final Integer popularity = ds.child("popularity").getValue(Integer.class);
-                        final Float price = ds.child("price").getValue(Float.class);
-                        String path = "movies/"+id+"/content.txt";
-                        StorageReference contentRef = FirebaseStorage.getInstance().getReference().child(path);
-                        contentRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                            @Override
-                            public void onSuccess(byte[] bytes) {
-                                String content = new String(bytes);
-                                String[] stringArray = content.split(System.getProperty("line.separator"));
-                                myAdapter.addItem(new MovieShort(id , stringArray[0], stringArray[1], popularity, price, stringArray[2]));
-
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });*/
-            /*
-            ValueEventListener eventListener = new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {}
-            };*/
-
         }
         return rootView;
 
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        //mViewModel = ViewModelProviders.o
-        //
-        // f(this).get(AllLibraryViewModel.class);
-        // TODO: Use the ViewModel
     }
 
     @Override

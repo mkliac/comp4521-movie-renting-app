@@ -84,7 +84,7 @@ public class HomePage extends AppCompatActivity {
                 .show();
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.nav_view);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.setOnItemSelectedListener(mOnNavigationItemSelectedListener);
         fm.beginTransaction().add(R.id.main_container, libraryPage, "library").hide(libraryPage).commit();
         fm.beginTransaction().add(R.id.main_container, cartPage, "cart").hide(cartPage).commit();
         fm.beginTransaction().add(R.id.main_container, profilePage, "profile").hide(profilePage).commit();
@@ -119,8 +119,8 @@ public class HomePage extends AppCompatActivity {
         });
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+    private BottomNavigationView.OnItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {

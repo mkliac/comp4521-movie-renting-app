@@ -90,12 +90,14 @@ public class Movie implements Parcelable {
     public Integer getPopularity(){
         return popularity;
     }
+
+    public final long MB = 1024 * 1024;
     public Bitmap getImage(){
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         String path = "movies/"+id+"/"+id+".jpg";
         StorageReference imageRef = storageRef.child(path);
-        final long ONE_MEGABYTE = 1024 * 1024;
-        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+
+        imageRef.getBytes(MB).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
