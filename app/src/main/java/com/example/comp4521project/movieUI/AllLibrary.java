@@ -330,7 +330,7 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
         childVoyeur = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                String genre = dataSnapshot.child("genre").getValue().toString();
+//                String genre = dataSnapshot.child("genre").getValue().toString();
                 final String id = dataSnapshot.getKey();
                 final Integer popularity = dataSnapshot.child("popularity").getValue(Integer.class);
                 final Float price = dataSnapshot.child("price").getValue(Float.class);

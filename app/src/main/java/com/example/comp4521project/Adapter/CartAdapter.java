@@ -82,6 +82,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                 public void onSuccess(byte[] bytes) {
                     String content = new String(bytes);
                     String[] stringArray = content.split(System.getProperty("line.separator"));
+                    Log.d("debug", String.valueOf(stringArray));
                     holder.title.setText(stringArray[0]);
                     holder.year.setText(stringArray[1]);
                     if(getItemCount()!=0){

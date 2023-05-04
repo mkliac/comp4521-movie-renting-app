@@ -1,10 +1,15 @@
 package com.example.comp4521project.ui.home;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +20,13 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.comp4521project.R;
 import com.example.comp4521project.UserData.Users;
 import com.example.comp4521project.movieUI.AllLibrary;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class HomeFragment extends Fragment {
     Button buttonAll, buttonAction, buttonAdventure, buttonCartoon, buttonComedy;
@@ -28,6 +40,11 @@ public class HomeFragment extends Fragment {
     AllLibrary allLibraryPage;
     Users user;
     boolean start = false;
+
+    ImageView rotateThumbnail;
+    int[] images = {R.drawable.icon_action, R.drawable.icon_adventure, R.drawable.icon_cartoon,
+                    R.drawable.icon_comedy, R.drawable.icon_documentary, R.drawable.icon_horror,
+                    R.drawable.icon_mystery, R.drawable.icon_scifi};
 
     public HomeFragment(){}
     public HomeFragment(Users user){this.user = user; start = true;}
@@ -54,6 +71,21 @@ public class HomeFragment extends Fragment {
             buttonMystery = (Button) root.findViewById(R.id.buttonMystery);
             buttonScifi = (Button) root.findViewById(R.id.buttonScifi);
             search = (SearchView) root.findViewById(R.id.searchView) ;
+            rotateThumbnail = (ImageView) root.findViewById(R.id.temp);
+
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+
+            rotateThumbnail.setImageResource(images[0]);
+            Handler handler = new Handler();
+            Runnable runnable = new Runnable() {
+                int i = 0;
+                @Override
+                public void run() {
+                    rotateThumbnail.setImageResource(images[(++i) % images.length]);
+                    handler.postDelayed(this, 4000);
+                }
+            };
+            handler.postDelayed(runnable, 4000);
 
             setButtons();
         }
