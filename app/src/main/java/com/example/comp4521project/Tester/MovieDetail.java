@@ -3,12 +3,15 @@ package com.example.comp4521project.Tester;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,6 +28,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.time.LocalDateTime;
+
 public class MovieDetail extends AppCompatActivity {
     ImageButton playTrailer, movieDetailExitButton;
 
@@ -32,14 +37,14 @@ public class MovieDetail extends AppCompatActivity {
     Drawable image;
     String username;
     TextView movieName, movieNameShadow, movieYear, movieDescription, moviePopularity, priceValue;
+    RatingBar ratingBar;
     String id, name, year, description, popularity, category;
     Float price;
     String path, url;
     ExtendedFloatingActionButton addToCart;
-    final long ONE_MEGABYTE = 1024 * 1024;
+    final long MB = 1024 * 1024;
 
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference statusRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,7 @@ public class MovieDetail extends AppCompatActivity {
         movieYear = (TextView) findViewById(R.id.movieYear);
         movieDescription = (TextView) findViewById(R.id.movieDescription);
         moviePopularity = (TextView) findViewById(R.id.moviePopularity);
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         priceValue = (TextView) findViewById(R.id.priceValue);
         playTrailer = (ImageButton) findViewById(R.id.playTrailer);
         movieDetailExitButton = (ImageButton) findViewById(R.id.movieDetailExitButton);
@@ -67,20 +73,19 @@ public class MovieDetail extends AppCompatActivity {
         addToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                rootRef.child("purchaseStatus").child(username).child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                rootRef.child("users").child(username).child("cart").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()){
-                            if(dataSnapshot.getValue().toString().equals("1")){
-                                rootRef.child("purchaseStatus").child(username).child(id).removeValue();
-                            }
-                            else rootRef.child("purchaseStatus").child(username).child(id).setValue(1);
+                        if (dataSnapshot.exists() && dataSnapshot.getValue().equals(true)) {
+                                rootRef.child("users").child(username).child("cart").child(id).removeValue();
+                        } else {
+                            rootRef.child("users").child(username).child("cart").child(id).setValue(true);
                         }
-                        else rootRef.child("purchaseStatus").child(username).child(id).setValue(1);
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) { }
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
                 });
             }
         });
@@ -90,14 +95,14 @@ public class MovieDetail extends AppCompatActivity {
         movieRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) { //if no this path = no this user (since the path I designed is: users/(username)/password.value
+                if (dataSnapshot.exists()) {
                     id = dataSnapshot.child("id").getValue().toString();
                     popularity = dataSnapshot.child("popularity").getValue().toString();
                     price = Float.parseFloat(dataSnapshot.child("price").getValue().toString());
                     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
                     path = "movies/"+id+"/content.txt";
                     StorageReference contentRef = storageRef.child(path);
-                    contentRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    contentRef.getBytes(MB).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
                         public void onSuccess(byte[] bytes) {
                             String content = new String(bytes);
@@ -113,6 +118,7 @@ public class MovieDetail extends AppCompatActivity {
                             movieYear.setText("( "+year+")");
                             movieDescription.setText(description);
                             moviePopularity.setText(popularity);
+                            ratingBar.setRating(Float.parseFloat(popularity));
                             priceValue.setText(price.toString());
                         }
                     });
@@ -148,10 +154,9 @@ public class MovieDetail extends AppCompatActivity {
 
     public void pullImageFromDatabase(final String id){
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        String path = "movies/"+id+"/"+id+".jpg";
-        StorageReference imageRef = storageRef.child(path);
-        final long ONE_MEGABYTE = 1024 * 1024;
-        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        StorageReference imageRef = storageRef.child("movies/"+id+"/"+id+".jpg");
+        final long MB = 1024 * 1024;
+        imageRef.getBytes(MB).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap a = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -161,23 +166,44 @@ public class MovieDetail extends AppCompatActivity {
 
     }
     public void setListener(){
-        statusRef = rootRef.child("purchaseStatus").child(username).child(id);
-        statusRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference cartRef = rootRef.child("users").child(username).child("cart").child(id);
+        cartRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    if(dataSnapshot.getValue().toString().equals("1")){
+                    if(dataSnapshot.getValue().equals(true)){
                         addToCart.setText("Cancel cart");
                         addToCart.setEnabled(true);
                     }
-                    else {
-                        addToCart.setText("Purchased");
-                        addToCart.setEnabled(false);
-                    }
                 }
                 else {
-                    addToCart.setText("Add to cart");
-                    addToCart.setEnabled(true);
+                    DatabaseReference transactionRef = rootRef.child("users").child(username).child("transactions").orderByChild("movieID").equalTo(id).getRef();
+                    transactionRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for(DataSnapshot transactionDetail : dataSnapshot.getChildren())
+                            {
+                                Log.i("Wt","original "+id+" stuff "+transactionDetail.child("movieID").getValue().toString());
+                                Log.i("Wt",transactionDetail.child("dueDate").getValue().toString());
+                                if(!id.equals(transactionDetail.child("movieID").getValue().toString()))
+                                    continue;
+                                LocalDateTime dueDateTime=LocalDateTime.parse(transactionDetail.child("dueDate").getValue().toString());
+                                LocalDateTime timeNow = LocalDateTime.now();
+                                if(!timeNow.isAfter(dueDateTime))
+                                {
+                                    addToCart.setText("Already Rented");
+                                    addToCart.setEnabled(false);
+                                    return;
+                                }
+                            }
+                            addToCart.setText("Add to cart");
+                            addToCart.setEnabled(true);
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
             }
 

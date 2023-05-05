@@ -36,12 +36,12 @@ public class PriceCalculator {
         else if(checkout){}
         else {
             price = 0F;
-            DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference().child("purchaseStatus").child(username);
+            DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference().child("users").child(username).child("cart");
             cartRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for(DataSnapshot ds : dataSnapshot.getChildren()){
-                        if(ds.getValue(Integer.class)==1){
+                        if(ds.getValue(Boolean.class)==true){
 
                             DatabaseReference temp = FirebaseDatabase.getInstance().getReference().child("movies").child(ds.getKey());
                             temp.addListenerForSingleValueEvent(new ValueEventListener() {

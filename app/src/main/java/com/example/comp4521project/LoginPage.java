@@ -20,7 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class login extends AppCompatActivity{
+public class LoginPage extends AppCompatActivity{
 
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();  //has the path of the database
 
@@ -89,7 +89,7 @@ public class login extends AppCompatActivity{
                                                 .apply();
                                 }
                                     Intent i = new Intent();
-                                    i.setClass(login.this, HomePage.class);
+                                    i.setClass(LoginPage.this, HomePage.class);
                                     Bundle bundle = new Bundle();
                                     _nickname = dataSnapshot.child("nickname").getValue().toString();
                                     _credits = Float.parseFloat(dataSnapshot.child("credits").getValue().toString());
@@ -97,7 +97,7 @@ public class login extends AppCompatActivity{
                                     bundle.putParcelable("user", user);
                                     i.putExtras(bundle);
                                     startActivity(i);
-                                    login.this.finish();
+                                    LoginPage.this.finish();
                                 }
                             }
                         }
@@ -116,7 +116,7 @@ public class login extends AppCompatActivity{
         signup.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(login.this, register.class));
+                startActivity(new Intent(LoginPage.this, RegisterPage.class));
             }
         });
 

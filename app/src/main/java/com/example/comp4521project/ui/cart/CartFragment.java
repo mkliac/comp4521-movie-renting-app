@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.comp4521project.Adapter.CartAdapter;
 import com.example.comp4521project.MovieData.MovieShort;
+import com.example.comp4521project.MovieData.Transaction;
 import com.example.comp4521project.R;
 import com.example.comp4521project.ui.profile.ProfileFragment;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -28,8 +29,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class CartFragment extends Fragment {
 
@@ -37,7 +42,6 @@ public class CartFragment extends Fragment {
     private String user;
     private Float price = 0F;
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference userRef;
     DatabaseReference cartRef;
 
     TextView priceValue, creditsValue, emptyNotification;
@@ -70,7 +74,7 @@ public class CartFragment extends Fragment {
                 checkout = (ExtendedFloatingActionButton) root.findViewById(R.id.checkout);
             }
 
-            cartRef = rootRef.child("purchaseStatus").child(user);
+            cartRef = rootRef.child("users").child(user).child("cart");
             cartList = new ArrayList<>();
             RecyclerView myrv = (RecyclerView) root.findViewById(R.id.cartView);
             myAdapter = new CartAdapter(this, cartList, user);
@@ -85,46 +89,35 @@ public class CartFragment extends Fragment {
             checkout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    final Float movieTotal = Float.parseFloat(priceValue.getText().toString());
-                    DatabaseReference temp = FirebaseDatabase.getInstance().getReference().child("users").child(user).child("credits");
-                    temp.addListenerForSingleValueEvent(new ValueEventListener() {
+                    Float movieTotal = Float.parseFloat(priceValue.getText().toString());
+                    DatabaseReference userRef = rootRef.child("users").child(user);
+                    userRef.child("credits").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull final DataSnapshot userCredits) {
                             if(userCredits.getValue(Float.class)<Float.parseFloat(priceValue.getText().toString())){
-                                Toast.makeText(root.getContext(), "Not enough credits", Toast.LENGTH_LONG).show();
+                                Toast.makeText(root.getContext(), "Not enough credits", Toast.LENGTH_SHORT).show();
                             }
                             else{
-                                final DatabaseReference movieValue = FirebaseDatabase.getInstance().getReference().child("purchaseStatus").child(user);
-                                FirebaseDatabase.getInstance().getReference().child("users").child(user).child("credits").setValue(userCredits.getValue(Float.class)-movieTotal);
+                                userRef.child("credits").setValue(userCredits.getValue(Float.class)-movieTotal);
                                 Toast.makeText(root.getContext(), "Purchased", Toast.LENGTH_LONG);
-                                movieValue.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        for(DataSnapshot ds : dataSnapshot.getChildren()){
-                                            if(ds.getValue(Integer.class)==1){
-                                                FirebaseDatabase.getInstance().getReference().child("purchaseStatus").child(user).child(ds.getKey()).setValue(2);
-                                            }
-                                        }
-                                    }
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) { }
-                                });
+                                for(MovieShort rentedMovies:cartList) {
+                                    Log.i("stuff",rentedMovies.getId());
+                                    LocalDateTime now = LocalDateTime.now();
+                                    LocalDateTime dueDate = now.plusDays(7);
+                                    Transaction movieTransaction=new Transaction(dueDate.toString(),rentedMovies.getId(),user,rentedMovies.getPrice());
+                                    String transactionID=userRef.child("transactions").push().getKey();
+                                    userRef.child("transactions").child(transactionID).setValue(movieTransaction);
+                                    userRef.child("cart").child(rentedMovies.getId()).removeValue();
+                                }
                             }
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) { }
                     });
                 }
             });
         }
-
-
         return root;
-    }
-    public void notifyUserDataChanged(){
-    }
-    public void notifyMovieAdded(){
     }
     public void checkEmpty(){
         if(myAdapter.getItemCount()==0){
@@ -138,8 +131,8 @@ public class CartFragment extends Fragment {
 
     }
     private void boundUserCredits(){
-        userRef = FirebaseDatabase.getInstance().getReference().child("users").child(user).child("credits");
-        userRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference creditRef = FirebaseDatabase.getInstance().getReference().child("users").child(user).child("credits");
+        creditRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 creditsValue.setText(dataSnapshot.getValue(Float.class).toString());
@@ -179,18 +172,22 @@ public class CartFragment extends Fragment {
             @Override
             public void onChildAdded(@NonNull final DataSnapshot dataSnapshot, @Nullable String s) {
                 final String movie_id = dataSnapshot.getKey();
+                Log.w("wt","movieid "+movie_id);
                 rootRef.child("movies").child(movie_id).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot ds) {
+                        Log.i("Wt","DataSnapshot "+dataSnapshot.getValue());
                         if(ds.exists()){
-                            if(dataSnapshot.getValue().toString().equals("1")){
+                            Log.i("Wt","DataSnaposhot "+dataSnapshot.getValue());
+                            if(dataSnapshot.getValue().equals(true)){
                                 String status = dataSnapshot.getValue().toString();
                                 String id = dataSnapshot.getKey();
                                 myAdapter.addItem(id);
                                 recalculateTotal(movie_id, "ADD");
                             }
                         }
-                        else rootRef.child("purchaseStatus").child(user).child(dataSnapshot.getKey()).removeValue();
+                       // else rootRef.child("purchaseStatus").child(user).child(dataSnapshot.getKey()).removeValue();
+                        else rootRef.child("users").child(user).child("cart").child(dataSnapshot.getKey()).removeValue();
                     }
 
                     @Override

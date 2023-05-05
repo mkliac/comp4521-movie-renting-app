@@ -21,7 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class register extends AppCompatActivity {
+public class RegisterPage extends AppCompatActivity {
     //establish connection to the database
     private boolean noServerError = true;
     private final int red = Color.parseColor("#F44336");
@@ -206,15 +206,11 @@ public class register extends AppCompatActivity {
                     progressBar.setVisibility(View.VISIBLE);
 
                     //rootRef is the whole database
-                    Log.d("debug", "enter db");
                     final DatabaseReference userPathRef = rootRef.child("users");    //establish single path of the database
-                    Log.d("debug", "end db");
                     userPathRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {   //snapshot = copy the whole structure of the target table
-                            Log.d("debug", "enter on data change");
                             if(!dataSnapshot.child(username.getText().toString()).exists()){ //if this path exists = has this user = username conflict
-                                Log.d("debug", "enter if statement");
                                 DatabaseReference thisUser = userPathRef.child(username.getText().toString());
                                 thisUser.child("password").setValue(password.getText().toString());
                                 thisUser.child("credits").setValue(0);

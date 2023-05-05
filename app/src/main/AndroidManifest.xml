@@ -19,8 +19,8 @@
         <activity
             android:name=".HomePage"
             android:label="@string/title_activity_home_page" />
-        <activity android:name=".register" />
-        <activity android:name=".login" />
+        <activity android:name=".RegisterPage" />
+        <activity android:name=".LoginPage" />
         <activity android:name=".InitialPage"
             android:exported="true">
             <intent-filter>

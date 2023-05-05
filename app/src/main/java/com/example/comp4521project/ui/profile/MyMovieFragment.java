@@ -1,4 +1,4 @@
-package com.example.comp4521project.ui.home;
+package com.example.comp4521project.ui.profile;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,16 +17,16 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.comp4521project.R;
 import com.example.comp4521project.UserData.Users;
 import com.example.comp4521project.movieUI.MovieCatalogView;
+import com.example.comp4521project.ui.home.HomeViewModel;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class HomeFragment extends Fragment {
+public class MyMovieFragment extends Fragment {
     Button buttonAll, buttonAction, buttonAdventure, buttonCartoon, buttonComedy;
     Button buttonDocumentary, buttonHorror, buttonMystery, buttonScifi;
     SearchView search;
     private HomeViewModel homeViewModel;
     FragmentManager fm;
-    //FragmentTransaction fmTran;
     Fragment homePage;
     boolean active;
     MovieCatalogView movieCatalogViewPage;
@@ -38,8 +38,8 @@ public class HomeFragment extends Fragment {
                     R.drawable.icon_comedy, R.drawable.icon_documentary, R.drawable.icon_horror,
                     R.drawable.icon_mystery, R.drawable.icon_scifi};
 
-    public HomeFragment(){}
-    public HomeFragment(Users user){this.user = user; start = true;}
+    public MyMovieFragment(){}
+    public MyMovieFragment(Users user){this.user = user; start = true;}
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,

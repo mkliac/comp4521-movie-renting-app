@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:text="Total: "
+        android:text="Total: $"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
         android:translationZ="10dp"
@@ -43,7 +43,7 @@
         android:id="@+id/priceValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:text="0"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
@@ -74,7 +74,7 @@
         android:clickable="true"
         android:contentDescription="Check out"
         android:enabled="false"
-        android:text="Check out"
+        android:text="Checkout"
         app:icon="@drawable/custom_ic_shopping_cart_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -87,8 +87,10 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/toolbar2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -102,26 +104,27 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/creditTag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="Credits:"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        app:layout_constraintStart_toStartOf="@+id/toolbar"
-        app:layout_constraintTop_toTopOf="@+id/toolbar" />
-
-    <TextView
         android:id="@+id/creditsValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:text="0.0"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/creditTag"
         app:layout_constraintStart_toEndOf="@+id/creditTag"
-        app:layout_constraintTop_toTopOf="@+id/creditTag" />
+        app:layout_constraintTop_toTopOf="@+id/creditTag"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/creditTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Balance: $"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
     <TextView
         android:id="@+id/creditTag2"

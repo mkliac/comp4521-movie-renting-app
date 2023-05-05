@@ -27,6 +27,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder>{
@@ -37,20 +39,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
     private String currentCategory = "none";
     private onCardListener onCardListener;
     MovieAdapter mAdapt;
-    /*
-    all categories:
-    action
-    adventure
-    cartoon
-    comedy
-    documentary
-    horror
-    mystery
-    sci-fi
-
-    search
-    advanced search
-     */
 
     public MovieAdapter(Context mContext, List<MovieShort> mData, String user, onCardListener onCardListener) {
         this.mContext = mContext;
@@ -70,31 +58,50 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         String id = mData.get(position).getId();
         holder.movieImage.setImageResource(R.drawable.custom_profile_movies_24dp);
         holder.movieImage.setBackground(null);
         holder.movieProgressBar.setVisibility(View.VISIBLE);
-
-        DatabaseReference purchasedStatusRef = FirebaseDatabase.getInstance().getReference().child("purchaseStatus").child(user).child(id);
-        purchasedStatusRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("users").child(user);
+        DatabaseReference transactionRef = rootRef.child("cart").child(id);
+        transactionRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.exists()){ Log.e("hello", "OH NO U GOT 0");holder.statusIcon.setVisibility(View.INVISIBLE); }
+                if(!dataSnapshot.exists()){
+                    DatabaseReference movieBoughtRef = rootRef.child("transactions").orderByChild("movieID").equalTo(id).getRef();
+                    movieBoughtRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                           for(DataSnapshot transactionDetail : dataSnapshot.getChildren())
+                           {
+                               if(!id.equals(transactionDetail.child("movieID").getValue().toString()))
+                                   continue;
+                               LocalDateTime dueDateTime=LocalDateTime.parse(transactionDetail.child("dueDate").getValue().toString());
+                               LocalDateTime timeNow = LocalDateTime.now();
+                               if(!timeNow.isAfter(dueDateTime))
+                               {
+                                   holder.statusIcon.setImageResource(R.drawable.custom_ic_tick_24dp);
+                                   holder.statusIcon.setBackgroundColor(Color.parseColor("#0DCA00"));
+                                   holder.statusIcon.setVisibility(View.VISIBLE);
+                                   return;
+                               }
+                           }
+                               holder.statusIcon.setVisibility(View.INVISIBLE);
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            holder.statusIcon.setImageResource(R.drawable.custom_ic_warning_24dp);
+                            holder.statusIcon.setBackgroundColor(Color.parseColor("#FF0000"));
+                            holder.statusIcon.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
                 else if(dataSnapshot.exists()){
-                    if(dataSnapshot.getValue().toString().equals("1")){
-                        Log.e("hello", "U GOT 1");
                         holder.statusIcon.setImageResource(R.drawable.custom_ic_shopping_cart_24dp);
                         holder.statusIcon.setBackgroundColor(Color.parseColor("#00CACA"));
                         holder.statusIcon.setVisibility(View.VISIBLE);
-                    }
-                    else if(dataSnapshot.getValue().toString().equals("2")){
-                        Log.e("hello", "U GOT 2");
-                        holder.statusIcon.setImageResource(R.drawable.custom_ic_tick_24dp);
-                        holder.statusIcon.setBackgroundColor(Color.parseColor("#0DCA00"));
-                        holder.statusIcon.setVisibility(View.VISIBLE);
-                    }
                 }
             }
 
@@ -108,8 +115,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         String path = "movies/"+id+"/"+id+".jpg";
         StorageReference imageRef = storageRef.child(path);
         holder.popularityValue.setText(mData.get(position).getPopularity().toString());
-        final long ONE_MEGABYTE = 1024 * 1024;
-        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        final long MB = 1024 * 1024;
+        imageRef.getBytes(MB).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap a = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -123,7 +130,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         path = "movies/"+id+"/"+id+".png";
         imageRef = storageRef.child(path);
         holder.popularityValue.setText(mData.get(position).getPopularity().toString());
-        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        imageRef.getBytes(MB).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap a = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);

@@ -10,11 +10,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 public class Movie implements Parcelable {
-    private String id = "dummydata", name = "dummydata", year = "dummydata", description = "dummydata";
+    private String id = "", name = "", year = "", description = "";
     private Integer popularity = 0;
     private Float price = 0F;
     private Bitmap image;
-    private String trailerURL = "dummydata";
+    private String trailerURL = "";
     public Movie(String id, Integer popularity){this.id = id; this.popularity = popularity;}
     public Movie(String id, String name, String year, String description, Integer popularity, String trailerURL, Float price){
         setId(id);

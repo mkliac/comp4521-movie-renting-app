@@ -120,11 +120,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="#777777"
+                android:scaleType="fitXY"
                 android:src="@color/white"
                 android:translationZ="0dp"
-                android:scaleType="fitXY"
                 app:layout_constraintDimensionRatio="2:3"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@null"
@@ -197,28 +198,49 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
-                android:layout_marginTop="24dp"
-                android:text="Purchase popularity"
+                android:text="Rating"
                 android:textAlignment="viewStart"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:translationZ="2dp"
+                app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
                 app:layout_constraintStart_toStartOf="@+id/black"
-                app:layout_constraintTop_toBottomOf="@+id/movieDescription" />
+                app:layout_constraintTop_toTopOf="@+id/ratingBar" />
 
             <TextView
                 android:id="@+id/moviePopularity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="48dp"
+                android:layout_marginEnd="8dp"
                 android:text="Loading"
                 android:textAlignment="textEnd"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:translationZ="2dp"
-                app:layout_constraintBottom_toBottomOf="@+id/popularityTag"
+                app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
                 app:layout_constraintEnd_toEndOf="@+id/black"
-                app:layout_constraintTop_toTopOf="@+id/popularityTag" />
+                app:layout_constraintStart_toEndOf="@+id/ratingBar"
+                app:layout_constraintTop_toTopOf="@+id/ratingBar" />
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_width="184dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="24dp"
+                android:background="#B80000"
+                android:indeterminate="false"
+                android:isIndicator="true"
+                android:max="5"
+                android:numStars="5"
+                android:progressTint="#FFEB3C"
+                android:stepSize="1"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@+id/movieImage"
+                app:layout_constraintStart_toEndOf="@+id/popularityTag"
+                app:layout_constraintTop_toBottomOf="@+id/movieDescription"
+                app:layout_constraintVertical_bias="0.357"
+                tools:visibility="visible" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

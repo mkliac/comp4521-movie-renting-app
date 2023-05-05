@@ -1,10 +1,11 @@
 package com.example.comp4521project.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.comp4521project.MovieData.MovieShort;
 import com.example.comp4521project.R;
 import com.example.comp4521project.ui.cart.CartFragment;
+import com.example.comp4521project.ui.profile.MyMovieFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -29,17 +31,15 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
-public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> {
+public class MovieViewAdapter extends RecyclerView.Adapter<MovieViewAdapter.MyViewHolder> {
 
     private Context mContext;
-    private CartFragment cartFragment;
+    private MyMovieFragment cartFragment;
     private String user;
-    private Float price;
     private List<MovieShort> mData;
-    private String currentCategory = "none";
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
 
-    public CartAdapter(CartFragment cartFragment, List<MovieShort> mData, String user /* , onCardListener onCardListener*/) {
+    public MovieViewAdapter(MyMovieFragment cartFragment, List<MovieShort> mData, String user) {
         this.cartFragment = cartFragment;
         this.mContext = cartFragment.getContext();
         this.mData = mData;
@@ -50,7 +50,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         LayoutInflater mInflator = LayoutInflater.from(mContext);
-        view = mInflator.inflate(R.layout.cart_view, parent, false);
+        view = mInflator.inflate(R.layout.my_movies_view, parent, false);
 
         return new MyViewHolder(view);
     }
@@ -69,7 +69,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                 holder.movieImage.setImageResource(android.R.color.transparent);
                 holder.movieImage.setBackground(new BitmapDrawable(mContext.getResources(), a));
                 holder.movieImage.setImageBitmap(a);
-                cartFragment.checkEmpty();
+
             }
         });
 
@@ -91,13 +91,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                 }
             });
         }
-
-        holder.remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removeCartItem(mData.get(position).getId());
-            }
-        });
     }
 
     @Override
@@ -108,74 +101,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView movieImage;
         TextView year, title, price;
-        FloatingActionButton remove;
+        FloatingActionButton playMovie;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             movieImage = itemView.findViewById(R.id.movieImage);
             title = itemView.findViewById(R.id.Title);
             year = itemView.findViewById(R.id.yearValue);
-            price = itemView.findViewById(R.id.priceValue);
-            remove = itemView.findViewById(R.id.remove);
-
+            price = itemView.findViewById(R.id.dueDateValue);
+            playMovie = itemView.findViewById(R.id.playMovie);
         }
-    }
-
-    public void addItem(MovieShort mSingle) {
-
-        mData.add(mSingle);
-        this.notifyItemInserted(getItemCount() - 1);
-    }
-
-    public void removeCartItem(String movie_id)
-    {
-        FirebaseDatabase.getInstance().getReference().child("users").child(user).child("cart").child(movie_id).removeValue();
-    }
-
-    public void removeAll(){
-            int size = mData.size();
-            mData.clear();
-            notifyItemRangeRemoved(0, size);
-    }
-
-    public void addItem(String movie_id){
-        boolean saveToAdd = true;
-        for(int i = 0; i < getItemCount(); i++){
-            if(mData.get(i).getId().equals(movie_id)){
-                saveToAdd = false;
-                break;
-            }
-        }
-        if(saveToAdd){
-            DatabaseReference movieRef = rootRef.child("movies").child(movie_id);
-            movieRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    String id = dataSnapshot.child("id").getValue().toString();
-                    Float price = dataSnapshot.child("price").getValue(Float.class);
-                    mData.add(new MovieShort(id, price));
-                    notifyItemRangeChanged(0, getItemCount());
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        }
-
-    }
-
-    public void removeItem(String movie_id){
-        for(int i = 0; i < getItemCount(); i++){
-            if(mData.get(i).getId().equals(movie_id)){
-                mData.remove(i);
-                notifyItemRemoved(i);
-                notifyItemRangeChanged(i, getItemCount());
-                break;
-            }
-        }
-        cartFragment.checkEmpty();
     }
 
     public List<MovieShort> returnList(){return mData;}

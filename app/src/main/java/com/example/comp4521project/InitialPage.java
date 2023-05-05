@@ -37,7 +37,7 @@ public class InitialPage extends AppCompatActivity {
         finish();
     }
     private void loadLoginPage(){
-        startActivity(new Intent(InitialPage.this, login.class));
+        startActivity(new Intent(InitialPage.this, LoginPage.class));
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         // close splash activity
         finish();

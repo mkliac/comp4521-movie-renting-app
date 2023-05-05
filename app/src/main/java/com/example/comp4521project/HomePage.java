@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.comp4521project.UserData.Users;
-import com.example.comp4521project.movieUI.AllLibrary;
+import com.example.comp4521project.movieUI.MovieCatalogView;
 import com.example.comp4521project.ui.cart.CartFragment;
 import com.example.comp4521project.ui.home.HomeFragment;
 import com.example.comp4521project.ui.profile.ProfileFragment;
@@ -42,7 +42,7 @@ public class HomePage extends AppCompatActivity {
     HomeFragment homePage = new HomeFragment();
     CartFragment cartPage = new CartFragment();
     ProfileFragment profilePage = new ProfileFragment();
-    AllLibrary libraryPage = new AllLibrary();
+    MovieCatalogView libraryPage = new MovieCatalogView();
     final FragmentManager fm = getSupportFragmentManager();
     Fragment active = homePage;
 
@@ -67,7 +67,7 @@ public class HomePage extends AppCompatActivity {
         {
             Bundle bundle = getIntent().getExtras();
             user = bundle.getParcelable("user");
-            libraryPage = new AllLibrary(user.getUsername());
+            libraryPage = new MovieCatalogView(user.getUsername());
             profilePage = new ProfileFragment(user);
             homePage = new HomeFragment(user);
             cartPage = new CartFragment(user.getUsername());
@@ -111,7 +111,7 @@ public class HomePage extends AppCompatActivity {
             public void onClick(View view) {
                 SharedPreferences preferences = getSharedPreferences("groupProjectLoginPref", MODE_PRIVATE);
                 preferences.edit().clear().apply();
-                startActivity(new Intent(HomePage.this, login.class));
+                startActivity(new Intent(HomePage.this, LoginPage.class));
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 // close splash activity
                 finish();

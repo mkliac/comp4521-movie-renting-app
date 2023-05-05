@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.comp4521project.R;
 import com.example.comp4521project.UserData.Users;
-import com.example.comp4521project.movieUI.AllLibrary;
+import com.example.comp4521project.movieUI.MovieCatalogView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,7 +40,7 @@ public class ProfileFragment extends Fragment {
     private ProfileViewModel profileViewModel;
     FragmentManager fm;
     ProfileFragment profilePage;
-    AllLibrary allLibraryPage;
+    MovieCatalogView movieCatalogViewPage;
 
     public ProfileFragment(){
         loadUser = false;
@@ -74,13 +74,13 @@ public class ProfileFragment extends Fragment {
             fm = getFragmentManager();
             //fmTran = fm.beginTransaction();
             profilePage = this;
-            allLibraryPage = (AllLibrary) fm.findFragmentByTag("library");
+            movieCatalogViewPage = (MovieCatalogView) fm.findFragmentByTag("library");
 
             ((ExtendedFloatingActionButton)(root.findViewById(R.id.movieButton))).setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    allLibraryPage.refreshByUserOrder(username);
-                    allLibraryPage.setParent("profile");
-                    fm.beginTransaction().hide(profilePage).show(allLibraryPage).commit();
+                    movieCatalogViewPage.refreshByUserOrder(username);
+                    movieCatalogViewPage.setParent("profile");
+                    fm.beginTransaction().hide(profilePage).show(movieCatalogViewPage).commit();
                 }
             });
 
