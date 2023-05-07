@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.comp4521project.R;
+import com.example.comp4521project.VideoActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +27,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.io.IOException;
 
 public class MovieDetail extends AppCompatActivity {
     ImageButton playTrailer, movieDetailExitButton;
@@ -35,7 +40,8 @@ public class MovieDetail extends AppCompatActivity {
     String id, name, year, description, popularity, category;
     Float price;
     String path, url;
-    ExtendedFloatingActionButton addToCart;
+    ExtendedFloatingActionButton addToCart, playMovie;
+    String movieMp4Url = "";
     final long ONE_MEGABYTE = 1024 * 1024;
 
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -58,6 +64,7 @@ public class MovieDetail extends AppCompatActivity {
         playTrailer = (ImageButton) findViewById(R.id.playTrailer);
         movieDetailExitButton = (ImageButton) findViewById(R.id.movieDetailExitButton);
         addToCart = (ExtendedFloatingActionButton) findViewById(R.id.checkout);
+        playMovie = (ExtendedFloatingActionButton) findViewById(R.id.play);
 
         id = getIntent().getStringExtra("movie_id");
         username = getIntent().getStringExtra("username");
@@ -97,6 +104,14 @@ public class MovieDetail extends AppCompatActivity {
                     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
                     path = "movies/"+id+"/content.txt";
                     StorageReference contentRef = storageRef.child(path);
+                    path = "movies/"+id+"/"+id+".mp4";
+                    StorageReference movieUrlRef = storageRef.child(path);
+                    movieUrlRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            movieMp4Url = uri.toString();
+                        }
+                    });
                     contentRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
                         public void onSuccess(byte[] bytes) {
@@ -136,6 +151,17 @@ public class MovieDetail extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        playMovie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(movieMp4Url != "") {
+                    Intent intent = new Intent(getApplicationContext(), VideoActivity.class);
+                    intent.putExtra("videoUri", movieMp4Url);
+                    startActivity(intent);
+                }
+            }
+        });
         movieDetailExitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -169,15 +195,18 @@ public class MovieDetail extends AppCompatActivity {
                     if(dataSnapshot.getValue().toString().equals("1")){
                         addToCart.setText("Cancel cart");
                         addToCart.setEnabled(true);
+                        playMovie.setEnabled(false);
                     }
                     else {
                         addToCart.setText("Purchased");
                         addToCart.setEnabled(false);
+                        playMovie.setEnabled(true);
                     }
                 }
                 else {
                     addToCart.setText("Add to cart");
                     addToCart.setEnabled(true);
+                    playMovie.setEnabled(false);
                 }
             }
 

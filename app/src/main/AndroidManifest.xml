@@ -12,16 +12,21 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity android:name=".MainActivity" />
-
         <activity android:name=".Tester.MovieDetail" />
         <activity android:name=".ui.profile.CashPurchase" />
         <activity android:name=".ui.profile.ProfileSetting" />
+        <activity android:name=".VideoActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            android:screenOrientation="landscape">
+
+        </activity>
         <activity
             android:name=".HomePage"
             android:label="@string/title_activity_home_page" />
         <activity android:name=".register" />
         <activity android:name=".login" />
-        <activity android:name=".InitialPage"
+        <activity
+            android:name=".InitialPage"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
