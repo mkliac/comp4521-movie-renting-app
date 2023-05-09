@@ -67,6 +67,8 @@ public class CommentActivity extends AppCompatActivity {
                 addComment();
             }
         });
+
+        getSupportActionBar().setTitle("Comments");
     }
 
     private void addComment() {
