@@ -11,15 +11,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
+        <activity
+            android:name=".CommentActivity"
+            android:exported="false" />
         <activity android:name=".MainActivity" />
         <activity android:name=".Tester.MovieDetail" />
         <activity android:name=".ui.profile.CashPurchase" />
         <activity android:name=".ui.profile.ProfileSetting" />
-        <activity android:name=".VideoActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
-            android:screenOrientation="landscape">
-
-        </activity>
+        <activity
+            android:name=".VideoActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"></activity>
         <activity
             android:name=".HomePage"
             android:label="@string/title_activity_home_page" />

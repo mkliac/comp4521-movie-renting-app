@@ -91,7 +91,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="just kiddin' adding sandbox creditcard is annoying so I skipped"
+        android:text="As we do not own the real video, real payment methods are not provided."
         android:textColor="#949494"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

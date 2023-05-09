@@ -1,5 +1,7 @@
 package com.example.comp4521project.ui.cart;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,12 +13,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.comp4521project.Adapter.CartAdapter;
+import com.example.comp4521project.MainActivity;
 import com.example.comp4521project.MovieData.MovieShort;
 import com.example.comp4521project.R;
 import com.example.comp4521project.ui.profile.ProfileFragment;
@@ -83,6 +88,10 @@ public class CartFragment extends Fragment {
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(root.getContext());
             myrv.setLayoutManager(layoutManager);
 
+            NotificationChannel channel = new NotificationChannel("check out", "check out", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager NotifManager = getActivity().getSystemService(NotificationManager.class);
+            NotifManager.createNotificationChannel(channel);
+
             checkout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -98,6 +107,7 @@ public class CartFragment extends Fragment {
                                 final DatabaseReference movieValue = FirebaseDatabase.getInstance().getReference().child("purchaseStatus").child(user);
                                 FirebaseDatabase.getInstance().getReference().child("users").child(user).child("credits").setValue(userCredits.getValue(Float.class)-movieTotal);
                                 Toast.makeText(root.getContext(), "Purchased", Toast.LENGTH_LONG);
+                                notification(movieTotal);
                                 movieValue.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -122,6 +132,16 @@ public class CartFragment extends Fragment {
 
 
         return root;
+    }
+    public void notification(Float amount){
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this.getContext(), "check out");
+        builder.setContentTitle("Transaction Accepted");
+        builder.setContentText("Purchased successfully! $" + amount + " was deducted from your wallet.");
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setAutoCancel(true);
+
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this.getContext());
+        managerCompat.notify(1, builder.build());
     }
     public void notifyUserDataChanged(){
     }

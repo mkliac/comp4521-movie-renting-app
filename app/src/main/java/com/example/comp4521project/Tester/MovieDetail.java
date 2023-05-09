@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.comp4521project.CommentActivity;
 import com.example.comp4521project.R;
 import com.example.comp4521project.VideoActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,7 +41,7 @@ public class MovieDetail extends AppCompatActivity {
     String id, name, year, description, popularity, category;
     Float price;
     String path, url;
-    ExtendedFloatingActionButton addToCart, playMovie;
+    ExtendedFloatingActionButton addToCart, playMovie, comment;
     String movieMp4Url = "";
     final long ONE_MEGABYTE = 1024 * 1024;
 
@@ -65,6 +66,7 @@ public class MovieDetail extends AppCompatActivity {
         movieDetailExitButton = (ImageButton) findViewById(R.id.movieDetailExitButton);
         addToCart = (ExtendedFloatingActionButton) findViewById(R.id.checkout);
         playMovie = (ExtendedFloatingActionButton) findViewById(R.id.play);
+        comment = (ExtendedFloatingActionButton) findViewById(R.id.comment);
 
         id = getIntent().getStringExtra("movie_id");
         username = getIntent().getStringExtra("username");
@@ -160,6 +162,16 @@ public class MovieDetail extends AppCompatActivity {
                     intent.putExtra("videoUri", movieMp4Url);
                     startActivity(intent);
                 }
+            }
+        });
+
+        comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
+                intent.putExtra("username", username);
+                intent.putExtra("movieId", id);
+                startActivity(intent);
             }
         });
         movieDetailExitButton.setOnClickListener(new View.OnClickListener() {

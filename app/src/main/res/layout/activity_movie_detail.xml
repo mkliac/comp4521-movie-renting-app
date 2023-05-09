@@ -264,6 +264,21 @@
         android:layout_marginBottom="20dp"
         app:srcCompat="@android:drawable/ic_input_add" />
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FFFF99"
+        android:clickable="true"
+        android:contentDescription="Comments"
+        android:text="Comments"
+        app:icon="@drawable/baseline_comment_24"
+        app:layout_constraintBottom_toTopOf="@+id/checkout"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="20dp"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
     <TextView
         android:id="@+id/priceTag"
         android:layout_width="wrap_content"
