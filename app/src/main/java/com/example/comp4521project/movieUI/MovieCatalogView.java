@@ -35,7 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
+public class MovieCatalogView extends Fragment implements MovieAdapter.onCardListener{
 
     List<MovieShort> movieShortList;
     MovieAdapter myAdapter;
@@ -59,7 +59,7 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
     HomeFragment home;
     CartFragment cart;
     ProfileFragment profile;
-    final long ONE_MEGABYTE = 1024 * 1024;
+    final long MB = 1024 * 1024;
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference movieRef;
     ChildEventListener childVoyeur = new ChildEventListener() {
@@ -89,8 +89,8 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
         }
     };
 
-    public AllLibrary(){ }
-    public AllLibrary(String user){
+    public MovieCatalogView(){ }
+    public MovieCatalogView(String user){
         this.user = user;
         start = true;
     }
@@ -110,32 +110,32 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.all_library_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.movie_catalog_fragment, container, false);
         v = rootView;
-        final FragmentManager fm = getFragmentManager();
-        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+        final FragmentManager fm = getParentFragmentManager();
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
                 if(parentHome){
-                    fm.beginTransaction().hide(AllLibrary.this).show(home).commit();
+                    fm.beginTransaction().hide(MovieCatalogView.this).show(home).commit();
                 }
                 if(parentCart){
-                    fm.beginTransaction().hide(AllLibrary.this).show(cart).commit();
+                    fm.beginTransaction().hide(MovieCatalogView.this).show(cart).commit();
                 }
                 if(parentProfile){
-                    fm.beginTransaction().hide(AllLibrary.this).show(profile).commit();
+                    fm.beginTransaction().hide(MovieCatalogView.this).show(profile).commit();
                 }
-                fm.beginTransaction().hide(AllLibrary.this).commit();
+                fm.beginTransaction().hide(MovieCatalogView.this).commit();
             }
         };
         if(start){
             ((ImageButton) rootView.findViewById(R.id.exitButton2)).setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View view) {
-                   fm.beginTransaction().hide(AllLibrary.this).commit();
+                   fm.beginTransaction().hide(MovieCatalogView.this).commit();
                }
            });
-            RecyclerView myrv = (RecyclerView) rootView.findViewById(R.id.all_library_view);
+            RecyclerView myrv = (RecyclerView) rootView.findViewById(R.id.movieCatalogView);
             movieShortList = new ArrayList<>();
             myAdapter = new MovieAdapter(rootView.getContext(), movieShortList, user, this);
             myrv.setAdapter(myAdapter);
@@ -146,7 +146,7 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
 
             movieRef = rootRef.child("movies");
             //add blank event listener
-            DatabaseReference userRef = rootRef.child("purchaseStatus").child(user);
+            DatabaseReference userRef = rootRef.child("users").child(user).child("cart");
             userRef.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -288,7 +288,7 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
 
                 String path = "movies/"+id+"/content.txt";
                 StorageReference contentRef = FirebaseStorage.getInstance().getReference().child(path);
-                contentRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                contentRef.getBytes(MB).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
                     public void onSuccess(byte[] bytes) {
                         String content = new String(bytes);

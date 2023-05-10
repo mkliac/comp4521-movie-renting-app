@@ -21,7 +21,6 @@ import com.google.firebase.database.ValueEventListener;
 
 public class CashPurchase extends AppCompatActivity {
     String username;
-    TextView mocking;
     EditText cash;
     ExtendedFloatingActionButton submit;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -35,25 +34,16 @@ public class CashPurchase extends AppCompatActivity {
         username = getIntent().getExtras().getString("username");
         creditsRef = rootRef.child("users").child(username).child("credits");
 
-        mocking = (TextView) findViewById(R.id.mocking);
         cash = (EditText) findViewById(R.id.cash);
         submit = (ExtendedFloatingActionButton) findViewById(R.id.submit);
-        mocking.setVisibility(View.INVISIBLE);
 
 
 
-        cash.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        /*cash.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(!b){
-                    if(cash.getText().toString()==""){
-                        mocking.setText("*Please enter value to the line");
-                        mocking.setVisibility(View.VISIBLE);
-                    }
-                }
-                else mocking.setVisibility(View.INVISIBLE);
             }
-        });
+        });*/
 
         ((ImageButton)findViewById(R.id.exitButton)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,8 +58,7 @@ public class CashPurchase extends AppCompatActivity {
             public void onClick(View view) {
                 final Float enteredCash = Float.parseFloat(cash.getText().toString());
                 if(enteredCash==0F){
-                    mocking.setText("*you are wasting your time by trying to add 0 dollars");
-                    mocking.setVisibility(View.VISIBLE);
+                    Toast.makeText(getApplicationContext(),"please enter the right amount",Toast.LENGTH_SHORT);
                 }
                 else if((cash.getText().toString())=="") { }
                 else{
@@ -79,15 +68,10 @@ public class CashPurchase extends AppCompatActivity {
                             Float userCash = dataSnapshot.getValue(Float.class);
 
                             if((enteredCash < 0F) && (userCash + enteredCash < 0F)){
-                                mocking.setText("*what you want to do will cause depts\nyou will own "+ (userCash+enteredCash) +" HKD in total");
-                                mocking.setVisibility(View.VISIBLE);
+                                Toast.makeText(getApplicationContext(),"please enter a positive amount",Toast.LENGTH_SHORT);
                             }
                             else {
-                                if(enteredCash < 0F && (enteredCash + userCash >= 0F)){
-                                    Toast.makeText(getApplicationContext(), "You just lose "+ Float.toString((0F-enteredCash)) +"HKD at final", Toast.LENGTH_LONG).show();
-                                }else{
-                                    Toast.makeText(getApplicationContext(), enteredCash.toString()+" HKD added to your credits", Toast.LENGTH_LONG).show();
-                                }
+                                Toast.makeText(getApplicationContext(), enteredCash.toString()+" HKD added to your credits", Toast.LENGTH_LONG).show();
                             }
                             final Float finalCash = userCash+enteredCash;
                             rootRef = FirebaseDatabase.getInstance().getReference();
