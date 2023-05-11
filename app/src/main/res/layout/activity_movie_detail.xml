@@ -2,10 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#203B42"
-    android:id="@+id/page"
+    android:visibility="visible"
     tools:context=".Tester.MovieDetail">
 
     <ImageButton
@@ -55,6 +56,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                style="@style/Widget.AppCompat.RatingBar.Indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:numStars="5"
+                android:rating="5"
+                android:stepSize="1"
+                android:translationZ="10dp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@+id/popularityTag"
+                app:layout_constraintEnd_toStartOf="@+id/moviePopularity"
+                app:layout_constraintStart_toEndOf="@+id/popularityTag"
+                app:layout_constraintTop_toTopOf="@+id/popularityTag"
+                app:layout_constraintVertical_bias="0.515" />
 
             <ImageButton
                 android:id="@+id/playTrailer"
@@ -120,14 +139,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="#777777"
+                android:scaleType="fitXY"
                 android:src="@color/white"
                 android:translationZ="0dp"
-                android:scaleType="fitXY"
                 app:layout_constraintDimensionRatio="2:3"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@null"
+                tools:layout_editor_absoluteY="-7dp"
                 tools:srcCompat="@null" />
 
             <TextView
@@ -196,29 +216,31 @@
                 android:id="@+id/popularityTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
-                android:text="Purchase popularity"
+                android:text="Popularity"
                 android:textAlignment="viewStart"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:translationZ="2dp"
+                app:layout_constraintBottom_toBottomOf="@+id/movieImage"
                 app:layout_constraintStart_toStartOf="@+id/black"
-                app:layout_constraintTop_toBottomOf="@+id/movieDescription" />
+                app:layout_constraintTop_toBottomOf="@+id/movieDescription"
+                app:layout_constraintVertical_bias="0.012" />
 
             <TextView
                 android:id="@+id/moviePopularity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="48dp"
+                android:layout_width="52dp"
+                android:layout_height="26dp"
+                android:layout_marginEnd="24dp"
                 android:text="Loading"
                 android:textAlignment="textEnd"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:translationZ="2dp"
-                app:layout_constraintBottom_toBottomOf="@+id/popularityTag"
+                app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
                 app:layout_constraintEnd_toEndOf="@+id/black"
-                app:layout_constraintTop_toTopOf="@+id/popularityTag" />
+                app:layout_constraintTop_toTopOf="@+id/ratingBar" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -250,33 +272,18 @@
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FFFFFF"
-        android:clickable="true"
-        android:contentDescription="Play"
-        android:text="Play"
-        app:icon="@drawable/custom_ic_movie_play_24dp"
-        app:layout_constraintBottom_toTopOf="@+id/checkout"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        app:srcCompat="@android:drawable/ic_input_add" />
-
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:backgroundTint="#FFFF99"
         android:clickable="true"
         android:contentDescription="Comments"
         android:text="Comments"
         app:icon="@drawable/baseline_comment_24"
         app:layout_constraintBottom_toTopOf="@+id/checkout"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginLeft="20dp"
-        android:layout_marginBottom="20dp"
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <TextView

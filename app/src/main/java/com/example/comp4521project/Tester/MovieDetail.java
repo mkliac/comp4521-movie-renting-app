@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,12 +37,12 @@ public class MovieDetail extends AppCompatActivity {
 
     ImageView movieImage;
     Drawable image;
-    String username;
+    String username , id, name, year, description, category,popularity;
     TextView movieName, movieNameShadow, movieYear, movieDescription, moviePopularity, priceValue;
-    String id, name, year, description, popularity, category;
     Float price;
     String path, url;
     ExtendedFloatingActionButton addToCart, playMovie, comment;
+    RatingBar movieRating;
     String movieMp4Url = "";
     final long ONE_MEGABYTE = 1024 * 1024;
 
@@ -65,9 +66,8 @@ public class MovieDetail extends AppCompatActivity {
         playTrailer = (ImageButton) findViewById(R.id.playTrailer);
         movieDetailExitButton = (ImageButton) findViewById(R.id.movieDetailExitButton);
         addToCart = (ExtendedFloatingActionButton) findViewById(R.id.checkout);
-        playMovie = (ExtendedFloatingActionButton) findViewById(R.id.play);
         comment = (ExtendedFloatingActionButton) findViewById(R.id.comment);
-
+        movieRating = (RatingBar) findViewById(R.id.ratingBar);
         id = getIntent().getStringExtra("movie_id");
         username = getIntent().getStringExtra("username");
 
@@ -83,7 +83,15 @@ public class MovieDetail extends AppCompatActivity {
                             if(dataSnapshot.getValue().toString().equals("1")){
                                 rootRef.child("purchaseStatus").child(username).child(id).removeValue();
                             }
-                            else rootRef.child("purchaseStatus").child(username).child(id).setValue(1);
+                            else if(dataSnapshot.getValue().toString().equals("2"))
+                            {
+                                if(movieMp4Url != "") {
+                                    Intent intent = new Intent(getApplicationContext(), VideoActivity.class);
+                                    intent.putExtra("videoUri", movieMp4Url);
+                                    startActivity(intent);
+                                }
+                            }
+                                else rootRef.child("purchaseStatus").child(username).child(id).setValue(1);
                         }
                         else rootRef.child("purchaseStatus").child(username).child(id).setValue(1);
                     }
@@ -129,6 +137,7 @@ public class MovieDetail extends AppCompatActivity {
                             movieNameShadow.setText(name);
                             movieYear.setText("( "+year+")");
                             movieDescription.setText(description);
+                            movieRating.setRating(Float.parseFloat(popularity));
                             moviePopularity.setText(popularity);
                             priceValue.setText(price.toString());
                         }
@@ -151,17 +160,6 @@ public class MovieDetail extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:"+urlShort));
                 intent.putExtra("force_fullscreen",true);
                 startActivity(intent);
-            }
-        });
-
-        playMovie.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(movieMp4Url != "") {
-                    Intent intent = new Intent(getApplicationContext(), VideoActivity.class);
-                    intent.putExtra("videoUri", movieMp4Url);
-                    startActivity(intent);
-                }
             }
         });
 
@@ -206,19 +204,18 @@ public class MovieDetail extends AppCompatActivity {
                 if(dataSnapshot.exists()){
                     if(dataSnapshot.getValue().toString().equals("1")){
                         addToCart.setText("Cancel cart");
+                        addToCart.setIcon(getResources().getDrawable(R.drawable.custom_ic_shopping_cart_24dp,null));
                         addToCart.setEnabled(true);
-                        playMovie.setEnabled(false);
                     }
                     else {
-                        addToCart.setText("Purchased");
-                        addToCart.setEnabled(false);
-                        playMovie.setEnabled(true);
+                        addToCart.setText("Play Movie");
+                        addToCart.setIcon(getResources().getDrawable(R.drawable.custom_ic_movie_play_24dp,null));
                     }
                 }
                 else {
                     addToCart.setText("Add to cart");
                     addToCart.setEnabled(true);
-                    playMovie.setEnabled(false);
+                    addToCart.setIcon(getResources().getDrawable(R.drawable.custom_ic_shopping_cart_24dp,null));
                 }
             }
 
