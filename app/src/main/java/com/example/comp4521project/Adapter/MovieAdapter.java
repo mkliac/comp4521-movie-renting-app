@@ -15,7 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.comp4521project.MovieData.MovieShort;
+import com.example.comp4521project.model.MovieBrief;
 import com.example.comp4521project.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,11 +31,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 
     private Context mContext;
     private String user;
-    private List<MovieShort> mData;
-    private String currentCategory = "none";
+    private List<MovieBrief> mData;
     private onCardListener onCardListener;
+    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
-    public MovieAdapter(Context mContext, List<MovieShort> mData, String user, onCardListener onCardListener) {
+    public MovieAdapter(Context mContext, List<MovieBrief> mData, String user, onCardListener onCardListener) {
         this.mContext = mContext;
         this.mData = mData;
         this.user = user;
@@ -53,63 +54,56 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         String id = mData.get(position).getId();
-        holder.movieImage.setImageResource(R.drawable.custom_profile_movies_24dp);
-        holder.movieImage.setBackground(null);
-        holder.movieProgressBar.setVisibility(View.VISIBLE);
+        holder.progressBar.setVisibility(View.VISIBLE);
+        holder.movieThumbnail.setImageResource(R.drawable.custom_profile_movies_24dp);
+        holder.movieThumbnail.setBackground(null);
 
-        DatabaseReference purchasedStatusRef = FirebaseDatabase.getInstance().getReference().child("purchaseStatus").child(user).child(id);
+        //get movie status, 1 == on cart, 2 == purchased
+        DatabaseReference purchasedStatusRef = rootRef.child("purchaseStatus").child(user).child(id);
         purchasedStatusRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.exists()){ holder.statusIcon.setVisibility(View.INVISIBLE); }
-                else if(dataSnapshot.exists()){
-                    if(dataSnapshot.getValue().toString().equals("1")){
-                        holder.statusIcon.setImageResource(R.drawable.custom_ic_shopping_cart_24dp);
-                        holder.statusIcon.setBackgroundColor(Color.parseColor("#00CACA"));
-                        holder.statusIcon.setVisibility(View.VISIBLE);
+                if(dataSnapshot.exists()){
+                    String val = dataSnapshot.getValue().toString();
+                    if(val.equals("1")){
+                        holder.icon.setImageResource(R.drawable.custom_ic_shopping_cart_24dp);
+                        holder.icon.setBackgroundColor(Color.parseColor("#00CACA"));
+                        holder.icon.setVisibility(View.VISIBLE);
                     }
-                    else if(dataSnapshot.getValue().toString().equals("2")){
-                        holder.statusIcon.setImageResource(R.drawable.custom_ic_tick_24dp);
-                        holder.statusIcon.setBackgroundColor(Color.parseColor("#0DCA00"));
-                        holder.statusIcon.setVisibility(View.VISIBLE);
+                    else if(val.equals("2")){
+                        holder.icon.setImageResource(R.drawable.custom_ic_tick_24dp);
+                        holder.icon.setBackgroundColor(Color.parseColor("#0DCA00"));
+                        holder.icon.setVisibility(View.VISIBLE);
                     }
+                }else{
+                    holder.icon.setVisibility(View.INVISIBLE);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                holder.statusIcon.setImageResource(R.drawable.custom_ic_warning_24dp);
-                holder.statusIcon.setBackgroundColor(Color.parseColor("#FF0000"));
-                holder.statusIcon.setVisibility(View.VISIBLE);
+                holder.icon.setImageResource(R.drawable.custom_ic_warning_24dp);
+                holder.icon.setBackgroundColor(Color.parseColor("#FF0000"));
+                holder.icon.setVisibility(View.VISIBLE);
             }
         });
+
+        // get movie thumbnail
         String path = "movies/"+id+"/"+id+".jpg";
         StorageReference imageRef = storageRef.child(path);
-        holder.popularityValue.setText(mData.get(position).getPopularity().toString());
-        final long ONE_MEGABYTE = 1024 * 1024;
-        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+        holder.popularity.setText(mData.get(position).getPopularity().toString());
+        final long IN_MB = 1024 * 1024;
+        imageRef.getBytes(IN_MB).addOnSuccessListener(bytes -> {
             Bitmap a = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            holder.movieImage.setImageResource(android.R.color.transparent);
-            holder.movieImage.setBackground(new BitmapDrawable(mContext.getResources(), a));
-            holder.movieImage.setImageBitmap(a);
-            holder.movieProgressBar.setVisibility(View.INVISIBLE);
-
-        });
-        path = "movies/"+id+"/"+id+".png";
-        imageRef = storageRef.child(path);
-        holder.popularityValue.setText(mData.get(position).getPopularity().toString());
-        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-            Bitmap a = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            holder.movieImage.setImageResource(android.R.color.transparent);
-            holder.movieImage.setBackground(new BitmapDrawable(mContext.getResources(), a));
-            holder.movieImage.setImageBitmap(a);
-            holder.movieProgressBar.setVisibility(View.INVISIBLE);
+            holder.movieThumbnail.setBackground(new BitmapDrawable(mContext.getResources(), a));
+            holder.movieThumbnail.setImageResource(android.R.color.transparent);
+            holder.movieThumbnail.setImageBitmap(a);
+            holder.progressBar.setVisibility(View.INVISIBLE);
 
         });
 
-        holder.popularityValue.setText(mData.get(position).getPopularity().toString());
+        holder.popularity.setText(mData.get(position).getPopularity().toString());
     }
 
     @Override
@@ -118,20 +112,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView movieImage;
-        TextView popularityValue;
-        ImageView statusIcon;
-        ProgressBar movieProgressBar;
+        ImageView icon;
+        ImageView movieThumbnail;
+        ProgressBar progressBar;
+        TextView popularity;
         onCardListener onCardListener;
 
         public MyViewHolder(View itemView, onCardListener onCardListener) {
             super(itemView);
 
-            movieImage = itemView.findViewById(R.id.movieImage);
-            popularityValue = itemView.findViewById(R.id.popularityValue);
-            statusIcon = itemView.findViewById(R.id.statusIcon);
-            movieProgressBar = itemView.findViewById(R.id.movieProgressBar);
+            icon = itemView.findViewById(R.id.statusIcon);
+            movieThumbnail = itemView.findViewById(R.id.movieImage);
+            progressBar = itemView.findViewById(R.id.movieProgressBar);
+            popularity = itemView.findViewById(R.id.popularityValue);
             this.onCardListener = onCardListener;
+
             itemView.setOnClickListener(this);
         }
 
@@ -141,8 +136,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         }
     }
 
-    public void addItem(MovieShort mSingle){
-        mData.add(mSingle);
+    public void addItem(MovieBrief movieBrief){
+        mData.add(movieBrief);
         this.notifyItemInserted(getItemCount()-1);
     }
 
@@ -152,17 +147,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         notifyItemRangeRemoved(0, size);
     }
 
-    public void changeStatus(String movie_id/*, Integer status*/){
+    public void changeStatus(String movieId){
         for(int i = 0; i < getItemCount(); i++){
             notifyItemChanged(i);
         }
 
     }
 
-    public List<MovieShort> returnList(){return mData;}
-
-
-
+    public List<MovieBrief> returnList(){return mData;}
 
     public interface onCardListener{
         void onCardClick(int position);

@@ -1,4 +1,4 @@
-package com.example.comp4521project.ui.cart;
+package com.example.comp4521project.view.cart;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

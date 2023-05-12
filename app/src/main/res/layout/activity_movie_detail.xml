@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#203B42"
     android:visibility="visible"
-    tools:context=".Tester.MovieDetail">
+    tools:context=".movieUI.MovieDetail">
 
     <ImageButton
         android:id="@+id/movieDetailExitButton"

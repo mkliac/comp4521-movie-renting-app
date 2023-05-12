@@ -14,10 +14,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.comp4521project.MovieData.MovieShort;
+import com.example.comp4521project.model.MovieBrief;
 import com.example.comp4521project.R;
-import com.example.comp4521project.ui.cart.CartFragment;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.comp4521project.view.cart.CartFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,12 +34,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     private CartFragment cartFragment;
     private String user;
     private Float price;
-    private List<MovieShort> mData;
-    private String currentCategory = "none";
+    private List<MovieBrief> mData;
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference cartRef;
+    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
-    public CartAdapter(CartFragment cartFragment, List<MovieShort> mData, String user /* , onCardListener onCardListener*/) {
+    public CartAdapter(CartFragment cartFragment, List<MovieBrief> mData, String user) {
         this.cartFragment = cartFragment;
         this.mContext = cartFragment.getContext();
         this.mData = mData;
@@ -58,47 +56,37 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        // get movie thumbnail
         final String id = mData.get(position).getId();
         String path = "movies/" + id + "/" + id + ".jpg";
-        final StorageReference imageRef = storageRef.child(path);
-        final long ONE_MEGABYTE = 1024 * 1024;
-        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap a = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                holder.movieImage.setImageResource(android.R.color.transparent);
-                holder.movieImage.setBackground(new BitmapDrawable(mContext.getResources(), a));
-                holder.movieImage.setImageBitmap(a);
-                cartFragment.checkEmpty();
-            }
+        final StorageReference jpgRef = storageRef.child(path);
+        final long IN_MB = 1024 * 1024;
+        jpgRef.getBytes(IN_MB).addOnSuccessListener(bytes -> {
+            Bitmap a = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            holder.movieImage.setImageResource(android.R.color.transparent);
+            holder.movieImage.setImageBitmap(a);
+            holder.movieImage.setBackground(new BitmapDrawable(mContext.getResources(), a));
+            cartFragment.emptyHandling();
         });
 
+        // get movie detail description
         path = "movies/" + id + "/content.txt";
-        StorageReference contentRef = FirebaseStorage.getInstance().getReference().child(path);
+        StorageReference contentRef = storageRef.child(path);
         if(getItemCount()!=0){
-            contentRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    String content = new String(bytes);
-                    String[] stringArray = content.split(System.getProperty("line.separator"));
-                    Log.d("debug", String.valueOf(stringArray));
-                    holder.title.setText(stringArray[0]);
-                    holder.year.setText(stringArray[1]);
-                    if(getItemCount()!=0){
-                        Float tempPrice = mData.get(position).getPrice();
-                        holder.price.setText(tempPrice.toString());
-                    }
+            contentRef.getBytes(IN_MB).addOnSuccessListener(bytes -> {
+                String content = new String(bytes);
+                String[] contents = content.split(System.getProperty("line.separator"));
+                Log.d("debug", String.valueOf(contents));
+                holder.title.setText(contents[0]);
+                holder.year.setText(contents[1]);
+                if(getItemCount()!=0){
+                    Float price = mData.get(position).getPrice();
+                    holder.price.setText(price.toString());
                 }
             });
         }
 
-        holder.remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removeCartItem(mData.get(position).getId());
-            }
-        });
+        holder.remove.setOnClickListener(v -> removeCartItem(mData.get(position).getId()));
     }
 
     @Override
@@ -107,8 +95,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView price;
+        TextView year;
+        TextView title;
         ImageView movieImage;
-        TextView year, title, price;
         FloatingActionButton remove;
 
         public MyViewHolder(View itemView) {
@@ -123,40 +113,29 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         }
     }
 
-    public void addItem(MovieShort mSingle) {
-
-        mData.add(mSingle);
-        this.notifyItemInserted(getItemCount() - 1);
-    }
-
     public void removeCartItem(String movie_id)
     {
-        Log.e("hello", "removeCartItem: "+movie_id);
-        FirebaseDatabase.getInstance().getReference().child("purchaseStatus").child(user).child(movie_id).removeValue();
-    }
-
-    public void removeAll(){
-            int size = mData.size();
-            mData.clear();
-            notifyItemRangeRemoved(0, size);
+        Log.e("debug", "removeCartItem: "+movie_id);
+        rootRef.child("purchaseStatus").child(user).child(movie_id).removeValue();
     }
 
     public void addItem(String movie_id){
-        boolean saveToAdd = true;
+        boolean idExist = false;
         for(int i = 0; i < getItemCount(); i++){
-            if(mData.get(i).getId().equals(movie_id)){
-                saveToAdd = false;
-                break;
-            }
+            if(!mData.get(i).getId().equals(movie_id)) continue;
+
+            idExist = true;
+            break;
         }
-        if(saveToAdd){
+        // if no duplicate id found, save to add
+        if(!idExist){
             DatabaseReference movieRef = rootRef.child("movies").child(movie_id);
             movieRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    String id = dataSnapshot.child("id").getValue().toString();
                     Float price = dataSnapshot.child("price").getValue(Float.class);
-                    mData.add(new MovieShort(id, price));
+                    String id = dataSnapshot.child("id").getValue().toString();
+                    mData.add(new MovieBrief(id, price));
                     notifyItemRangeChanged(0, getItemCount());
                 }
 
@@ -171,15 +150,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
 
     public void removeItem(String movie_id){
         for(int i = 0; i < getItemCount(); i++){
-            if(mData.get(i).getId().equals(movie_id)){
-                mData.remove(i);
-                notifyItemRemoved(i);
-                notifyItemRangeChanged(i, getItemCount());
-                break;
-            }
+            if(!mData.get(i).getId().equals(movie_id)) continue;
+
+            mData.remove(i);
+            notifyItemRemoved(i);
+            notifyItemRangeChanged(i, getItemCount());
+            break;
         }
-        cartFragment.checkEmpty();
+        cartFragment.emptyHandling();
     }
 
-    public List<MovieShort> returnList(){return mData;}
 }

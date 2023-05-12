@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.comp4521project.MovieData.Comment;
+import com.example.comp4521project.model.Comment;
 import com.example.comp4521project.R;
 
 import java.util.ArrayList;

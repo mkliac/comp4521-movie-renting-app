@@ -15,9 +15,9 @@
             android:name=".CommentActivity"
             android:exported="false" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".Tester.MovieDetail" />
-        <activity android:name=".ui.profile.CashPurchase" />
-        <activity android:name=".ui.profile.ProfileSetting" />
+        <activity android:name=".movieUI.MovieDetail" />
+        <activity android:name=".view.profile.CreditsPurchase" />
+        <activity android:name=".view.profile.ProfileSetting" />
         <activity
             android:name=".VideoActivity"
             android:screenOrientation="landscape"

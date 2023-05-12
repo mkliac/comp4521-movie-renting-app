@@ -4,48 +4,55 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.comp4521project.UserData.Users;
-import com.example.comp4521project.movieUI.AllLibrary;
-import com.example.comp4521project.ui.cart.CartFragment;
-import com.example.comp4521project.ui.home.HomeFragment;
-import com.example.comp4521project.ui.profile.ProfileFragment;
+import com.example.comp4521project.model.Users;
+import com.example.comp4521project.movieUI.Library;
+import com.example.comp4521project.view.cart.CartFragment;
+import com.example.comp4521project.view.home.HomeFragment;
+import com.example.comp4521project.view.profile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class HomePage extends AppCompatActivity {
-
+    HomeFragment home = new HomeFragment();
+    CartFragment cart = new CartFragment();
+    ProfileFragment profile = new ProfileFragment();
+    Library library = new Library();
+    Fragment active = home;
     FloatingActionButton setting;
+
+    // screen, touch -> setting button rotate back & dimbox disappear
     ImageView dimBox;
     ExtendedFloatingActionButton logout;
     Users user;
-    private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-
-    HomeFragment homePage = new HomeFragment();
-    CartFragment cartPage = new CartFragment();
-    ProfileFragment profilePage = new ProfileFragment();
-    AllLibrary libraryPage = new AllLibrary();
     final FragmentManager fm = getSupportFragmentManager();
-    Fragment active = homePage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
+        Bundle bundle = getIntent().getExtras();
+        user = bundle.getParcelable("user");
+        profile = new ProfileFragment(user);
+        home = new HomeFragment(user);
+        cart = new CartFragment(user.getUsername());
+
+        active = home;
+
+        library = new Library(user.getUsername());
+        library.setHome(home);
+        library.setCart(cart);
+        library.setProfile(profile);
 
         setting = findViewById(R.id.floating_action_button);
         dimBox = findViewById(R.id.dimBox);
@@ -55,18 +62,6 @@ public class HomePage extends AppCompatActivity {
         logout.setVisibility(View.INVISIBLE);
         logout.setAlpha(0.0F);
 
-        {
-            Bundle bundle = getIntent().getExtras();
-            user = bundle.getParcelable("user");
-            libraryPage = new AllLibrary(user.getUsername());
-            profilePage = new ProfileFragment(user);
-            homePage = new HomeFragment(user);
-            cartPage = new CartFragment(user.getUsername());
-            active = homePage;
-            libraryPage.setHome(homePage);
-            libraryPage.setCart(cartPage);
-            libraryPage.setProfile(profilePage);
-        }
         getSupportActionBar().hide();
 
         Snackbar.make(this.findViewById(android.R.id.content),
@@ -74,12 +69,12 @@ public class HomePage extends AppCompatActivity {
                 Snackbar.LENGTH_LONG)
                 .show();
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.nav_view);
+        BottomNavigationView navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        fm.beginTransaction().add(R.id.main_container, libraryPage, "library").hide(libraryPage).commit();
-        fm.beginTransaction().add(R.id.main_container, cartPage, "cart").hide(cartPage).commit();
-        fm.beginTransaction().add(R.id.main_container, profilePage, "profile").hide(profilePage).commit();
-        fm.beginTransaction().add(R.id.main_container,homePage, "home").commit();
+        fm.beginTransaction().add(R.id.main_container, library, "library").hide(library).commit();
+        fm.beginTransaction().add(R.id.main_container, cart, "cart").hide(cart).commit();
+        fm.beginTransaction().add(R.id.main_container, profile, "profile").hide(profile).commit();
+        fm.beginTransaction().add(R.id.main_container, home, "home").commit();
 
         rotateSettingBackward();
 
@@ -101,18 +96,18 @@ public class HomePage extends AppCompatActivity {
             = item -> {
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
-                        fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(homePage).commit();
-                        active = homePage;
+                        fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(home).commit();
+                        active = home;
                         return true;
 
                     case R.id.navigation_cart:
-                        fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(cartPage).commit();
-                        active = cartPage;
+                        fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(cart).commit();
+                        active = cart;
                         return true;
 
                     case R.id.navigation_profile:
-                        fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(profilePage).commit();
-                        active = profilePage;
+                        fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(profile).commit();
+                        active = profile;
                         return true;
                 }
                 return false;
@@ -155,13 +150,11 @@ public class HomePage extends AppCompatActivity {
                 .setDuration(300L)
                 .start();
         final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //Do something after 5s = 300ms
-                dimBox.setVisibility(View.INVISIBLE);
-                logout.setVisibility(View.INVISIBLE);
-            }
+        handler.postDelayed(() -> {
+
+            //logout button disappear after 0.3s
+            dimBox.setVisibility(View.INVISIBLE);
+            logout.setVisibility(View.INVISIBLE);
         }, 300);
 
     }

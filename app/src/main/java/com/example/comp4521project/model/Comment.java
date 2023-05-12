@@ -1,4 +1,4 @@
-package com.example.comp4521project.MovieData;
+package com.example.comp4521project.model;
 
 public class Comment {
     String username;

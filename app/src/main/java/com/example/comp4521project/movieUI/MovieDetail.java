@@ -1,4 +1,4 @@
-package com.example.comp4521project.Tester;
+package com.example.comp4521project.movieUI;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,21 +26,33 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 public class MovieDetail extends AppCompatActivity {
-    ImageButton playTrailer, movieDetailExitButton;
-
+    String id;
+    String name;
+    String username;
+    String year;
+    String category;
+    String description;
+    ImageButton movieDetailExitButton;
+    ImageButton playTrailer;
     ImageView movieImage;
-    String username , id, name, year, description, category,popularity;
-    TextView movieName, movieNameShadow, movieYear, movieDescription, moviePopularity, priceValue;
+    TextView popularityTV;
+    TextView priceTV;
+    TextView nameTV;
+    TextView nameShadowTV;
+    TextView yearTV;
+    TextView descriptionTV;
     Float price;
-    String path, url;
+    String popularity;
+    String path;
+    String url;
     ExtendedFloatingActionButton addToCart;
     ExtendedFloatingActionButton comment;
     RatingBar movieRating;
     String movieMp4Url = "";
-    final long ONE_MEGABYTE = 1024 * 1024;
+    final long IN_MB = 1024 * 1024;
 
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference statusRef;
+    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +61,18 @@ public class MovieDetail extends AppCompatActivity {
         getSupportActionBar().hide();
 
         username = getIntent().getExtras().getString("username");
-        movieImage = (ImageView) findViewById(R.id.movieImage);
-        movieName = (TextView) findViewById(R.id.movieName);
-        movieNameShadow = (TextView) findViewById(R.id.movieNameShadow);
-        movieYear = (TextView) findViewById(R.id.movieYear);
-        movieDescription = (TextView) findViewById(R.id.movieDescription);
-        moviePopularity = (TextView) findViewById(R.id.moviePopularity);
-        priceValue = (TextView) findViewById(R.id.priceValue);
-        playTrailer = (ImageButton) findViewById(R.id.playTrailer);
-        movieDetailExitButton = (ImageButton) findViewById(R.id.movieDetailExitButton);
-        addToCart = (ExtendedFloatingActionButton) findViewById(R.id.checkout);
-        comment = (ExtendedFloatingActionButton) findViewById(R.id.comment);
-        movieRating = (RatingBar) findViewById(R.id.ratingBar);
+        movieImage = findViewById(R.id.movieImage);
+        nameTV = findViewById(R.id.movieName);
+        nameShadowTV = findViewById(R.id.movieNameShadow);
+        yearTV = findViewById(R.id.movieYear);
+        descriptionTV = findViewById(R.id.movieDescription);
+        popularityTV = findViewById(R.id.moviePopularity);
+        priceTV = findViewById(R.id.priceValue);
+        playTrailer = findViewById(R.id.playTrailer);
+        movieDetailExitButton = findViewById(R.id.movieDetailExitButton);
+        addToCart = findViewById(R.id.checkout);
+        comment = findViewById(R.id.comment);
+        movieRating = findViewById(R.id.ratingBar);
         id = getIntent().getStringExtra("movie_id");
         username = getIntent().getStringExtra("username");
 
@@ -69,11 +81,14 @@ public class MovieDetail extends AppCompatActivity {
         addToCart.setOnClickListener(view -> rootRef.child("purchaseStatus").child(username).child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    if(dataSnapshot.getValue().toString().equals("1")){
+                if(!dataSnapshot.exists())
+                    rootRef.child("purchaseStatus").child(username).child(id).setValue(1);
+                else{
+                    String val = dataSnapshot.getValue().toString();
+                    if(val.equals("1")){
                         rootRef.child("purchaseStatus").child(username).child(id).removeValue();
                     }
-                    else if(dataSnapshot.getValue().toString().equals("2"))
+                    else if(val.equals("2"))
                     {
                         if(movieMp4Url != "") {
                             Intent intent = new Intent(getApplicationContext(), VideoActivity.class);
@@ -81,46 +96,47 @@ public class MovieDetail extends AppCompatActivity {
                             startActivity(intent);
                         }
                     }
-                        else rootRef.child("purchaseStatus").child(username).child(id).setValue(1);
+                    else rootRef.child("purchaseStatus").child(username).child(id).setValue(1);
                 }
-                else rootRef.child("purchaseStatus").child(username).child(id).setValue(1);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         }));
 
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        //get movies
         DatabaseReference movieRef = rootRef.child("movies").child(id);
         movieRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     id = dataSnapshot.child("id").getValue().toString();
-                    popularity = dataSnapshot.child("popularity").getValue().toString();
                     price = Float.parseFloat(dataSnapshot.child("price").getValue().toString());
+                    popularity = dataSnapshot.child("popularity").getValue().toString();
+
                     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
                     path = "movies/"+id+"/content.txt";
                     StorageReference contentRef = storageRef.child(path);
                     path = "movies/"+id+"/"+id+".mp4";
                     StorageReference movieUrlRef = storageRef.child(path);
-                    movieUrlRef.getDownloadUrl().addOnSuccessListener(uri -> movieMp4Url = uri.toString());
-                    contentRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                        String content = new String(bytes);
-                        String[] stringArray = content.split(System.getProperty("line.separator"));
-                        name = stringArray[0];
-                        year = stringArray[1];
-                        category = stringArray[2];
-                        url = stringArray[3];
-                        description = stringArray[4];
 
-                        movieName.setText(name);
-                        movieNameShadow.setText(name);
-                        movieYear.setText("( "+year+")");
-                        movieDescription.setText(description);
+                    movieUrlRef.getDownloadUrl().addOnSuccessListener(uri -> movieMp4Url = uri.toString());
+                    contentRef.getBytes(IN_MB).addOnSuccessListener(bytes -> {
+                        String content = new String(bytes);
+                        String[] contents = content.split(System.getProperty("line.separator"));
+                        name = contents[0];
+                        year = contents[1];
+                        category = contents[2];
+                        url = contents[3];
+                        description = contents[4];
+
+                        popularityTV.setText(popularity);
+                        priceTV.setText(price.toString());
+                        nameTV.setText(name);
+                        nameShadowTV.setText(name);
+                        yearTV.setText("( "+year+")");
+                        descriptionTV.setText(description);
                         movieRating.setRating(Float.parseFloat(popularity));
-                        moviePopularity.setText(popularity);
-                        priceValue.setText(price.toString());
                     });
                 }
             }
@@ -131,11 +147,12 @@ public class MovieDetail extends AppCompatActivity {
             }
         });
 
-        pullImageFromDatabase(id);
+        getThumbnailFromFirebase(id);
 
         playTrailer.setOnClickListener(view -> {
             String urlShort = url.substring(32, url.length()-1);
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:"+urlShort));
+            String uriString = "vnd.youtube:"+urlShort;
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uriString));
             intent.putExtra("force_fullscreen",true);
             startActivity(intent);
         });
@@ -151,8 +168,7 @@ public class MovieDetail extends AppCompatActivity {
     }
 
 
-    public void pullImageFromDatabase(final String id){
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    public void getThumbnailFromFirebase(final String id){
         String path = "movies/"+id+"/"+id+".jpg";
         StorageReference imageRef = storageRef.child(path);
         final long ONE_MEGABYTE = 1024 * 1024;
@@ -163,25 +179,27 @@ public class MovieDetail extends AppCompatActivity {
 
     }
     public void setListener(){
-        statusRef = rootRef.child("purchaseStatus").child(username).child(id);
+        //get movie purchaseStatus
+        DatabaseReference statusRef = rootRef.child("purchaseStatus").child(username).child(id);
         statusRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    if(dataSnapshot.getValue().toString().equals("1")){
+                if(!dataSnapshot.exists()){
+                    addToCart.setText("Add to cart");
+                    addToCart.setEnabled(true);
+                    addToCart.setIcon(getResources().getDrawable(R.drawable.custom_ic_shopping_cart_24dp,null));
+                }
+                else{
+                    String val = dataSnapshot.getValue().toString();
+                    if(val.equals("1")){
                         addToCart.setText("Cancel cart");
                         addToCart.setIcon(getResources().getDrawable(R.drawable.custom_ic_shopping_cart_24dp,null));
                         addToCart.setEnabled(true);
                     }
-                    else {
+                    else if(val.equals("2")){
                         addToCart.setText("Play Movie");
                         addToCart.setIcon(getResources().getDrawable(R.drawable.custom_ic_movie_play_24dp,null));
                     }
-                }
-                else {
-                    addToCart.setText("Add to cart");
-                    addToCart.setEnabled(true);
-                    addToCart.setIcon(getResources().getDrawable(R.drawable.custom_ic_shopping_cart_24dp,null));
                 }
             }
 

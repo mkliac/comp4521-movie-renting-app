@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -16,13 +15,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.comp4521project.Adapter.MovieAdapter;
-import com.example.comp4521project.MovieData.MovieShort;
+import com.example.comp4521project.model.MovieBrief;
 import com.example.comp4521project.R;
-import com.example.comp4521project.Tester.MovieDetail;
-import com.example.comp4521project.ui.cart.CartFragment;
-import com.example.comp4521project.ui.home.HomeFragment;
-import com.example.comp4521project.ui.profile.ProfileFragment;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.example.comp4521project.view.cart.CartFragment;
+import com.example.comp4521project.view.home.HomeFragment;
+import com.example.comp4521project.view.profile.ProfileFragment;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,33 +32,49 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
-
-    List<MovieShort> movieShortList;
-    MovieAdapter myAdapter;
+public class Library extends Fragment implements MovieAdapter.onCardListener{
     boolean start = false;
-    boolean byGenre = false;
-    boolean byUserOrder = false;
-    boolean bySearching = false;
+    boolean bySearch = false;
+    boolean byCategory = false;
+    boolean byUser = false;
 
-    boolean parentHome = false;
-    boolean parentCart = false;
-    boolean parentProfile = false;
+    boolean isHomeParent = false;
+    boolean isCartParent = false;
+    boolean isProfileParent = false;
+
+    List<MovieBrief> movieBriefList = new ArrayList<>();
+    MovieAdapter myAdapter;
 
     String search;
     String user;
-    ImageButton exitButton;
     View v;
-    String genre = "********";
-    String yearFilter = "any";
-    String filter = "";
+    String categoryBCode = "********";
     HomeFragment home;
     CartFragment cart;
     ProfileFragment profile;
-    final long ONE_MEGABYTE = 1024 * 1024;
+    final long IN_MB = 1024 * 1024;
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference movieRef;
-    ChildEventListener childVoyeur = new ChildEventListener() {
+
+    public Library(){ }
+    public Library(String user){
+        this.user = user;
+        start = true;
+    }
+
+    public void setHome(HomeFragment home) {
+        this.home = home;
+    }
+
+    public void setCart(CartFragment cart) {
+        this.cart = cart;
+    }
+
+    public void setProfile(ProfileFragment profile) {
+        this.profile = profile;
+    }
+
+    ChildEventListener childEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
@@ -87,25 +100,6 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
 
         }
     };
-
-    public AllLibrary(){ }
-    public AllLibrary(String user){
-        this.user = user;
-        start = true;
-    }
-
-    public void setHome(HomeFragment home) {
-        this.home = home;
-    }
-
-    public void setCart(CartFragment cart) {
-        this.cart = cart;
-    }
-
-    public void setProfile(ProfileFragment profile) {
-        this.profile = profile;
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -115,31 +109,30 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if(parentHome){
-                    fm.beginTransaction().hide(AllLibrary.this).show(home).commit();
+                if(isHomeParent) {
+                    fm.beginTransaction().hide(Library.this).show(home).commit();
                 }
-                if(parentCart){
-                    fm.beginTransaction().hide(AllLibrary.this).show(cart).commit();
+                else if(isCartParent){
+                    fm.beginTransaction().hide(Library.this).show(cart).commit();
                 }
-                if(parentProfile){
-                    fm.beginTransaction().hide(AllLibrary.this).show(profile).commit();
+                else if(isProfileParent){
+                    fm.beginTransaction().hide(Library.this).show(profile).commit();
                 }
-                fm.beginTransaction().hide(AllLibrary.this).commit();
+                fm.beginTransaction().hide(Library.this).commit();
             }
         };
         if(start){
-            ((ImageButton) rootView.findViewById(R.id.exitButton2)).setOnClickListener(view -> fm.beginTransaction().hide(AllLibrary.this).commit());
-            RecyclerView myrv = (RecyclerView) rootView.findViewById(R.id.all_library_view);
-            movieShortList = new ArrayList<>();
-            myAdapter = new MovieAdapter(rootView.getContext(), movieShortList, user, this);
-            myrv.setAdapter(myAdapter);
+            rootView.findViewById(R.id.exitButton2).setOnClickListener(view -> fm.beginTransaction().hide(Library.this).commit());
+            RecyclerView libraryRV = rootView.findViewById(R.id.all_library_view);
+            myAdapter = new MovieAdapter(rootView.getContext(), movieBriefList, user, this);
+            libraryRV.setAdapter(myAdapter);
             RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
-            myrv.setLayoutManager(layoutManager);
+            libraryRV.setLayoutManager(layoutManager);
 
             addChildListener();
 
+            // get movies
             movieRef = rootRef.child("movies");
-
             DatabaseReference userRef = rootRef.child("purchaseStatus").child(user);
             userRef.addChildEventListener(new ChildEventListener() {
                 @Override
@@ -172,141 +165,136 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
 
     }
 
-//    @Override
-//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        //mViewModel = ViewModelProviders.o
-//        //
-//        // f(this).get(AllLibraryViewModel.class);
-//        // TODO: Use the ViewModel
-//    }
-
     @Override
     public void onCardClick(int position) {
-        List<MovieShort> mData = myAdapter.returnList();
+        List<MovieBrief> mData = myAdapter.returnList();
         Intent intent = new Intent(this.getContext(), MovieDetail.class);
-        intent.putExtra("username", user);
         intent.putExtra("movie_id", mData.get(position).getId());
+        intent.putExtra("username", user);
         startActivity(intent);
     }
 
-    public boolean genreDecide(String genre){
-        boolean match = true;
+    public boolean checkCategoryBCode(String category){
+        boolean isMatch = true;
+        // we have 8 categories
         for(int i = 0; i < 8 ; i++){
-            if(this.genre.charAt(i)=='*'){ }
-            else if(this.genre.charAt(i)==genre.charAt(i)){ }
+            //compare binary code
+            if(this.categoryBCode.charAt(i)=='*') continue;
+            if(this.categoryBCode.charAt(i)==category.charAt(i)){ }
             else {
-                match = false;
+                isMatch = false;
                 break;
             }
         }
-        return match;
+        return isMatch;
     }
 
-    public void refreshByGenre(String genre){
-        resetFilter();
-        setGenre(genre);
-        resetListener();
+    public void renderByCategory(String genre){
+        changeFilter();
+        setCategoryBCode(genre);
+        changeListener();
     }
-    public void refreshBySearch(String search) {
-        resetFilter();
-        bySearching = true;
+    public void renderBySearch(String search) {
+        changeFilter();
+        bySearch = true;
         this.search = search;
-        resetListener();
+        changeListener();
     }
-    public void refreshByUserOrder(String username){
-        resetFilter();
-        setUserOrder();
-        resetListener();
+    public void renderByByUser(){
+        changeFilter();
+        setUser();
+        changeListener();
     }
 
     public void setListener(){
         movieRef = rootRef.child("movies");
-        movieRef.addChildEventListener(childVoyeur);
+        movieRef.addChildEventListener(childEventListener);
     }
-    public void resetListener(){
+    public void changeListener(){
         myAdapter.removeAllItem();
-        movieRef.removeEventListener(childVoyeur);
+        movieRef.removeEventListener(childEventListener);
         addChildListener();
         setListener();
     }
-    public void resetFilter(){
-        this.byGenre = false;
-        this.byUserOrder = false;
-        this.bySearching = false;
+    public void changeFilter(){
+        this.byCategory = false;
+        this.byUser = false;
+        this.bySearch = false;
     }
-    public void setUserOrder(){
-        this.byUserOrder = true;
+    public void setUser(){
+        this.byUser = true;
     }
 
     public void setParent(String parent){
         if(parent.equals("home")) {
-            parentHome = true;
-            parentCart = false;
-            parentProfile = false;
+            isHomeParent = true;
+            isCartParent = false;
+            isProfileParent = false;
         }
         else if(parent.equals("cart")) {
-            parentHome = false;
-            parentCart = true;
-            parentProfile = false;
+            isHomeParent = false;
+            isCartParent = true;
+            isProfileParent = false;
         }
         else if(parent.equals("profile")){
-                parentHome = false;
-                parentCart = false;
-                parentProfile = true;
+                isHomeParent = false;
+                isCartParent = false;
+                isProfileParent = true;
         }
     }
 
-    public boolean matchSearch(String thisMovie, String search){
-        String movieWithoutSPC = thisMovie.replaceAll("[^a-zA-Z0-9\\s_-]", "");
-        String searchWithoutSPC = search.replaceAll("[^a-zA-Z0-9\\s_-]", "");
-        if(movieWithoutSPC.toLowerCase().contains(searchWithoutSPC.toLowerCase())){
+    public boolean matchSearch(String movieName, String search){
+        String movieWithNoSpecialLetter = movieName.replaceAll("[^a-zA-Z0-9\\s_-]", "");
+        String searchInputWithNoSpecialLetter = search.replaceAll("[^a-zA-Z0-9\\s_-]", "");
+        if(movieWithNoSpecialLetter.toLowerCase().contains(searchInputWithNoSpecialLetter.toLowerCase())){
             return true;
         }
-        else if(thisMovie.toLowerCase().contains(search.toLowerCase())){
+        else if(movieName.toLowerCase().contains(search.toLowerCase())){
             return true;
         }
         else return false;
     }
-    public void setGenre(String genre){
-        this.byGenre = true;
-        this.genre = genre;
+    public void setCategoryBCode(String categoryBCode){
+        this.categoryBCode = categoryBCode;
+        this.byCategory = true;
     }
 
     public void addChildListener(){
-        childVoyeur = new ChildEventListener() {
+        childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 final String id = dataSnapshot.getKey();
-                final Integer popularity = dataSnapshot.child("popularity").getValue(Integer.class);
+
+                //get movie properties & details
                 final Float price = dataSnapshot.child("price").getValue(Float.class);
+                final Integer popularity = dataSnapshot.child("popularity").getValue(Integer.class);
 
                 String path = "movies/"+id+"/content.txt";
                 StorageReference contentRef = FirebaseStorage.getInstance().getReference().child(path);
-                contentRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                contentRef.getBytes(IN_MB).addOnSuccessListener(bytes -> {
                     String content = new String(bytes);
-                    final String[] stringArray = content.split(System.getProperty("line.separator"));
+                    final String[] contents = content.split(System.getProperty("line.separator"));
                     rootRef.child("purchaseStatus").child(user).child(id).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot ds2) {
-                            boolean match = true;
-                            if(byUserOrder){
+                            boolean isMatch = true;
+                            if(bySearch){
+                                if(matchSearch(contents[0], search)){}
+                                else isMatch = false;
+                            }
+                            if(byCategory){
+                                if(checkCategoryBCode(contents[2])){ }
+                                else isMatch = false;
+                            }
+                            if(byUser){
                                 if(ds2.exists()){
                                     if(ds2.getValue(Integer.class)==2){}
-                                    else match = false;
+                                    else isMatch = false;
                                 }
-                                else match = false;
+                                else isMatch = false;
                             }
-                            if(byGenre){
-                                if(genreDecide(stringArray[2])){ }
-                                else match = false;
-                            }
-                            if(bySearching){
-                                if(matchSearch(stringArray[0], search)){}
-                                else match = false;
-                            }
-                            if(match){
-                                myAdapter.addItem(new MovieShort(id , stringArray[0], stringArray[1], popularity, price, stringArray[2]));
+                            if(isMatch){
+                                myAdapter.addItem(new MovieBrief(id , contents[0], contents[1], popularity, price));
                             }
                         }
 

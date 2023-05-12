@@ -1,4 +1,4 @@
-package com.example.comp4521project.UserData;
+package com.example.comp4521project.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
