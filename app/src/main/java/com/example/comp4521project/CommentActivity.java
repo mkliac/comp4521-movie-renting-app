@@ -1,5 +1,6 @@
 package com.example.comp4521project;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -33,7 +34,7 @@ public class CommentActivity extends AppCompatActivity {
     String username, movieId;
     CommentAdapter myAdapter;
     DatabaseReference commentRef;
-    RadioButton ratingGood;
+    RadioButton ratingGood, ratingBad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +43,16 @@ public class CommentActivity extends AppCompatActivity {
         addComment = findViewById(R.id.addComment);
         ratingGroup = findViewById(R.id.ratingRadioGroup);
         commentET = findViewById(R.id.commentText);
-        ratingGood= findViewById(R.id.ratingGood);
-
+        ratingGood = findViewById(R.id.ratingGood);
+        ratingGood.setOnClickListener(v -> {
+            ratingGood.setButtonTintList(getResources().getColorStateList(R.color.green));
+            ratingBad.setButtonTintList(getResources().getColorStateList(R.color.black));
+        });
+        ratingBad = findViewById(R.id.ratingBad);
+        ratingBad.setOnClickListener(v -> {
+            ratingBad.setButtonTintList(getResources().getColorStateList(R.color.red));
+            ratingGood.setButtonTintList(getResources().getColorStateList(R.color.black));
+        });
         Bundle extras = getIntent().getExtras();
         username = extras.getString("username");
         movieId = extras.getString("movieId");

@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:button="@drawable/baseline_bad_24"
-                android:buttonTint="@color/red"></RadioButton>
+                android:buttonTint="@color/black"></RadioButton>
         </RadioGroup>
 
         <EditText
