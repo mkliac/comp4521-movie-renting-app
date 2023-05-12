@@ -1,8 +1,5 @@
 package com.example.comp4521project.ui.home;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -20,13 +17,8 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.comp4521project.R;
 import com.example.comp4521project.UserData.Users;
 import com.example.comp4521project.movieUI.AllLibrary;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class HomeFragment extends Fragment {
     Button buttonAll, buttonAction, buttonAdventure, buttonCartoon, buttonComedy;
@@ -34,7 +26,6 @@ public class HomeFragment extends Fragment {
     SearchView search;
     private HomeViewModel homeViewModel;
     FragmentManager fm;
-    //FragmentTransaction fmTran;
     Fragment homePage;
     boolean active;
     AllLibrary allLibraryPage;
@@ -57,7 +48,6 @@ public class HomeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         if(start){
             fm = getFragmentManager();
-            //fmTran = fm.beginTransaction();
             homePage = this;
             active = true;
             allLibraryPage = (AllLibrary) fm.findFragmentByTag("library");
@@ -99,7 +89,6 @@ public class HomeFragment extends Fragment {
         super.onHiddenChanged(hidden);
         if (hidden) {
             if(active){
-                //fmTran.hide(allLibraryPage).commit();
             }
         }else{
 
@@ -107,95 +96,68 @@ public class HomeFragment extends Fragment {
     }
 
     private void setButtons(){
-        buttonAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                active = false;
-                allLibraryPage.refreshByGenre("********");
-                allLibraryPage.setParent("home");
-                fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
-                active = true;
-            }
+        buttonAll.setOnClickListener(view -> {
+            active = false;
+            allLibraryPage.refreshByGenre("********");
+            allLibraryPage.setParent("home");
+            fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
+            active = true;
         });
-        buttonAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                active = false;
-                allLibraryPage.refreshByGenre("1*******");
-                allLibraryPage.setParent("home");
-                fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
-                active = true;
-            }
+        buttonAction.setOnClickListener(view -> {
+            active = false;
+            allLibraryPage.refreshByGenre("1*******");
+            allLibraryPage.setParent("home");
+            fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
+            active = true;
         });
-        buttonAdventure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                active = false;
-                allLibraryPage.refreshByGenre("*1******");
-                allLibraryPage.setParent("home");
-                fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
-                active = true;
-            }
+        buttonAdventure.setOnClickListener(view -> {
+            active = false;
+            allLibraryPage.refreshByGenre("*1******");
+            allLibraryPage.setParent("home");
+            fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
+            active = true;
         });
-        buttonCartoon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                active = false;
-                allLibraryPage.refreshByGenre("**1*****");
-                allLibraryPage.setParent("home");
-                fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
-                active = true;
-            }
+        buttonCartoon.setOnClickListener(view -> {
+            active = false;
+            allLibraryPage.refreshByGenre("**1*****");
+            allLibraryPage.setParent("home");
+            fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
+            active = true;
         });
-        buttonComedy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                active = false;
-                allLibraryPage.refreshByGenre("***1****");
-                allLibraryPage.setParent("home");
-                fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
-                active = true;
-            }
+        buttonComedy.setOnClickListener(view -> {
+            active = false;
+            allLibraryPage.refreshByGenre("***1****");
+            allLibraryPage.setParent("home");
+            fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
+            active = true;
         });
-        buttonDocumentary.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                active = false;
-                allLibraryPage.refreshByGenre("****1***");
-                allLibraryPage.setParent("home");
-                fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
-                active = true;
-            }
+        buttonDocumentary.setOnClickListener(view -> {
+            active = false;
+            allLibraryPage.refreshByGenre("****1***");
+            allLibraryPage.setParent("home");
+            fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
+            active = true;
         });
-        buttonHorror.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                active = false;
-                allLibraryPage.refreshByGenre("*****1**");
-                allLibraryPage.setParent("home");
-                fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
-                active = true;
-            }
+        buttonHorror.setOnClickListener(view -> {
+            active = false;
+            allLibraryPage.refreshByGenre("*****1**");
+            allLibraryPage.setParent("home");
+            fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
+            active = true;
         });
-        buttonMystery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                active = false;
-                allLibraryPage.refreshByGenre("******1*");
-                allLibraryPage.setParent("home");
-                fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
-                active = true;
-            }
+        buttonMystery.setOnClickListener(view -> {
+            active = false;
+            allLibraryPage.refreshByGenre("******1*");
+            allLibraryPage.setParent("home");
+            fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
+            active = true;
         });
-        buttonScifi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                active = false;
-                allLibraryPage.refreshByGenre("*******1");
-                allLibraryPage.setParent("home");
-                fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
-                active = true;
-            }
+        buttonScifi.setOnClickListener(view -> {
+            active = false;
+            allLibraryPage.refreshByGenre("*******1");
+            allLibraryPage.setParent("home");
+            fm.beginTransaction().hide(homePage).show(allLibraryPage).commit();
+            active = true;
         });
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

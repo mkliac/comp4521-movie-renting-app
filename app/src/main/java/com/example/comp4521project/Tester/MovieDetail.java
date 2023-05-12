@@ -3,12 +3,8 @@ package com.example.comp4521project.Tester;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.media.AudioAttributes;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -20,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.comp4521project.CommentActivity;
 import com.example.comp4521project.R;
 import com.example.comp4521project.VideoActivity;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,18 +25,16 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.IOException;
-
 public class MovieDetail extends AppCompatActivity {
     ImageButton playTrailer, movieDetailExitButton;
 
     ImageView movieImage;
-    Drawable image;
     String username , id, name, year, description, category,popularity;
     TextView movieName, movieNameShadow, movieYear, movieDescription, moviePopularity, priceValue;
     Float price;
     String path, url;
-    ExtendedFloatingActionButton addToCart, playMovie, comment;
+    ExtendedFloatingActionButton addToCart;
+    ExtendedFloatingActionButton comment;
     RatingBar movieRating;
     String movieMp4Url = "";
     final long ONE_MEGABYTE = 1024 * 1024;
@@ -73,41 +66,36 @@ public class MovieDetail extends AppCompatActivity {
 
         setListener();
 
-        addToCart.setOnClickListener(new View.OnClickListener() {
+        addToCart.setOnClickListener(view -> rootRef.child("purchaseStatus").child(username).child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View view) {
-                rootRef.child("purchaseStatus").child(username).child(id).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()){
-                            if(dataSnapshot.getValue().toString().equals("1")){
-                                rootRef.child("purchaseStatus").child(username).child(id).removeValue();
-                            }
-                            else if(dataSnapshot.getValue().toString().equals("2"))
-                            {
-                                if(movieMp4Url != "") {
-                                    Intent intent = new Intent(getApplicationContext(), VideoActivity.class);
-                                    intent.putExtra("videoUri", movieMp4Url);
-                                    startActivity(intent);
-                                }
-                            }
-                                else rootRef.child("purchaseStatus").child(username).child(id).setValue(1);
-                        }
-                        else rootRef.child("purchaseStatus").child(username).child(id).setValue(1);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    if(dataSnapshot.getValue().toString().equals("1")){
+                        rootRef.child("purchaseStatus").child(username).child(id).removeValue();
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) { }
-                });
+                    else if(dataSnapshot.getValue().toString().equals("2"))
+                    {
+                        if(movieMp4Url != "") {
+                            Intent intent = new Intent(getApplicationContext(), VideoActivity.class);
+                            intent.putExtra("videoUri", movieMp4Url);
+                            startActivity(intent);
+                        }
+                    }
+                        else rootRef.child("purchaseStatus").child(username).child(id).setValue(1);
+                }
+                else rootRef.child("purchaseStatus").child(username).child(id).setValue(1);
             }
-        });
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        }));
 
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference movieRef = rootRef.child("movies").child(id);
         movieRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) { //if no this path = no this user (since the path I designed is: users/(username)/password.value
+                if (dataSnapshot.exists()) {
                     id = dataSnapshot.child("id").getValue().toString();
                     popularity = dataSnapshot.child("popularity").getValue().toString();
                     price = Float.parseFloat(dataSnapshot.child("price").getValue().toString());
@@ -116,31 +104,23 @@ public class MovieDetail extends AppCompatActivity {
                     StorageReference contentRef = storageRef.child(path);
                     path = "movies/"+id+"/"+id+".mp4";
                     StorageReference movieUrlRef = storageRef.child(path);
-                    movieUrlRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            movieMp4Url = uri.toString();
-                        }
-                    });
-                    contentRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                        @Override
-                        public void onSuccess(byte[] bytes) {
-                            String content = new String(bytes);
-                            String[] stringArray = content.split(System.getProperty("line.separator"));
-                            name = stringArray[0];
-                            year = stringArray[1];
-                            category = stringArray[2];
-                            url = stringArray[3];
-                            description = stringArray[4];
+                    movieUrlRef.getDownloadUrl().addOnSuccessListener(uri -> movieMp4Url = uri.toString());
+                    contentRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                        String content = new String(bytes);
+                        String[] stringArray = content.split(System.getProperty("line.separator"));
+                        name = stringArray[0];
+                        year = stringArray[1];
+                        category = stringArray[2];
+                        url = stringArray[3];
+                        description = stringArray[4];
 
-                            movieName.setText(name);
-                            movieNameShadow.setText(name);
-                            movieYear.setText("( "+year+")");
-                            movieDescription.setText(description);
-                            movieRating.setRating(Float.parseFloat(popularity));
-                            moviePopularity.setText(popularity);
-                            priceValue.setText(price.toString());
-                        }
+                        movieName.setText(name);
+                        movieNameShadow.setText(name);
+                        movieYear.setText("( "+year+")");
+                        movieDescription.setText(description);
+                        movieRating.setRating(Float.parseFloat(popularity));
+                        moviePopularity.setText(popularity);
+                        priceValue.setText(price.toString());
                     });
                 }
             }
@@ -153,31 +133,20 @@ public class MovieDetail extends AppCompatActivity {
 
         pullImageFromDatabase(id);
 
-        playTrailer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String urlShort = url.substring(32, url.length()-1);
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:"+urlShort));
-                intent.putExtra("force_fullscreen",true);
-                startActivity(intent);
-            }
+        playTrailer.setOnClickListener(view -> {
+            String urlShort = url.substring(32, url.length()-1);
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:"+urlShort));
+            intent.putExtra("force_fullscreen",true);
+            startActivity(intent);
         });
 
-        comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
-                intent.putExtra("username", username);
-                intent.putExtra("movieId", id);
-                startActivity(intent);
-            }
+        comment.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), CommentActivity.class);
+            intent.putExtra("username", username);
+            intent.putExtra("movieId", id);
+            startActivity(intent);
         });
-        movieDetailExitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        movieDetailExitButton.setOnClickListener(view -> finish());
 
     }
 
@@ -187,12 +156,9 @@ public class MovieDetail extends AppCompatActivity {
         String path = "movies/"+id+"/"+id+".jpg";
         StorageReference imageRef = storageRef.child(path);
         final long ONE_MEGABYTE = 1024 * 1024;
-        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap a = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                movieImage.setImageBitmap(a);
-            }
+        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+            Bitmap a = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            movieImage.setImageBitmap(a);
         });
 
     }

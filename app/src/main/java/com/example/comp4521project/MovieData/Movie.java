@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -95,12 +94,7 @@ public class Movie implements Parcelable {
         String path = "movies/"+id+"/"+id+".jpg";
         StorageReference imageRef = storageRef.child(path);
         final long ONE_MEGABYTE = 1024 * 1024;
-        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            }
-        });
+        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
         return image;
     }
     public String getTrailerURL(){

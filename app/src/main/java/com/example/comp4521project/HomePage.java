@@ -34,10 +34,6 @@ public class HomePage extends AppCompatActivity {
     ExtendedFloatingActionButton logout;
     Users user;
     private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-    private DatabaseReference userMonitor;
-
-    //fragment dealer:
-    Button homePageButton;
 
     HomeFragment homePage = new HomeFragment();
     CartFragment cartPage = new CartFragment();
@@ -50,8 +46,6 @@ public class HomePage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-        //hid 2 other fragment
-
 
         setting = findViewById(R.id.floating_action_button);
         dimBox = findViewById(R.id.dimBox);
@@ -61,9 +55,6 @@ public class HomePage extends AppCompatActivity {
         logout.setVisibility(View.INVISIBLE);
         logout.setAlpha(0.0F);
 
-
-
-        //set users
         {
             Bundle bundle = getIntent().getExtras();
             user = bundle.getParcelable("user");
@@ -92,56 +83,40 @@ public class HomePage extends AppCompatActivity {
 
         rotateSettingBackward();
 
-        setting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                rotateSettingForward();
-            }
-        });
+        setting.setOnClickListener(view -> rotateSettingForward());
 
-        dimBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                rotateSettingBackward();
-            }
-        });
+        dimBox.setOnClickListener(view -> rotateSettingBackward());
 
-        logout.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                SharedPreferences preferences = getSharedPreferences("groupProjectLoginPref", MODE_PRIVATE);
-                preferences.edit().clear().apply();
-                startActivity(new Intent(HomePage.this, login.class));
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                // close splash activity
-                finish();
-            }
+        logout.setOnClickListener(view -> {
+            SharedPreferences preferences = getSharedPreferences("groupProjectLoginPref", MODE_PRIVATE);
+            preferences.edit().clear().apply();
+            startActivity(new Intent(HomePage.this, login.class));
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
+            finish();
         });
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(homePage).commit();
-                    active = homePage;
-                    return true;
+            = item -> {
+                switch (item.getItemId()) {
+                    case R.id.navigation_home:
+                        fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(homePage).commit();
+                        active = homePage;
+                        return true;
 
-                case R.id.navigation_cart:
-                    fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(cartPage).commit();
-                    active = cartPage;
-                    return true;
+                    case R.id.navigation_cart:
+                        fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(cartPage).commit();
+                        active = cartPage;
+                        return true;
 
-                case R.id.navigation_profile:
-                    fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(profilePage).commit();
-                    active = profilePage;
-                    return true;
-            }
-            return false;
-        }
-    };
+                    case R.id.navigation_profile:
+                        fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(profilePage).commit();
+                        active = profilePage;
+                        return true;
+                }
+                return false;
+            };
 
     public void rotateSettingForward() {
         ViewCompat.animate(setting)
@@ -149,7 +124,6 @@ public class HomePage extends AppCompatActivity {
                 .withLayer()
                 .translationY(-20L)
                 .setDuration(300L)
-                //.setInterpolator(new OvershootInterpolator(10.0F))
                 .start();
         dimBox.setVisibility(View.VISIBLE);
         ViewCompat.animate(dimBox)

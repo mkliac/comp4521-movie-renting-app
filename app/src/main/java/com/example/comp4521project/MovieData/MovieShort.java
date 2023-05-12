@@ -65,28 +65,4 @@ public class MovieShort {
     }
     public Float getPrice(){return price;}
 
-    public boolean isAction() {
-        return action;
-    }
-    public boolean isAdventure() {
-        return adventure;
-    }
-    public boolean isCartoon() {
-        return cartoon;
-    }
-    public boolean isComedy() {
-        return comedy;
-    }
-    public boolean isDocumentary() {
-        return documentary;
-    }
-    public boolean isHorror() {
-        return horror;
-    }
-    public boolean isMystery() {
-        return mystery;
-    }
-    public boolean isScifi() {
-        return scifi;
-    }
 }

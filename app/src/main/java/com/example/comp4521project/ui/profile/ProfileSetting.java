@@ -86,89 +86,57 @@ public class ProfileSetting extends AppCompatActivity {
             submit.setEnabled(false);
         }
 
-        name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                nameError.setVisibility(View.INVISIBLE);
-            }
-        });
-        oldPw.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                oldPwError.setVisibility(View.INVISIBLE);
-            }
-        });
-        newPw.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                newPwError.setVisibility(View.INVISIBLE);
-            }
-        });
-        newPw2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                newPw2Error.setVisibility(View.INVISIBLE);
-            }
-        });
+        name.setOnFocusChangeListener((view, b) -> nameError.setVisibility(View.INVISIBLE));
+        oldPw.setOnFocusChangeListener((view, b) -> oldPwError.setVisibility(View.INVISIBLE));
+        newPw.setOnFocusChangeListener((view, b) -> newPwError.setVisibility(View.INVISIBLE));
+        newPw2.setOnFocusChangeListener((view, b) -> newPw2Error.setVisibility(View.INVISIBLE));
 
-        ((ImageButton)findViewById(R.id.exitButton)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-                overridePendingTransition(0, android.R.anim.slide_out_right);
-            }
+        ((ImageButton)findViewById(R.id.exitButton)).setOnClickListener(view -> {
+            finish();
+            overridePendingTransition(0, android.R.anim.slide_out_right);
         });
-        ((Switch) findViewById(R.id.nameSwitch)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                    name.setEnabled(isChecked);
-                    if(!isChecked){
-                        nameError.setVisibility(View.INVISIBLE);
-                    }
-                    if(isChecked){
-                        submit.setEnabled(true);
-                    }
-                    else if(!passwordSwitch.isChecked()){
-                        submit.setEnabled(false);
-                    }
-            }
-        });
-
-        ((Switch) findViewById(R.id.passwordSwitch)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                oldPw.setEnabled(isChecked);
-                newPw.setEnabled(isChecked);
-                newPw2.setEnabled(isChecked);
+        ((Switch) findViewById(R.id.nameSwitch)).setOnCheckedChangeListener((compoundButton, isChecked) -> {
+                name.setEnabled(isChecked);
                 if(!isChecked){
-                    oldPwError.setVisibility(View.INVISIBLE);
-                    newPwError.setVisibility(View.INVISIBLE);
-                    newPw2Error.setVisibility(View.INVISIBLE);
+                    nameError.setVisibility(View.INVISIBLE);
                 }
                 if(isChecked){
                     submit.setEnabled(true);
                 }
-                else if(!nameSwitch.isChecked()){
+                else if(!passwordSwitch.isChecked()){
                     submit.setEnabled(false);
                 }
+        });
+
+        ((Switch) findViewById(R.id.passwordSwitch)).setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            oldPw.setEnabled(isChecked);
+            newPw.setEnabled(isChecked);
+            newPw2.setEnabled(isChecked);
+            if(!isChecked){
+                oldPwError.setVisibility(View.INVISIBLE);
+                newPwError.setVisibility(View.INVISIBLE);
+                newPw2Error.setVisibility(View.INVISIBLE);
+            }
+            if(isChecked){
+                submit.setEnabled(true);
+            }
+            else if(!nameSwitch.isChecked()){
+                submit.setEnabled(false);
             }
         });
 
-        ((ExtendedFloatingActionButton)findViewById(R.id.submit)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(varify()){
-                    if(nameSwitch.isChecked()){
-                        nicknameRef.setValue(name.getText().toString());
-                    }
-                    if(passwordSwitch.isChecked()){
-                        passwordRef.setValue(newPw.getText().toString());
-                    }
-                    Toast toast = Toast.makeText(getApplicationContext(), "change applied", Toast.LENGTH_LONG);
-                    toast.show();
-                    finish();
-                    overridePendingTransition(0, android.R.anim.slide_out_right);
+        ((ExtendedFloatingActionButton)findViewById(R.id.submit)).setOnClickListener(view -> {
+            if(varify()){
+                if(nameSwitch.isChecked()){
+                    nicknameRef.setValue(name.getText().toString());
                 }
+                if(passwordSwitch.isChecked()){
+                    passwordRef.setValue(newPw.getText().toString());
+                }
+                Toast toast = Toast.makeText(getApplicationContext(), "change applied", Toast.LENGTH_LONG);
+                toast.show();
+                finish();
+                overridePendingTransition(0, android.R.anim.slide_out_right);
             }
         });
 

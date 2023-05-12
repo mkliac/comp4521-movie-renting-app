@@ -27,10 +27,6 @@ public class InitialPage extends AppCompatActivity {
     Users user;
     DatabaseReference rootRef;
 
-    private void fakeLoading(){
-        loadingText.setVisibility(View.VISIBLE);
-        loadingBar.setVisibility(View.VISIBLE);
-    }
     private void loadHomePage(Intent i){
         startActivity(i);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -39,7 +35,7 @@ public class InitialPage extends AppCompatActivity {
     private void loadLoginPage(){
         startActivity(new Intent(InitialPage.this, login.class));
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        // close splash activity
+
         finish();
     }
     @Override
@@ -73,23 +69,23 @@ public class InitialPage extends AppCompatActivity {
                 else{
                     loadingBar.setProgress(38);
                     rootRef = FirebaseDatabase.getInstance().getReference();
-                    DatabaseReference userNameRef = rootRef.child("users").child(username);    //establish single path of the database
+                    DatabaseReference userNameRef = rootRef.child("users").child(username);
                     userNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {   //snapshot = copy the whole structure of the target table
+                        public void onDataChange(DataSnapshot dataSnapshot) {
                             loadingBar.setProgress(71);
-                            if(!dataSnapshot.exists()){ //if no this path = no this user (since the path I designed is: users/(username)/password.value
+                            if(!dataSnapshot.exists()){
                                 loadingBar.setProgress(100);
                                 loadLoginPage();
                             }
-                            else {  //else means this user exists
+                            else {
                                 loadingBar.setProgress(78);
-                                String serverPassword = dataSnapshot.child("password").getValue().toString();  //get password value from database
-                                if (!serverPassword.equals(password)) {    //if password not match
+                                String serverPassword = dataSnapshot.child("password").getValue().toString();
+                                if (!serverPassword.equals(password)) {
                                     loadingBar.setProgress(100);
                                     loadLoginPage();
                                 }
-                                else {  //all authorization success
+                                else {
                                     loadingBar.setProgress(100);
                                     nickname = dataSnapshot.child("nickname").getValue().toString();
                                     credits = Float.parseFloat(dataSnapshot.child("credits").getValue().toString());

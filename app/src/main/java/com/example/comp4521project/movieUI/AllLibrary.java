@@ -39,7 +39,6 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
 
     List<MovieShort> movieShortList;
     MovieAdapter myAdapter;
-    //MovieShort movie;
     boolean start = false;
     boolean byGenre = false;
     boolean byUserOrder = false;
@@ -113,7 +112,7 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
         View rootView = inflater.inflate(R.layout.all_library_fragment, container, false);
         v = rootView;
         final FragmentManager fm = getFragmentManager();
-        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
                 if(parentHome){
@@ -129,12 +128,7 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
             }
         };
         if(start){
-            ((ImageButton) rootView.findViewById(R.id.exitButton2)).setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View view) {
-                   fm.beginTransaction().hide(AllLibrary.this).commit();
-               }
-           });
+            ((ImageButton) rootView.findViewById(R.id.exitButton2)).setOnClickListener(view -> fm.beginTransaction().hide(AllLibrary.this).commit());
             RecyclerView myrv = (RecyclerView) rootView.findViewById(R.id.all_library_view);
             movieShortList = new ArrayList<>();
             myAdapter = new MovieAdapter(rootView.getContext(), movieShortList, user, this);
@@ -145,7 +139,7 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
             addChildListener();
 
             movieRef = rootRef.child("movies");
-            //add blank event listener
+
             DatabaseReference userRef = rootRef.child("purchaseStatus").child(user);
             userRef.addChildEventListener(new ChildEventListener() {
                 @Override
@@ -173,60 +167,19 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
 
                 }
             });
-
-            /*
-            DatabaseReference movieRef = rootRef.child("movies");
-            movieRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                        final String key = ds.getKey();
-                        final String id = ds.child("id").getValue(String.class);
-                        final Integer popularity = ds.child("popularity").getValue(Integer.class);
-                        final Float price = ds.child("price").getValue(Float.class);
-                        String path = "movies/"+id+"/content.txt";
-                        StorageReference contentRef = FirebaseStorage.getInstance().getReference().child(path);
-                        contentRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                            @Override
-                            public void onSuccess(byte[] bytes) {
-                                String content = new String(bytes);
-                                String[] stringArray = content.split(System.getProperty("line.separator"));
-                                myAdapter.addItem(new MovieShort(id , stringArray[0], stringArray[1], popularity, price, stringArray[2]));
-
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });*/
-            /*
-            ValueEventListener eventListener = new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {}
-            };*/
-
         }
         return rootView;
 
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        //mViewModel = ViewModelProviders.o
-        //
-        // f(this).get(AllLibraryViewModel.class);
-        // TODO: Use the ViewModel
-    }
+//    @Override
+//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//        //mViewModel = ViewModelProviders.o
+//        //
+//        // f(this).get(AllLibraryViewModel.class);
+//        // TODO: Use the ViewModel
+//    }
 
     @Override
     public void onCardClick(int position) {
@@ -250,7 +203,6 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
         return match;
     }
 
-    //pre-defined filtering method
     public void refreshByGenre(String genre){
         resetFilter();
         setGenre(genre);
@@ -267,9 +219,7 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
         setUserOrder();
         resetListener();
     }
-    public void customFilter(boolean byGenre, boolean byUserOrder, boolean bySearching, String username, String genreFilter, String search){}
 
-    //set filter
     public void setListener(){
         movieRef = rootRef.child("movies");
         movieRef.addChildEventListener(childVoyeur);
@@ -289,7 +239,6 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
         this.byUserOrder = true;
     }
 
-    //functional sub-method
     public void setParent(String parent){
         if(parent.equals("home")) {
             parentHome = true;
@@ -308,7 +257,6 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
         }
     }
 
-
     public boolean matchSearch(String thisMovie, String search){
         String movieWithoutSPC = thisMovie.replaceAll("[^a-zA-Z0-9\\s_-]", "");
         String searchWithoutSPC = search.replaceAll("[^a-zA-Z0-9\\s_-]", "");
@@ -325,53 +273,48 @@ public class AllLibrary extends Fragment implements MovieAdapter.onCardListener{
         this.genre = genre;
     }
 
-    //main database access listener
     public void addChildListener(){
         childVoyeur = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                String genre = dataSnapshot.child("genre").getValue().toString();
                 final String id = dataSnapshot.getKey();
                 final Integer popularity = dataSnapshot.child("popularity").getValue(Integer.class);
                 final Float price = dataSnapshot.child("price").getValue(Float.class);
 
                 String path = "movies/"+id+"/content.txt";
                 StorageReference contentRef = FirebaseStorage.getInstance().getReference().child(path);
-                contentRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                    @Override
-                    public void onSuccess(byte[] bytes) {
-                        String content = new String(bytes);
-                        final String[] stringArray = content.split(System.getProperty("line.separator"));
-                        rootRef.child("purchaseStatus").child(user).child(id).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot ds2) {
-                                boolean match = true;
-                                if(byUserOrder){
-                                    if(ds2.exists()){
-                                        if(ds2.getValue(Integer.class)==2){}
-                                        else match = false;
-                                    }
+                contentRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                    String content = new String(bytes);
+                    final String[] stringArray = content.split(System.getProperty("line.separator"));
+                    rootRef.child("purchaseStatus").child(user).child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot ds2) {
+                            boolean match = true;
+                            if(byUserOrder){
+                                if(ds2.exists()){
+                                    if(ds2.getValue(Integer.class)==2){}
                                     else match = false;
                                 }
-                                if(byGenre){
-                                    if(genreDecide(stringArray[2])){ }
-                                    else match = false;
-                                }
-                                if(bySearching){
-                                    if(matchSearch(stringArray[0], search)){}
-                                    else match = false;
-                                }
-                                if(match){
-                                    myAdapter.addItem(new MovieShort(id , stringArray[0], stringArray[1], popularity, price, stringArray[2]));
-                                }
+                                else match = false;
                             }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                            if(byGenre){
+                                if(genreDecide(stringArray[2])){ }
+                                else match = false;
                             }
-                        });
-                    }
+                            if(bySearching){
+                                if(matchSearch(stringArray[0], search)){}
+                                else match = false;
+                            }
+                            if(match){
+                                myAdapter.addItem(new MovieShort(id , stringArray[0], stringArray[1], popularity, price, stringArray[2]));
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 });
             }
 

@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.comp4521project.MovieData.MovieShort;
 import com.example.comp4521project.R;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,21 +34,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
     private List<MovieShort> mData;
     private String currentCategory = "none";
     private onCardListener onCardListener;
-    MovieAdapter mAdapt;
-    /*
-    all categories:
-    action
-    adventure
-    cartoon
-    comedy
-    documentary
-    horror
-    mystery
-    sci-fi
-
-    search
-    advanced search
-     */
 
     public MovieAdapter(Context mContext, List<MovieShort> mData, String user, onCardListener onCardListener) {
         this.mContext = mContext;
@@ -61,7 +44,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        String id;
         View view;
         LayoutInflater mInflator = LayoutInflater.from(mContext);
         view = mInflator.inflate(R.layout.movie_small_card_view, parent, false);
@@ -81,16 +63,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         purchasedStatusRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.exists()){ Log.e("hello", "OH NO U GOT 0");holder.statusIcon.setVisibility(View.INVISIBLE); }
+                if(!dataSnapshot.exists()){ holder.statusIcon.setVisibility(View.INVISIBLE); }
                 else if(dataSnapshot.exists()){
                     if(dataSnapshot.getValue().toString().equals("1")){
-                        Log.e("hello", "U GOT 1");
                         holder.statusIcon.setImageResource(R.drawable.custom_ic_shopping_cart_24dp);
                         holder.statusIcon.setBackgroundColor(Color.parseColor("#00CACA"));
                         holder.statusIcon.setVisibility(View.VISIBLE);
                     }
                     else if(dataSnapshot.getValue().toString().equals("2")){
-                        Log.e("hello", "U GOT 2");
                         holder.statusIcon.setImageResource(R.drawable.custom_ic_tick_24dp);
                         holder.statusIcon.setBackgroundColor(Color.parseColor("#0DCA00"));
                         holder.statusIcon.setVisibility(View.VISIBLE);
@@ -109,30 +89,24 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         StorageReference imageRef = storageRef.child(path);
         holder.popularityValue.setText(mData.get(position).getPopularity().toString());
         final long ONE_MEGABYTE = 1024 * 1024;
-        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap a = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                holder.movieImage.setImageResource(android.R.color.transparent);
-                holder.movieImage.setBackground(new BitmapDrawable(mContext.getResources(), a));
-                holder.movieImage.setImageBitmap(a);
-                holder.movieProgressBar.setVisibility(View.INVISIBLE);
+        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+            Bitmap a = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            holder.movieImage.setImageResource(android.R.color.transparent);
+            holder.movieImage.setBackground(new BitmapDrawable(mContext.getResources(), a));
+            holder.movieImage.setImageBitmap(a);
+            holder.movieProgressBar.setVisibility(View.INVISIBLE);
 
-            }
         });
         path = "movies/"+id+"/"+id+".png";
         imageRef = storageRef.child(path);
         holder.popularityValue.setText(mData.get(position).getPopularity().toString());
-        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap a = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                holder.movieImage.setImageResource(android.R.color.transparent);
-                holder.movieImage.setBackground(new BitmapDrawable(mContext.getResources(), a));
-                holder.movieImage.setImageBitmap(a);
-                holder.movieProgressBar.setVisibility(View.INVISIBLE);
+        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+            Bitmap a = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            holder.movieImage.setImageResource(android.R.color.transparent);
+            holder.movieImage.setBackground(new BitmapDrawable(mContext.getResources(), a));
+            holder.movieImage.setImageBitmap(a);
+            holder.movieProgressBar.setVisibility(View.INVISIBLE);
 
-            }
         });
 
         holder.popularityValue.setText(mData.get(position).getPopularity().toString());
@@ -167,10 +141,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         }
     }
 
-    public void updateUser(String user){
-        this.user = user;
-    }
-
     public void addItem(MovieShort mSingle){
         mData.add(mSingle);
         this.notifyItemInserted(getItemCount()-1);
@@ -187,14 +157,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
             notifyItemChanged(i);
         }
 
-    }
-
-    public void setFragmentCategory(String category){
-        this.currentCategory = category;
-    }
-
-    public String getFragmentCategory(){
-        return this.currentCategory;
     }
 
     public List<MovieShort> returnList(){return mData;}

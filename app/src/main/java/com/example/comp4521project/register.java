@@ -22,13 +22,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class register extends AppCompatActivity {
-    //establish connection to the database
-    private boolean noServerError = true;
     private final int red = Color.parseColor("#F44336");
     private final int blue = Color.parseColor("#03A9F4");
     private final int gray = Color.parseColor("#888888");
-    private FirebaseDatabase users = FirebaseDatabase.getInstance();    //represents the database itself
-    private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();  //has the path of the database
+    private FirebaseDatabase users = FirebaseDatabase.getInstance();
+    private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     EditText username, password, password2;
     TextView usernameError, passwordError, password2Error, tnc, tncError;
     CheckBox checkBox;
@@ -69,12 +67,10 @@ public class register extends AppCompatActivity {
         else if (!password.getText().toString().equals(password2.getText().toString())) {
             passwordError.setVisibility(View.INVISIBLE);
             password2Error.setVisibility(View.VISIBLE);
-            //return password.getText().toString().equals(password2.getText().toString());
         }
         else if (password.getText().toString().equals(password2.getText().toString())) {
             passwordError.setVisibility(View.INVISIBLE);
             password2Error.setVisibility(View.INVISIBLE);
-            //return password.getText().toString().equals(password2.getText().toString());
         }
         return password.getText().toString().equals(password2.getText().toString());
     }
@@ -119,129 +115,108 @@ public class register extends AppCompatActivity {
             checkBox = (CheckBox) findViewById(R.id.checkBox);
             signUp = (Button) findViewById(R.id.signUp);
             progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        } //initialize view objects
+        }
         progressBar.setVisibility(View.INVISIBLE);
 
-        username.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                usernameChecker(username, usernameError, hasFocus);
-                if(!hasFocus&& !username.getText().toString().equals("")){
-                    usernameError.setText("checking validity");
-                    usernameError.setTextColor(gray);
-                    usernameError.setVisibility(View.VISIBLE);
-                    //rootRef is the whole database
-                    DatabaseReference userNameRef = rootRef.child("users").child(username.getText().toString());    //establish single path of the database
-                    userNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {   //snapshot = copy the whole structure of the target table
-                            //if this path exists = has this user = username conflict
-                            if(dataSnapshot.exists()) {
-                                noServerError = false;
-                                usernameError.setText("*This username has been taken");
-                                usernameError.setTextColor(red);
-                                usernameError.setVisibility(View.VISIBLE);
-                            }
-                            else{
-                                noServerError = true;
-                                usernameError.setText("This username is valid");
-                                usernameError.setTextColor(blue);
-                                usernameError.setVisibility(View.VISIBLE);
-                            }
+        username.setOnFocusChangeListener((view, hasFocus) -> {
+            usernameChecker(username, usernameError, hasFocus);
+            if(!hasFocus&& !username.getText().toString().equals("")){
+                usernameError.setText("checking validity");
+                usernameError.setTextColor(gray);
+                usernameError.setVisibility(View.VISIBLE);
+
+                DatabaseReference userNameRef = rootRef.child("users").child(username.getText().toString());
+                userNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()) {
+                            usernameError.setText("*This username has been taken");
+                            usernameError.setTextColor(red);
+                            usernameError.setVisibility(View.VISIBLE);
                         }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Log.d("DatabaseError", databaseError.getMessage()); //Don't ignore errors!
-                            Toast toast = Toast.makeText(getApplicationContext(), "serverside error", Toast.LENGTH_LONG);
-                            toast.show();
-                            noServerError = false;
+                        else{
+                            usernameError.setText("This username is valid");
+                            usernameError.setTextColor(blue);
+                            usernameError.setVisibility(View.VISIBLE);
                         }
-                    });
-                }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.d("DatabaseError", databaseError.getMessage());
+                        Toast toast = Toast.makeText(getApplicationContext(), "serverside error", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                });
             }
         });
 
-        password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                passwordChecker(password, password2, passwordError, password2Error, hasFocus);
+        password.setOnFocusChangeListener((view, hasFocus) -> passwordChecker(password, password2, passwordError, password2Error, hasFocus));
+
+        password2.setOnFocusChangeListener((view, hasFocus) -> {
+            if(password2Checker(password, password2, password2Error, hasFocus)&&!hasFocus){
+                password2Error.setVisibility(View.VISIBLE);
             }
         });
 
-        password2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if(password2Checker(password, password2, password2Error, hasFocus)&&!hasFocus){
-                    password2Error.setVisibility(View.VISIBLE);
-                }
+        checkBox.setOnCheckedChangeListener((compoundButton, hasChecked) -> {
+            if(hasChecked){
+                tncError.setVisibility(View.INVISIBLE);
             }
         });
 
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean hasChecked) {
-                if(hasChecked){
-                    tncError.setVisibility(View.INVISIBLE);
-                }
+        signUp.setOnClickListener(view -> {
+            boolean hasProblems = false;
+            if(!usernameChecker(username, usernameError, false)){hasProblems=true;}
+            if(!passwordChecker(password, password2, passwordError, password2Error, false)){hasProblems=true;}
+            if(!password2Checker(password, password2, password2Error, false)){ hasProblems=true;}
+            if(!checkBox.isChecked()){
+                tncError.setVisibility(View.VISIBLE);
+                hasProblems=true;}
+
+            if(hasProblems){
+                Toast toast = Toast.makeText(getApplicationContext(), "please match all condition", Toast.LENGTH_LONG);
+                toast.show();
             }
-        });
+            else{
+                progressBar.setVisibility(View.VISIBLE);
 
-        signUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean hasProblems = false;
-                if(!usernameChecker(username, usernameError, false)){hasProblems=true;}
-                if(!passwordChecker(password, password2, passwordError, password2Error, false)){hasProblems=true;}
-                if(!password2Checker(password, password2, password2Error, false)){ hasProblems=true;}
-                if(!checkBox.isChecked()){
-                    tncError.setVisibility(View.VISIBLE);
-                    hasProblems=true;}
-
-                if(hasProblems){
-                    Toast toast = Toast.makeText(getApplicationContext(), "please match all condition", Toast.LENGTH_LONG);
-                    toast.show();
-                }
-                else{
-                    progressBar.setVisibility(View.VISIBLE);
-
-                    //rootRef is the whole database
-                    Log.d("debug", "enter db");
-                    final DatabaseReference userPathRef = rootRef.child("users");    //establish single path of the database
-                    Log.d("debug", "end db");
-                    userPathRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {   //snapshot = copy the whole structure of the target table
-                            Log.d("debug", "enter on data change");
-                            if(!dataSnapshot.child(username.getText().toString()).exists()){ //if this path exists = has this user = username conflict
-                                Log.d("debug", "enter if statement");
-                                DatabaseReference thisUser = userPathRef.child(username.getText().toString());
-                                thisUser.child("password").setValue(password.getText().toString());
-                                thisUser.child("credits").setValue(0);
-                                thisUser.child("nickname").setValue(username.getText().toString());
-                                progressBar.setVisibility(View.INVISIBLE);
-                                Toast toast = Toast.makeText(getApplicationContext(), "account created", Toast.LENGTH_LONG);
-                                toast.show();
-                                finish();
-                            }
-                            else {
-                                Log.d("debug", "enter else statement");
-                                usernameError.setText("*This username has been taken");
-                                usernameError.setTextColor(red);
-                                usernameError.setVisibility(View.VISIBLE);
-                                progressBar.setVisibility(View.INVISIBLE);
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                //rootRef is the whole database
+                Log.d("debug", "enter db");
+                final DatabaseReference userPathRef = rootRef.child("users");
+                Log.d("debug", "end db");
+                userPathRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d("debug", "enter on data change");
+                        if(!dataSnapshot.child(username.getText().toString()).exists()){
+                            Log.d("debug", "enter if statement");
+                            DatabaseReference thisUser = userPathRef.child(username.getText().toString());
+                            thisUser.child("password").setValue(password.getText().toString());
+                            thisUser.child("credits").setValue(0);
+                            thisUser.child("nickname").setValue(username.getText().toString());
                             progressBar.setVisibility(View.INVISIBLE);
-                            Log.d("DatabaseError", databaseError.getMessage()); //Don't ignore errors!
-                            Toast toast = Toast.makeText(getApplicationContext(), "serverside error", Toast.LENGTH_LONG);
+                            Toast toast = Toast.makeText(getApplicationContext(), "account created", Toast.LENGTH_LONG);
                             toast.show();
+                            finish();
                         }
-                    });
-                }
+                        else {
+                            Log.d("debug", "enter else statement");
+                            usernameError.setText("*This username has been taken");
+                            usernameError.setTextColor(red);
+                            usernameError.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.INVISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        progressBar.setVisibility(View.INVISIBLE);
+                        Log.d("DatabaseError", databaseError.getMessage());
+                        Toast toast = Toast.makeText(getApplicationContext(), "serverside error", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                });
             }
         });
     }

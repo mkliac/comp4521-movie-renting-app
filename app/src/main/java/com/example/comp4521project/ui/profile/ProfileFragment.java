@@ -68,39 +68,31 @@ public class ProfileFragment extends Fragment {
             this.credits = user.getCredits();
             usernameValue.setText(username);
             nicknameValue.setText(nickname);
-            //creditsValue.setText(credits.toString()+" HKD");
             setNicknameMonitor(username);
             setCreditsMonitor(username);
             fm = getFragmentManager();
-            //fmTran = fm.beginTransaction();
             profilePage = this;
             allLibraryPage = (AllLibrary) fm.findFragmentByTag("library");
 
-            ((ExtendedFloatingActionButton)(root.findViewById(R.id.movieButton))).setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    allLibraryPage.refreshByUserOrder(username);
-                    allLibraryPage.setParent("profile");
-                    fm.beginTransaction().hide(profilePage).show(allLibraryPage).commit();
-                }
+            ((ExtendedFloatingActionButton)(root.findViewById(R.id.movieButton))).setOnClickListener(v -> {
+                allLibraryPage.refreshByUserOrder(username);
+                allLibraryPage.setParent("profile");
+                fm.beginTransaction().hide(profilePage).show(allLibraryPage).commit();
             });
 
-            ((ExtendedFloatingActionButton)(root.findViewById(R.id.creditsButton))).setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent i = new Intent();
-                    i.setClass(getContext(), CashPurchase.class);
-                    i.putExtra("username", username);
-                    startActivity(i);
-                    ((Activity)getContext()).overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);
-                }
+            ((ExtendedFloatingActionButton)(root.findViewById(R.id.creditsButton))).setOnClickListener(v -> {
+                Intent i = new Intent();
+                i.setClass(getContext(), CashPurchase.class);
+                i.putExtra("username", username);
+                startActivity(i);
+                ((Activity)getContext()).overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);
             });
-            ((ExtendedFloatingActionButton)(root.findViewById(R.id.settingButton))).setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent i = new Intent();
-                    i.setClass(getContext(), ProfileSetting.class);
-                    i.putExtra("username", username);
-                    startActivity(i);
-                    ((Activity)getContext()).overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);
-                }
+            ((ExtendedFloatingActionButton)(root.findViewById(R.id.settingButton))).setOnClickListener(v -> {
+                Intent i = new Intent();
+                i.setClass(getContext(), ProfileSetting.class);
+                i.putExtra("username", username);
+                startActivity(i);
+                ((Activity)getContext()).overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);
             });
         }
 

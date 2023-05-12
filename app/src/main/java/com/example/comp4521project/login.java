@@ -22,7 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class login extends AppCompatActivity{
 
-    private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();  //has the path of the database
+    private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
 
     EditText username, password;
     TextView signup;
@@ -45,80 +45,69 @@ public class login extends AppCompatActivity{
         rememberMe = findViewById(R.id.rememberMe);
         getSupportActionBar().hide();
 
-        loginButton.setOnClickListener(new View.OnClickListener()      {
-            @Override
-            public void onClick(View v) {
-                Toast toast;
-                if(username.getText().toString().equals("")){   //if the user don't input name
-                    toast = Toast.makeText(getApplicationContext(), "please input username", Toast.LENGTH_LONG);
-                    toast.show();
-                }
-                else if(password.getText().toString().equals("")){  //if the user don't input password (but has username input)
-                    toast = Toast.makeText(getApplicationContext(), "please input password", Toast.LENGTH_LONG);
-                    toast.show();
-                }
-                else{   //both username and password has input, do below now
-                    final String _username = username.getText().toString();
-                    final String _password = password.getText().toString();
-                    Log.d("debug", "name:" + _username + " password:" + _password);
+        loginButton.setOnClickListener(v -> {
+            Toast toast;
+            if(username.getText().toString().equals("")){
+                toast = Toast.makeText(getApplicationContext(), "please input username", Toast.LENGTH_LONG);
+                toast.show();
+            }
+            else if(password.getText().toString().equals("")){
+                toast = Toast.makeText(getApplicationContext(), "please input password", Toast.LENGTH_LONG);
+                toast.show();
+            }
+            else{
+                final String _username = username.getText().toString();
+                final String _password = password.getText().toString();
 
-                    //rootRef is the whole database
-                    DatabaseReference userNameRef = rootRef.child("users").child(_username);    //establish single path of the database
-                    Log.d("debug", String.valueOf(userNameRef.child("password")));
+                DatabaseReference userNameRef = rootRef.child("users").child(_username);
 
-                    if(userNameRef == null) Log.d("debug", "null usernameref");
-                    userNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {   //snapshot = copy the whole structure of the target table
-                            if(!dataSnapshot.exists()){ //if no this path = no this user (since the path I designed is: users/(username)/password.value
-                                Toast toast = Toast.makeText(getApplicationContext(), "invalid username", Toast.LENGTH_LONG);
-                                toast.show();
-                            }
-                            else {  //else means this user exists
-                                String serverPassword = dataSnapshot.child("password").getValue().toString();  //get password value from database
-                                if (!serverPassword.equals(_password)) {    //if password not match
-                                    Toast toast = Toast.makeText(getApplicationContext(), "invalid password", Toast.LENGTH_LONG);
-                                    toast.show();
-                                }
-                                else {  //all authorization success
-                                    if(rememberMe.isChecked()){
-                                        getSharedPreferences("groupProjectLoginPref",MODE_PRIVATE)
-                                                .edit()
-                                                .putString("username", _username)
-                                                .putString("password", _password)
-                                                .apply();
-                                }
-                                    Intent i = new Intent();
-                                    i.setClass(login.this, HomePage.class);
-                                    Bundle bundle = new Bundle();
-                                    _nickname = dataSnapshot.child("nickname").getValue().toString();
-                                    _credits = Float.parseFloat(dataSnapshot.child("credits").getValue().toString());
-                                    user = new Users(_username, _password, _nickname,  _credits);
-                                    bundle.putParcelable("user", user);
-                                    i.putExtras(bundle);
-                                    startActivity(i);
-                                    login.this.finish();
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Log.d("DatabaseError", databaseError.getMessage()); //Don't ignore errors!
-                            Toast toast = Toast.makeText(getApplicationContext(), "serverside error", Toast.LENGTH_LONG);
+                if(userNameRef == null) Log.d("debug", "null usernameref");
+                userNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(!dataSnapshot.exists()){
+                            Toast toast = Toast.makeText(getApplicationContext(), "invalid username", Toast.LENGTH_LONG);
                             toast.show();
                         }
-                    });
-                }
+                        else {
+                            String serverPassword = dataSnapshot.child("password").getValue().toString();
+                            if (!serverPassword.equals(_password)) {
+                                Toast toast = Toast.makeText(getApplicationContext(), "invalid password", Toast.LENGTH_LONG);
+                                toast.show();
+                            }
+                            else {
+                                if(rememberMe.isChecked()){
+                                    getSharedPreferences("groupProjectLoginPref",MODE_PRIVATE)
+                                            .edit()
+                                            .putString("username", _username)
+                                            .putString("password", _password)
+                                            .apply();
+                            }
+                                Intent i = new Intent();
+                                i.setClass(login.this, HomePage.class);
+                                Bundle bundle = new Bundle();
+                                _nickname = dataSnapshot.child("nickname").getValue().toString();
+                                _credits = Float.parseFloat(dataSnapshot.child("credits").getValue().toString());
+                                user = new Users(_username, _password, _nickname,  _credits);
+                                bundle.putParcelable("user", user);
+                                i.putExtras(bundle);
+                                startActivity(i);
+                                login.this.finish();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.d("DatabaseError", databaseError.getMessage());
+                        Toast toast = Toast.makeText(getApplicationContext(), "serverside error", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                });
             }
         });
 
-        signup.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(login.this, register.class));
-            }
-        });
+        signup.setOnClickListener(view -> startActivity(new Intent(login.this, register.class)));
 
     }
 }

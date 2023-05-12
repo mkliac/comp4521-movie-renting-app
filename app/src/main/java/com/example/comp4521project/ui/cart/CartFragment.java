@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,10 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.comp4521project.Adapter.CartAdapter;
-import com.example.comp4521project.MainActivity;
 import com.example.comp4521project.MovieData.MovieShort;
 import com.example.comp4521project.R;
-import com.example.comp4521project.ui.profile.ProfileFragment;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -32,7 +29,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +44,8 @@ public class CartFragment extends Fragment {
 
     TextView priceValue, creditsValue, emptyNotification;
     ExtendedFloatingActionButton checkout;
-    Button remove, cancel;
     List<MovieShort> cartList;
     CartAdapter myAdapter;
-    ProfileFragment profilePage;
 
     public CartFragment(){}
     public CartFragment(String user){
@@ -68,7 +62,6 @@ public class CartFragment extends Fragment {
                 ViewModelProviders.of(this).get(CartViewModel.class);
         final View root = inflater.inflate(R.layout.fragment_cart, container, false);
         if(start){
-            //bound views
             {
                 priceValue = (TextView) root.findViewById(R.id.priceValue);
                 creditsValue = (TextView) root.findViewById(R.id.creditsValue);
@@ -92,41 +85,38 @@ public class CartFragment extends Fragment {
             NotificationManager NotifManager = getActivity().getSystemService(NotificationManager.class);
             NotifManager.createNotificationChannel(channel);
 
-            checkout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    final Float movieTotal = Float.parseFloat(priceValue.getText().toString());
-                    DatabaseReference temp = FirebaseDatabase.getInstance().getReference().child("users").child(user).child("credits");
-                    temp.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull final DataSnapshot userCredits) {
-                            if(userCredits.getValue(Float.class)<Float.parseFloat(priceValue.getText().toString())){
-                                Toast.makeText(root.getContext(), "Not enough credits", Toast.LENGTH_LONG).show();
-                            }
-                            else{
-                                final DatabaseReference movieValue = FirebaseDatabase.getInstance().getReference().child("purchaseStatus").child(user);
-                                FirebaseDatabase.getInstance().getReference().child("users").child(user).child("credits").setValue(userCredits.getValue(Float.class)-movieTotal);
-                                Toast.makeText(root.getContext(), "Purchased", Toast.LENGTH_LONG);
-                                notification(movieTotal);
-                                movieValue.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        for(DataSnapshot ds : dataSnapshot.getChildren()){
-                                            if(ds.getValue(Integer.class)==1){
-                                                FirebaseDatabase.getInstance().getReference().child("purchaseStatus").child(user).child(ds.getKey()).setValue(2);
-                                            }
+            checkout.setOnClickListener(view -> {
+                final Float movieTotal = Float.parseFloat(priceValue.getText().toString());
+                DatabaseReference temp = FirebaseDatabase.getInstance().getReference().child("users").child(user).child("credits");
+                temp.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull final DataSnapshot userCredits) {
+                        if(userCredits.getValue(Float.class)<Float.parseFloat(priceValue.getText().toString())){
+                            Toast.makeText(root.getContext(), "Not enough credits", Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            final DatabaseReference movieValue = FirebaseDatabase.getInstance().getReference().child("purchaseStatus").child(user);
+                            FirebaseDatabase.getInstance().getReference().child("users").child(user).child("credits").setValue(userCredits.getValue(Float.class)-movieTotal);
+                            Toast.makeText(root.getContext(), "Purchased", Toast.LENGTH_LONG);
+                            notification(movieTotal);
+                            movieValue.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    for(DataSnapshot ds : dataSnapshot.getChildren()){
+                                        if(ds.getValue(Integer.class)==1){
+                                            FirebaseDatabase.getInstance().getReference().child("purchaseStatus").child(user).child(ds.getKey()).setValue(2);
                                         }
                                     }
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) { }
-                                });
-                            }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) { }
+                            });
                         }
+                    }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) { }
-                    });
-                }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) { }
+                });
             });
         }
 
@@ -143,10 +133,7 @@ public class CartFragment extends Fragment {
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this.getContext());
         managerCompat.notify(1, builder.build());
     }
-    public void notifyUserDataChanged(){
-    }
-    public void notifyMovieAdded(){
-    }
+
     public void checkEmpty(){
         if(myAdapter.getItemCount()==0){
             emptyNotification.setVisibility(View.VISIBLE);
@@ -221,16 +208,13 @@ public class CartFragment extends Fragment {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                String status = dataSnapshot.getValue().toString();
                 String id = dataSnapshot.getKey();
-                Log.e("hello", "Child change detected: "+id+" "+dataSnapshot.getValue().toString());
+
                 if(dataSnapshot.getValue().toString().equals("1")){
-                    Log.e("hello", "method 1 entered");
                     myAdapter.addItem(id);
                     recalculateTotal(id, "ADD");
                 }
                 else if(dataSnapshot.getValue().toString().equals("2")){
-                    Log.e("hello", "method 2 entered");
                     myAdapter.removeItem(id);
                     recalculateTotal(id, "MINUS");
                 }

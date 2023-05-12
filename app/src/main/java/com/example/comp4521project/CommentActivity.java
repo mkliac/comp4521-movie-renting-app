@@ -1,20 +1,18 @@
 package com.example.comp4521project;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.example.comp4521project.Adapter.CartAdapter;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.comp4521project.Adapter.CommentAdapter;
 import com.example.comp4521project.MovieData.Comment;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -23,7 +21,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.UUID;
 
@@ -61,12 +58,7 @@ public class CommentActivity extends AppCompatActivity {
 
         listenToCommentDatabase();
 
-        addComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addComment();
-            }
-        });
+        addComment.setOnClickListener(v -> addComment());
 
         getSupportActionBar().setTitle("Comments");
     }
