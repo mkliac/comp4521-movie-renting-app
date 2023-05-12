@@ -20,43 +20,36 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class login extends AppCompatActivity{
-
-    private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-
-    EditText username, password;
-    TextView signup;
+    EditText usernameET, passwordET;
+    TextView signUpTV;
     Button loginButton;
     CheckBox rememberMe;
     Users user;
-    String _nickname;
-    Float _credits;
-
+    String nickname;
+    Float credits;
+    private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        username = findViewById(R.id.username);
-        password = findViewById(R.id.password);
-        signup = findViewById(R.id.signup);
-        loginButton = findViewById(R.id.loginButton);
-        rememberMe = findViewById(R.id.rememberMe);
+        usernameET = findViewById(R.id.login_username);
+        passwordET = findViewById(R.id.login_pw);
+        signUpTV = findViewById(R.id.login_signUp);
+        loginButton = findViewById(R.id.login_login_button);
+        rememberMe = findViewById(R.id.login_remember);
         getSupportActionBar().hide();
 
         loginButton.setOnClickListener(v -> {
             Toast toast;
-            if(username.getText().toString().equals("")){
-                toast = Toast.makeText(getApplicationContext(), "please input username", Toast.LENGTH_LONG);
-                toast.show();
-            }
-            else if(password.getText().toString().equals("")){
-                toast = Toast.makeText(getApplicationContext(), "please input password", Toast.LENGTH_LONG);
-                toast.show();
-            }
+            if(usernameET.getText().toString().equals(""))
+                Toast.makeText(getApplicationContext(), "please input username", Toast.LENGTH_LONG).show();
+            else if(passwordET.getText().toString().equals(""))
+                Toast.makeText(getApplicationContext(), "please input password", Toast.LENGTH_LONG).show();
             else{
-                final String _username = username.getText().toString();
-                final String _password = password.getText().toString();
+                final String _username = usernameET.getText().toString();
+                final String _password = passwordET.getText().toString();
 
                 DatabaseReference userNameRef = rootRef.child("users").child(_username);
 
@@ -64,33 +57,28 @@ public class login extends AppCompatActivity{
                 userNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(!dataSnapshot.exists()){
-                            Toast toast = Toast.makeText(getApplicationContext(), "invalid username", Toast.LENGTH_LONG);
-                            toast.show();
-                        }
+                        if(!dataSnapshot.exists())
+                            Toast.makeText(getApplicationContext(), "invalid username", Toast.LENGTH_LONG).show();
                         else {
                             String serverPassword = dataSnapshot.child("password").getValue().toString();
-                            if (!serverPassword.equals(_password)) {
-                                Toast toast = Toast.makeText(getApplicationContext(), "invalid password", Toast.LENGTH_LONG);
-                                toast.show();
-                            }
+                            if (!serverPassword.equals(_password))
+                                Toast.makeText(getApplicationContext(), "invalid password", Toast.LENGTH_LONG).show();
                             else {
                                 if(rememberMe.isChecked()){
-                                    getSharedPreferences("groupProjectLoginPref",MODE_PRIVATE)
+                                    getSharedPreferences("login info",MODE_PRIVATE)
                                             .edit()
                                             .putString("username", _username)
                                             .putString("password", _password)
                                             .apply();
                             }
-                                Intent i = new Intent();
-                                i.setClass(login.this, HomePage.class);
+                                Intent intent = new Intent(login.this, HomePage.class);
                                 Bundle bundle = new Bundle();
-                                _nickname = dataSnapshot.child("nickname").getValue().toString();
-                                _credits = Float.parseFloat(dataSnapshot.child("credits").getValue().toString());
-                                user = new Users(_username, _password, _nickname,  _credits);
+                                nickname = dataSnapshot.child("nickname").getValue().toString();
+                                credits = Float.parseFloat(dataSnapshot.child("credits").getValue().toString());
+                                user = new Users(_username, _password, nickname, credits);
                                 bundle.putParcelable("user", user);
-                                i.putExtras(bundle);
-                                startActivity(i);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
                                 login.this.finish();
                             }
                         }
@@ -98,15 +86,14 @@ public class login extends AppCompatActivity{
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.d("DatabaseError", databaseError.getMessage());
-                        Toast toast = Toast.makeText(getApplicationContext(), "serverside error", Toast.LENGTH_LONG);
-                        toast.show();
+                        Log.d("debug", databaseError.getMessage());
+                        Toast.makeText(getApplicationContext(), "firebase error", Toast.LENGTH_LONG).show();
                     }
                 });
             }
         });
 
-        signup.setOnClickListener(view -> startActivity(new Intent(login.this, register.class)));
+        signUpTV.setOnClickListener(view -> startActivity(new Intent(login.this, register.class)));
 
     }
 }

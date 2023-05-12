@@ -7,7 +7,7 @@
     tools:context=".movieUI.Library">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar4"
+        android:id="@+id/libraryf_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
@@ -15,41 +15,41 @@
         android:theme="?attr/actionBarTheme"
         android:translationZ="5dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.513"
+        app:layout_constraintHorizontal_bias="0.515"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/exitButton2"
+        android:id="@+id/libraryf_exit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:background="?attr/actionModeCloseDrawable"
+        android:src="@null"
         android:outlineProvider="none"
+        android:translationZ="6dp"
         android:padding="15dp"
         android:scaleType="center"
-        android:src="@null"
-        android:translationZ="6dp"
-        app:layout_constraintBottom_toBottomOf="@id/toolbar4"
-        app:layout_constraintStart_toStartOf="@id/toolbar4"
-        app:layout_constraintTop_toTopOf="@id/toolbar4" />
+        app:layout_constraintBottom_toBottomOf="@id/libraryf_toolbar"
+        app:layout_constraintStart_toStartOf="@id/libraryf_toolbar"
+        app:layout_constraintTop_toTopOf="@id/libraryf_toolbar" />
 
     <TextView
-        android:id="@+id/headerTag2"
+        android:id="@+id/libraryf_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:outlineProvider="none"
-        android:text="MOVIE LIBRARY"
         android:textColor="@color/black"
         android:textSize="25sp"
+        android:text="MOVIE LIBRARY"
         android:translationZ="6dp"
-        app:layout_constraintBottom_toBottomOf="@id/toolbar4"
-        app:layout_constraintStart_toEndOf="@id/exitButton2"
-        app:layout_constraintTop_toTopOf="@id/toolbar4" />
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/libraryf_toolbar"
+        app:layout_constraintStart_toEndOf="@id/libraryf_exit"
+        app:layout_constraintTop_toTopOf="@id/libraryf_toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/all_library_view"
+        android:id="@+id/library_movie_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:overScrollMode="always"
@@ -59,7 +59,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.875"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar4">
+        app:layout_constraintTop_toBottomOf="@+id/libraryf_toolbar">
 
     </androidx.recyclerview.widget.RecyclerView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -61,17 +61,17 @@ public class MovieDetail extends AppCompatActivity {
         getSupportActionBar().hide();
 
         username = getIntent().getExtras().getString("username");
-        movieImage = findViewById(R.id.movieImage);
-        nameTV = findViewById(R.id.movieName);
-        nameShadowTV = findViewById(R.id.movieNameShadow);
-        yearTV = findViewById(R.id.movieYear);
-        descriptionTV = findViewById(R.id.movieDescription);
-        popularityTV = findViewById(R.id.moviePopularity);
-        priceTV = findViewById(R.id.priceValue);
-        playTrailer = findViewById(R.id.playTrailer);
-        movieDetailExitButton = findViewById(R.id.movieDetailExitButton);
-        addToCart = findViewById(R.id.checkout);
-        comment = findViewById(R.id.comment);
+        movieImage = findViewById(R.id.movie_detail_movie_image);
+        nameTV = findViewById(R.id.movie_detail_movie_name);
+        nameShadowTV = findViewById(R.id.movie_detail_movie_name_shadow);
+        yearTV = findViewById(R.id.movie_detail_movie_year);
+        descriptionTV = findViewById(R.id.movie_detail_movie_desc);
+        popularityTV = findViewById(R.id.movie_detail_movie_popularity);
+        priceTV = findViewById(R.id.movie_detail_movie_price);
+        playTrailer = findViewById(R.id.movie_detail_play_trailer);
+        movieDetailExitButton = findViewById(R.id.movie_detail_exit);
+        addToCart = findViewById(R.id.movie_detail_checkout);
+        comment = findViewById(R.id.movie_detail_comment);
         movieRating = findViewById(R.id.ratingBar);
         id = getIntent().getStringExtra("movie_id");
         username = getIntent().getStringExtra("username");
@@ -187,18 +187,18 @@ public class MovieDetail extends AppCompatActivity {
                 if(!dataSnapshot.exists()){
                     addToCart.setText("Add to cart");
                     addToCart.setEnabled(true);
-                    addToCart.setIcon(getResources().getDrawable(R.drawable.custom_ic_shopping_cart_24dp,null));
+                    addToCart.setIcon(getResources().getDrawable(R.drawable.cart,null));
                 }
                 else{
                     String val = dataSnapshot.getValue().toString();
                     if(val.equals("1")){
                         addToCart.setText("Cancel cart");
-                        addToCart.setIcon(getResources().getDrawable(R.drawable.custom_ic_shopping_cart_24dp,null));
+                        addToCart.setIcon(getResources().getDrawable(R.drawable.cart,null));
                         addToCart.setEnabled(true);
                     }
                     else if(val.equals("2")){
                         addToCart.setText("Play Movie");
-                        addToCart.setIcon(getResources().getDrawable(R.drawable.custom_ic_movie_play_24dp,null));
+                        addToCart.setIcon(getResources().getDrawable(R.drawable.play_movie,null));
                     }
                 }
             }

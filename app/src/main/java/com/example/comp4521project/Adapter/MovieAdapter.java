@@ -47,7 +47,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         LayoutInflater mInflator = LayoutInflater.from(mContext);
-        view = mInflator.inflate(R.layout.movie_small_card_view, parent, false);
+        view = mInflator.inflate(R.layout.movie_cart_item_view, parent, false);
 
         return new MyViewHolder(view, onCardListener);
     }
@@ -56,7 +56,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
         String id = mData.get(position).getId();
         holder.progressBar.setVisibility(View.VISIBLE);
-        holder.movieThumbnail.setImageResource(R.drawable.custom_profile_movies_24dp);
+        holder.movieThumbnail.setImageResource(R.drawable.my_movie);
         holder.movieThumbnail.setBackground(null);
 
         //get movie status, 1 == on cart, 2 == purchased
@@ -67,12 +67,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
                 if(dataSnapshot.exists()){
                     String val = dataSnapshot.getValue().toString();
                     if(val.equals("1")){
-                        holder.icon.setImageResource(R.drawable.custom_ic_shopping_cart_24dp);
+                        holder.icon.setImageResource(R.drawable.cart);
                         holder.icon.setBackgroundColor(Color.parseColor("#00CACA"));
                         holder.icon.setVisibility(View.VISIBLE);
                     }
                     else if(val.equals("2")){
-                        holder.icon.setImageResource(R.drawable.custom_ic_tick_24dp);
+                        holder.icon.setImageResource(R.drawable.tick);
                         holder.icon.setBackgroundColor(Color.parseColor("#0DCA00"));
                         holder.icon.setVisibility(View.VISIBLE);
                     }
@@ -83,7 +83,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                holder.icon.setImageResource(R.drawable.custom_ic_warning_24dp);
+                holder.icon.setImageResource(R.drawable.warning);
                 holder.icon.setBackgroundColor(Color.parseColor("#FF0000"));
                 holder.icon.setVisibility(View.VISIBLE);
             }
@@ -121,10 +121,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         public MyViewHolder(View itemView, onCardListener onCardListener) {
             super(itemView);
 
-            icon = itemView.findViewById(R.id.statusIcon);
-            movieThumbnail = itemView.findViewById(R.id.movieImage);
-            progressBar = itemView.findViewById(R.id.movieProgressBar);
-            popularity = itemView.findViewById(R.id.popularityValue);
+            icon = itemView.findViewById(R.id.movie_cart_item_status_icon);
+            movieThumbnail = itemView.findViewById(R.id.movie_cart_item_movie_image);
+            progressBar = itemView.findViewById(R.id.movie_cart_item_progressBar);
+            popularity = itemView.findViewById(R.id.movie_cart_item_popularity);
             this.onCardListener = onCardListener;
 
             itemView.setOnClickListener(this);

@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/searchToolBar"
+        android:id="@+id/homef_search_toolbar"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/searchbar"
+            android:id="@+id/homef_searchbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
@@ -27,15 +27,15 @@
             tools:layout_editor_absoluteX="16dp" />
 
         <SearchView
-            android:id="@+id/searchView"
+            android:id="@+id/homef_searchView"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:iconifiedByDefault="false"
             android:queryHint="Enter movie name"
             android:translationZ="4.2dp"
-            app:layout_constraintBottom_toBottomOf="@id/searchbar"
-            app:layout_constraintStart_toStartOf="@id/searchbar"
-            app:layout_constraintTop_toTopOf="@+id/searchbar" />
+            app:layout_constraintBottom_toBottomOf="@id/homef_searchbar"
+            app:layout_constraintStart_toStartOf="@id/homef_searchbar"
+            app:layout_constraintTop_toTopOf="@+id/homef_searchbar" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
@@ -45,7 +45,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/searchToolBar"
+        app:layout_constraintTop_toBottomOf="@id/homef_search_toolbar"
         app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,149 +54,157 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/temp"
+                android:id="@+id/homef_rotate_thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="240dp"
-                android:src="@drawable/icon_action"
+                android:src="@drawable/action"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@android:color/background_dark" />
 
             <Button
-                android:id="@+id/buttonAll"
+                android:id="@+id/homef_buttonAll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="view all movies available"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/temp" />
+                app:layout_constraintTop_toBottomOf="@+id/homef_rotate_thumbnail" />
 
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline1"
+                android:id="@+id/homef_guideline1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.24" />
+
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline2"
+                android:id="@+id/homef_guideline2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.26" />
+
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline3"
+                android:id="@+id/homef_guideline3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.49" />
+
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline4"
+                android:id="@+id/homef_guideline4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.51" />
+
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline5"
+                android:id="@+id/homef_guideline5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.74" />
+
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline6"
+                android:id="@+id/homef_guideline6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.76" />
 
-            <Button
-                android:id="@+id/buttonAction"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:text="Action"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toStartOf="@+id/guideline1"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/buttonAll" />
-
-            <Button
-                android:id="@+id/buttonAdventure"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:text="Adventure"
-                android:textSize="11sp"
-                app:layout_constraintEnd_toStartOf="@+id/guideline3"
-                app:layout_constraintHorizontal_bias="0.48"
-                app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toBottomOf="@id/buttonAll" />
-
-            <Button
-                android:id="@+id/buttonComedy"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:text="Comedy"
-                android:textSize="10sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@+id/guideline6"
-                app:layout_constraintTop_toBottomOf="@id/buttonAll" />
-
-            <Button
-                android:id="@+id/buttonCartoon"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:text="Cartoon"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toStartOf="@+id/guideline5"
-                app:layout_constraintHorizontal_bias="0.665"
-                app:layout_constraintStart_toStartOf="@+id/guideline4"
-                app:layout_constraintTop_toBottomOf="@id/buttonAll" />
-
-            <Button
-                android:id="@+id/buttonDocumentary"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:text="Documentary"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="@+id/buttonAction"
-                app:layout_constraintStart_toStartOf="@+id/buttonAction"
-                app:layout_constraintTop_toBottomOf="@+id/buttonAction" />
-
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline"
+                android:id="@+id/homef_guideline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintGuide_begin="20dp" />
 
             <Button
-                android:id="@+id/buttonHorror"
+                android:id="@+id/homef_buttonAction"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
-                android:text="Horror"
-                app:layout_constraintEnd_toEndOf="@id/guideline3"
-                app:layout_constraintStart_toStartOf="@+id/guideline2"
-                app:layout_constraintTop_toBottomOf="@+id/buttonAdventure" />
-
-            <Button
-                android:id="@+id/buttonMystery"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:text="Mystery"
                 android:textSize="12sp"
-                app:layout_constraintEnd_toStartOf="@+id/guideline5"
-                app:layout_constraintStart_toStartOf="@+id/guideline4"
-                app:layout_constraintTop_toBottomOf="@+id/buttonCartoon" />
+                android:text="Action"
+                app:layout_constraintEnd_toStartOf="@+id/homef_guideline1"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/homef_buttonAll" />
 
             <Button
-                android:id="@+id/buttonScifi"
+                android:id="@+id/homef_buttonAdventure"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
+                android:textSize="12sp"
+                android:text="Adventure"
+                app:layout_constraintEnd_toStartOf="@+id/homef_guideline3"
+                app:layout_constraintHorizontal_bias="0.48"
+                app:layout_constraintStart_toStartOf="@+id/homef_guideline2"
+                app:layout_constraintTop_toBottomOf="@id/homef_buttonAll" />
+
+            <Button
+                android:id="@+id/homef_buttonCartoon"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:textSize="12sp"
+                android:text="Cartoon"
+                app:layout_constraintEnd_toStartOf="@+id/homef_guideline5"
+                app:layout_constraintHorizontal_bias="0.665"
+                app:layout_constraintStart_toStartOf="@+id/homef_guideline4"
+                app:layout_constraintTop_toBottomOf="@id/homef_buttonAll" />
+
+            <Button
+                android:id="@+id/homef_buttonComedy"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:textSize="12sp"
+                android:text="Comedy"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/homef_guideline6"
+                app:layout_constraintTop_toBottomOf="@id/homef_buttonAll" />
+
+            <Button
+                android:id="@+id/homef_buttonDocumentary"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:textSize="12sp"
+                android:text="Documentary"
+                app:layout_constraintEnd_toEndOf="@+id/homef_buttonAction"
+                app:layout_constraintStart_toStartOf="@+id/homef_buttonAction"
+                app:layout_constraintTop_toBottomOf="@+id/homef_buttonAction" />
+
+
+            <Button
+                android:id="@+id/homef_buttonHorror"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:textSize="12sp"
+                android:text="Horror"
+                app:layout_constraintEnd_toEndOf="@id/homef_guideline3"
+                app:layout_constraintStart_toStartOf="@+id/homef_guideline2"
+                app:layout_constraintTop_toBottomOf="@+id/homef_buttonAdventure" />
+
+            <Button
+                android:id="@+id/homef_buttonMystery"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:textSize="12sp"
+                android:text="Mystery"
+                app:layout_constraintEnd_toStartOf="@+id/homef_guideline5"
+                app:layout_constraintStart_toStartOf="@+id/homef_guideline4"
+                app:layout_constraintTop_toBottomOf="@+id/homef_buttonCartoon" />
+
+            <Button
+                android:id="@+id/homef_buttonScifi"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:textSize="12sp"
                 android:text="sci-fi"
-                app:layout_constraintEnd_toEndOf="@+id/buttonComedy"
-                app:layout_constraintStart_toStartOf="@+id/guideline6"
-                app:layout_constraintTop_toBottomOf="@+id/buttonComedy" />
+                app:layout_constraintEnd_toEndOf="@+id/homef_buttonComedy"
+                app:layout_constraintStart_toStartOf="@+id/homef_guideline6"
+                app:layout_constraintTop_toBottomOf="@+id/homef_buttonComedy" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

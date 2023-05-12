@@ -30,9 +30,9 @@ public class HomeFragment extends Fragment {
     Users user;
 
     ImageView rotateThumbnail;
-    int[] images = {R.drawable.icon_action, R.drawable.icon_adventure, R.drawable.icon_cartoon,
-                    R.drawable.icon_comedy, R.drawable.icon_documentary, R.drawable.icon_horror,
-                    R.drawable.icon_mystery, R.drawable.icon_scifi};
+    int[] images = {R.drawable.action, R.drawable.adventure, R.drawable.cartoon,
+                    R.drawable.comedy, R.drawable.documentary, R.drawable.horror,
+                    R.drawable.mystery, R.drawable.scifi};
 
     public HomeFragment(){}
     public HomeFragment(Users user){this.user = user; start = true;}
@@ -48,17 +48,17 @@ public class HomeFragment extends Fragment {
             homePage = this;
             active = true;
             libraryPage = (Library) fm.findFragmentByTag("library");
-            allButton = root.findViewById(R.id.buttonAll);
-            actionButton = root.findViewById(R.id.buttonAction);
-            adventureButton = root.findViewById(R.id.buttonAdventure);
-            cartoonButton = root.findViewById(R.id.buttonCartoon);
-            comedyButton = root.findViewById(R.id.buttonComedy);
-            documentaryButton = root.findViewById(R.id.buttonDocumentary);
-            horrorButton = root.findViewById(R.id.buttonHorror);
-            mysteryButton = root.findViewById(R.id.buttonMystery);
-            scifiButton = root.findViewById(R.id.buttonScifi);
-            search = root.findViewById(R.id.searchView) ;
-            rotateThumbnail = root.findViewById(R.id.temp);
+            allButton = root.findViewById(R.id.homef_buttonAll);
+            actionButton = root.findViewById(R.id.homef_buttonAction);
+            adventureButton = root.findViewById(R.id.homef_buttonAdventure);
+            cartoonButton = root.findViewById(R.id.homef_buttonCartoon);
+            comedyButton = root.findViewById(R.id.homef_buttonComedy);
+            documentaryButton = root.findViewById(R.id.homef_buttonDocumentary);
+            horrorButton = root.findViewById(R.id.homef_buttonHorror);
+            mysteryButton = root.findViewById(R.id.homef_buttonMystery);
+            scifiButton = root.findViewById(R.id.homef_buttonScifi);
+            search = root.findViewById(R.id.homef_searchView) ;
+            rotateThumbnail = root.findViewById(R.id.homef_rotate_thumbnail);
 
             rotateThumbnail.setImageResource(images[0]);
             Handler handler = new Handler();

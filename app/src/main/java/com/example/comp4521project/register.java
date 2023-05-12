@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,72 +21,62 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class register extends AppCompatActivity {
-    private final int red = Color.parseColor("#F44336");
-    private final int blue = Color.parseColor("#03A9F4");
-    private final int gray = Color.parseColor("#888888");
-    private FirebaseDatabase users = FirebaseDatabase.getInstance();
-    private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-    EditText username, password, password2;
-    TextView usernameError, passwordError, password2Error, tnc, tncError;
     CheckBox checkBox;
-    Button signUp;
+    Button signUpButton;
     ProgressBar progressBar;
+    EditText usernameET, pwET, rePwET;
+    TextView tncMsg, tncErrMsg, usernameErrMsg, pwErrMsg, rePwErrMsg;
+    private final int gray = Color.parseColor("#828282");
+    private final int red = Color.parseColor("#F43325");
+    private final int blue = Color.parseColor("#17b4fd");
+    private DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
 
-    protected boolean usernameChecker(EditText username, TextView usernameError, boolean hasFocus){
-        username = this.username;
-        usernameError = this.usernameError;
+    protected boolean checkUsername(boolean hasFocus){
         if(hasFocus){
-            usernameError.setVisibility(View.INVISIBLE);
+            usernameErrMsg.setVisibility(View.INVISIBLE);
             return false;
         }
         else{
-            if(username.getText().toString().equals("")){
-                usernameError.setText("*Please enter username");
-                usernameError.setTextColor(red);
-                usernameError.setVisibility(View.VISIBLE);
+            if(usernameET.getText().toString().equals("")){
+                usernameErrMsg.setText("*Please enter username");
+                usernameErrMsg.setTextColor(red);
+                usernameErrMsg.setVisibility(View.VISIBLE);
                 return false;
             }
-            else return !username.getText().toString().equals("");
+            else return !usernameET.getText().toString().equals("");
         }
     }
-    protected boolean passwordChecker(EditText password, EditText password2, TextView passwordError, TextView password2Error, boolean hasFocus){
-        password = this.password;
-        password2 = this.password2;
-        passwordError = this.passwordError;
-        password2Error = this.password2Error;
+    protected boolean checkPw(boolean hasFocus){
         if(hasFocus){
-            passwordError.setVisibility(View.INVISIBLE);
-            password2Error.setVisibility(View.INVISIBLE);
+            pwErrMsg.setVisibility(View.INVISIBLE);
+            rePwErrMsg.setVisibility(View.INVISIBLE);
         }
-        else if(password.getText().toString().equals("")){
-            passwordError.setVisibility(View.VISIBLE);
-            password2Error.setVisibility(View.INVISIBLE);
+        else if(pwET.getText().toString().equals("")){
+            pwErrMsg.setVisibility(View.VISIBLE);
+            rePwErrMsg.setVisibility(View.INVISIBLE);
             return false;
         }
-        else if (!password.getText().toString().equals(password2.getText().toString())) {
-            passwordError.setVisibility(View.INVISIBLE);
-            password2Error.setVisibility(View.VISIBLE);
+        else if (!pwET.getText().toString().equals(rePwET.getText().toString())) {
+            pwErrMsg.setVisibility(View.INVISIBLE);
+            rePwErrMsg.setVisibility(View.VISIBLE);
         }
-        else if (password.getText().toString().equals(password2.getText().toString())) {
-            passwordError.setVisibility(View.INVISIBLE);
-            password2Error.setVisibility(View.INVISIBLE);
+        else if (pwET.getText().toString().equals(rePwET.getText().toString())) {
+            pwErrMsg.setVisibility(View.INVISIBLE);
+            rePwErrMsg.setVisibility(View.INVISIBLE);
         }
-        return password.getText().toString().equals(password2.getText().toString());
+        return pwET.getText().toString().equals(rePwET.getText().toString());
     }
-    protected boolean password2Checker(EditText password, EditText password2, TextView password2Error, boolean hasFocus){
-        password = this.password;
-        password2 = this.password2;
-        password2Error = this.password2Error;
+    protected boolean checkRePw(boolean hasFocus){
         if(hasFocus){
-            password2Error.setVisibility(View.INVISIBLE);
+            rePwErrMsg.setVisibility(View.INVISIBLE);
             return false;
         }
-        else if(!password.getText().toString().equals(password2.getText().toString())){
-            password2Error.setVisibility(View.VISIBLE);
+        else if(!pwET.getText().toString().equals(rePwET.getText().toString())){
+            rePwErrMsg.setVisibility(View.VISIBLE);
             return false;
         }
-        else if(password.getText().toString().equals(password2.getText().toString())){
-            password2Error.setVisibility(View.INVISIBLE);
+        else if(pwET.getText().toString().equals(rePwET.getText().toString())){
+            rePwErrMsg.setVisibility(View.INVISIBLE);
             return true;
         }
         return false;
@@ -98,86 +87,86 @@ public class register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        checkBox = findViewById(R.id.register_checkbox);
+        signUpButton = findViewById(R.id.register_signUp);
+        progressBar = findViewById(R.id.register_progressbar);
+
+        usernameET = findViewById(R.id.register_username);
+        pwET = findViewById(R.id.register_pw);
+        rePwET = findViewById(R.id.register_re_pw);
+
+        usernameErrMsg = findViewById(R.id.register_username_err);
+        usernameErrMsg.setVisibility(View.INVISIBLE);
+        pwErrMsg = findViewById(R.id.register_pw_err);
+        pwErrMsg.setVisibility(View.INVISIBLE);
+        rePwErrMsg = findViewById(R.id.register_re_pw_err);
+        rePwErrMsg.setVisibility(View.INVISIBLE);
+        tncMsg = findViewById(R.id.register_tnc);
+        tncErrMsg = findViewById(R.id.register_tnc_err);
+        tncErrMsg.setVisibility(View.INVISIBLE);
+
         getSupportActionBar().hide();
-        {
-            username = (EditText) findViewById(R.id.username);
-            password = (EditText) findViewById(R.id.password);
-            password2 = (EditText) findViewById(R.id.password2);
-            usernameError = findViewById(R.id.usernameError);
-            usernameError.setVisibility(View.INVISIBLE);
-            passwordError = (TextView) findViewById(R.id.passwordError);
-            passwordError.setVisibility(View.INVISIBLE);
-            password2Error = (TextView) findViewById(R.id.password2Error);
-            password2Error.setVisibility(View.INVISIBLE);
-            tnc = (TextView) findViewById(R.id.tnc);
-            tncError = (TextView) findViewById(R.id.tncError);
-            tncError.setVisibility(View.INVISIBLE);
-            checkBox = (CheckBox) findViewById(R.id.checkBox);
-            signUp = (Button) findViewById(R.id.signUp);
-            progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        }
+
+
         progressBar.setVisibility(View.INVISIBLE);
 
-        username.setOnFocusChangeListener((view, hasFocus) -> {
-            usernameChecker(username, usernameError, hasFocus);
-            if(!hasFocus&& !username.getText().toString().equals("")){
-                usernameError.setText("checking validity");
-                usernameError.setTextColor(gray);
-                usernameError.setVisibility(View.VISIBLE);
+        usernameET.setOnFocusChangeListener((view, hasFocus) -> {
+            checkUsername(hasFocus);
+            if(!hasFocus&& !usernameET.getText().toString().equals("")){
+                usernameErrMsg.setText("checking validity");
+                usernameErrMsg.setTextColor(gray);
+                usernameErrMsg.setVisibility(View.VISIBLE);
 
-                DatabaseReference userNameRef = rootRef.child("users").child(username.getText().toString());
+                DatabaseReference userNameRef = rootRef.child("users").child(usernameET.getText().toString());
                 userNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if(dataSnapshot.exists()) {
-                            usernameError.setText("*This username has been taken");
-                            usernameError.setTextColor(red);
-                            usernameError.setVisibility(View.VISIBLE);
+                            usernameErrMsg.setText("*This username has been taken");
+                            usernameErrMsg.setTextColor(red);
+                            usernameErrMsg.setVisibility(View.VISIBLE);
                         }
                         else{
-                            usernameError.setText("This username is valid");
-                            usernameError.setTextColor(blue);
-                            usernameError.setVisibility(View.VISIBLE);
+                            usernameErrMsg.setText("This username is valid");
+                            usernameErrMsg.setTextColor(blue);
+                            usernameErrMsg.setVisibility(View.VISIBLE);
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.d("DatabaseError", databaseError.getMessage());
-                        Toast toast = Toast.makeText(getApplicationContext(), "serverside error", Toast.LENGTH_LONG);
-                        toast.show();
+                        Log.d("debug", databaseError.getMessage());
+                        Toast.makeText(getApplicationContext(), "firebase error", Toast.LENGTH_LONG).show();
                     }
                 });
             }
         });
 
-        password.setOnFocusChangeListener((view, hasFocus) -> passwordChecker(password, password2, passwordError, password2Error, hasFocus));
+        pwET.setOnFocusChangeListener((view, hasFocus) -> checkPw(hasFocus));
 
-        password2.setOnFocusChangeListener((view, hasFocus) -> {
-            if(password2Checker(password, password2, password2Error, hasFocus)&&!hasFocus){
-                password2Error.setVisibility(View.VISIBLE);
+        rePwET.setOnFocusChangeListener((view, hasFocus) -> {
+            if(checkRePw(hasFocus)&&!hasFocus){
+                rePwErrMsg.setVisibility(View.VISIBLE);
             }
         });
 
         checkBox.setOnCheckedChangeListener((compoundButton, hasChecked) -> {
             if(hasChecked){
-                tncError.setVisibility(View.INVISIBLE);
+                tncErrMsg.setVisibility(View.INVISIBLE);
             }
         });
 
-        signUp.setOnClickListener(view -> {
+        signUpButton.setOnClickListener(view -> {
             boolean hasProblems = false;
-            if(!usernameChecker(username, usernameError, false)){hasProblems=true;}
-            if(!passwordChecker(password, password2, passwordError, password2Error, false)){hasProblems=true;}
-            if(!password2Checker(password, password2, password2Error, false)){ hasProblems=true;}
+            if(!checkUsername(false)){hasProblems=true;}
+            if(!checkPw(false)){hasProblems=true;}
+            if(!checkRePw(false)){ hasProblems=true;}
             if(!checkBox.isChecked()){
-                tncError.setVisibility(View.VISIBLE);
+                tncErrMsg.setVisibility(View.VISIBLE);
                 hasProblems=true;}
 
-            if(hasProblems){
-                Toast toast = Toast.makeText(getApplicationContext(), "please match all condition", Toast.LENGTH_LONG);
-                toast.show();
-            }
+            if(hasProblems)
+                Toast.makeText(getApplicationContext(), "please match all condition", Toast.LENGTH_LONG).show();
             else{
                 progressBar.setVisibility(View.VISIBLE);
 
@@ -189,22 +178,21 @@ public class register extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Log.d("debug", "enter on data change");
-                        if(!dataSnapshot.child(username.getText().toString()).exists()){
+                        if(!dataSnapshot.child(usernameET.getText().toString()).exists()){
                             Log.d("debug", "enter if statement");
-                            DatabaseReference thisUser = userPathRef.child(username.getText().toString());
-                            thisUser.child("password").setValue(password.getText().toString());
+                            DatabaseReference thisUser = userPathRef.child(usernameET.getText().toString());
+                            thisUser.child("password").setValue(pwET.getText().toString());
                             thisUser.child("credits").setValue(0);
-                            thisUser.child("nickname").setValue(username.getText().toString());
+                            thisUser.child("nickname").setValue(usernameET.getText().toString());
                             progressBar.setVisibility(View.INVISIBLE);
-                            Toast toast = Toast.makeText(getApplicationContext(), "account created", Toast.LENGTH_LONG);
-                            toast.show();
+                            Toast.makeText(getApplicationContext(), "account created", Toast.LENGTH_LONG).show();
                             finish();
                         }
                         else {
                             Log.d("debug", "enter else statement");
-                            usernameError.setText("*This username has been taken");
-                            usernameError.setTextColor(red);
-                            usernameError.setVisibility(View.VISIBLE);
+                            usernameErrMsg.setText("*This username has been taken");
+                            usernameErrMsg.setTextColor(red);
+                            usernameErrMsg.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.INVISIBLE);
                         }
                     }
@@ -212,9 +200,8 @@ public class register extends AppCompatActivity {
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         progressBar.setVisibility(View.INVISIBLE);
-                        Log.d("DatabaseError", databaseError.getMessage());
-                        Toast toast = Toast.makeText(getApplicationContext(), "serverside error", Toast.LENGTH_LONG);
-                        toast.show();
+                        Log.d("debug", databaseError.getMessage());
+                        Toast.makeText(getApplicationContext(), "serverside error", Toast.LENGTH_LONG).show();
                     }
                 });
             }

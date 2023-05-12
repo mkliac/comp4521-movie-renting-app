@@ -63,11 +63,11 @@ public class ProfileFragment extends Fragment {
             this.password = user.getPassword();
             this.credits = user.getCredits();
 
-            usernameTV = root.findViewById(R.id.usernameValue);
+            usernameTV = root.findViewById(R.id.profilef_username);
             usernameTV.setText(username);
-            nicknameTV = root.findViewById(R.id.nicknameValue);
+            nicknameTV = root.findViewById(R.id.profilef_nickname);
             nicknameTV.setText(nickname);
-            creditsTV = root.findViewById(R.id.creditsValue);
+            creditsTV = root.findViewById(R.id.profilef_credit_remain);
 
             setNicknameRef(username);
             setCreditsRef(username);
@@ -77,20 +77,20 @@ public class ProfileFragment extends Fragment {
             library = (Library) fm.findFragmentByTag("library");
             profile = this;
 
-            (root.findViewById(R.id.movieButton)).setOnClickListener(v -> {
+            (root.findViewById(R.id.profilef_my_movie)).setOnClickListener(v -> {
                 library.renderByByUser();
                 library.setParent("profile");
                 fm.beginTransaction().hide(profile).show(library).commit();
             });
 
-            (root.findViewById(R.id.creditsButton)).setOnClickListener(v -> {
+            (root.findViewById(R.id.profilef_purchase_credits)).setOnClickListener(v -> {
                 Intent i = new Intent();
                 i.setClass(getContext(), CreditsPurchase.class);
                 i.putExtra("username", username);
                 startActivity(i);
                 ((Activity)getContext()).overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);
             });
-            (root.findViewById(R.id.settingButton)).setOnClickListener(v -> {
+            (root.findViewById(R.id.profilef_profile_settings)).setOnClickListener(v -> {
                 Intent i = new Intent();
                 i.setClass(getContext(), ProfileSetting.class);
                 i.putExtra("username", username);

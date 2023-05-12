@@ -28,14 +28,14 @@ public class CreditsPurchase extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cash_purchase);
+        setContentView(R.layout.activity_credits_purchase);
         getSupportActionBar().hide();
         username = getIntent().getExtras().getString("username");
         creditRef = rootRef.child("users").child(username).child("credits");
 
-        warningTV = findViewById(R.id.mocking);
-        inputCreditsET = findViewById(R.id.cash);
-        submitButton = findViewById(R.id.submit);
+        warningTV = findViewById(R.id.credit_purchase_warning_textView);
+        inputCreditsET = findViewById(R.id.credit_purchase_credit_input);
+        submitButton = findViewById(R.id.credit_purchase_submit);
         warningTV.setVisibility(View.INVISIBLE);
 
 
@@ -50,12 +50,12 @@ public class CreditsPurchase extends AppCompatActivity {
             else warningTV.setVisibility(View.INVISIBLE);
         });
 
-        (findViewById(R.id.exitButton)).setOnClickListener(view -> {
+        findViewById(R.id.profile_setting_exit).setOnClickListener(view -> {
             finish();
             overridePendingTransition(0, android.R.anim.slide_out_right);
         });
 
-        (findViewById(R.id.submit)).setOnClickListener(view -> {
+        submitButton.setOnClickListener(view -> {
             String valString = inputCreditsET.getText().toString();
             if(valString.equals("")){
                 warningTV.setText("Invalid operation, please input a positive value");

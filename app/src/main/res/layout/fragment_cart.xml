@@ -1,97 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/emptyNotification"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Your cart is empty"
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/cartView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent" />
-
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar2"
-        android:layout_width="409dp"
+        android:id="@+id/cartf_toolbar2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#28887F"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/checkout"
+        app:layout_constraintEnd_toEndOf="@+id/cartf_checkout"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/priceTag"
+        android:id="@+id/cartf_price_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
         android:text="Total: "
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
         android:translationZ="10dp"
-        app:layout_constraintBottom_toBottomOf="@id/toolbar2"
-        app:layout_constraintStart_toStartOf="@id/toolbar2"
-        app:layout_constraintTop_toTopOf="@id/toolbar2" />
+        android:layout_marginStart="24dp"
+        app:layout_constraintBottom_toBottomOf="@id/cartf_toolbar2"
+        app:layout_constraintStart_toStartOf="@id/cartf_toolbar2"
+        app:layout_constraintTop_toTopOf="@id/cartf_toolbar2" />
 
     <TextView
-        android:id="@+id/priceValue"
+        android:id="@+id/cartf_movie_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
         android:text="0"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
         android:translationZ="10dp"
-        app:layout_constraintBottom_toBottomOf="@id/priceTag"
-        app:layout_constraintStart_toEndOf="@id/priceTag"
-        app:layout_constraintTop_toTopOf="@id/priceTag" />
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/cartf_price_text"
+        app:layout_constraintStart_toEndOf="@id/cartf_price_text"
+        app:layout_constraintTop_toTopOf="@id/cartf_price_text" />
 
     <TextView
-        android:id="@+id/priceTag2"
+        android:id="@+id/cartf_hkd_text2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="HKD"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
+        android:text="HKD"
         android:translationZ="10dp"
-        app:layout_constraintBottom_toBottomOf="@id/priceValue"
-        app:layout_constraintStart_toEndOf="@id/priceValue"
-        app:layout_constraintTop_toTopOf="@id/priceValue" />
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/cartf_movie_price"
+        app:layout_constraintStart_toEndOf="@id/cartf_movie_price"
+        app:layout_constraintTop_toTopOf="@id/cartf_movie_price" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/checkout"
+        android:id="@+id/cartf_checkout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
         android:backgroundTint="#FFFFFF"
         android:clickable="true"
         android:contentDescription="Check out"
         android:enabled="false"
         android:text="Check out"
-        app:icon="@drawable/custom_ic_shopping_cart_24dp"
+        app:icon="@drawable/cart"
+        android:layout_marginEnd="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/toolbar2"
+        app:layout_constraintTop_toTopOf="@id/cartf_toolbar2"
         app:srcCompat="@android:drawable/ic_input_add" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/cartView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/toolbar2"
-        app:layout_constraintEnd_toEndOf="parent"
+    <TextView
+        android:id="@+id/cartf_empty_notification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your cart is empty"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/cartf_cartView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="parent" />
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/cartf_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -102,36 +92,47 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/creditTag"
+        android:id="@+id/cartf_credit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:textColor="@color/black"
         android:text="Credits:"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        app:layout_constraintStart_toStartOf="@+id/toolbar"
-        app:layout_constraintTop_toTopOf="@+id/toolbar" />
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cartf_toolbar"
+        app:layout_constraintStart_toStartOf="@+id/cartf_toolbar"
+        app:layout_constraintTop_toTopOf="@+id/cartf_toolbar" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cartf_cartView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/cartf_toolbar2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cartf_toolbar" />
 
     <TextView
-        android:id="@+id/creditsValue"
+        android:id="@+id/cartf_credit_remain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:textColor="@color/black"
         android:text="0.0"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/creditTag"
-        app:layout_constraintStart_toEndOf="@+id/creditTag"
-        app:layout_constraintTop_toTopOf="@+id/creditTag" />
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cartf_credit_text"
+        app:layout_constraintStart_toEndOf="@+id/cartf_credit_text"
+        app:layout_constraintTop_toTopOf="@+id/cartf_credit_text" />
 
     <TextView
-        android:id="@+id/creditTag2"
+        android:id="@+id/cartf_hkd_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="HKD"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/creditsValue"
-        app:layout_constraintStart_toEndOf="@+id/creditsValue"
-        app:layout_constraintTop_toTopOf="@+id/creditsValue" />
+        android:text="HKD"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cartf_credit_remain"
+        app:layout_constraintStart_toEndOf="@+id/cartf_credit_remain"
+        app:layout_constraintTop_toTopOf="@+id/cartf_credit_remain" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,228 +7,228 @@
     tools:context=".view.profile.ProfileSetting">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="409dp"
+        android:id="@+id/profile_setting_toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         android:translationZ="5dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.513"
+        app:layout_constraintHorizontal_bias="0.520"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/exitButton"
+        android:id="@+id/profile_setting_exit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:background="?attr/actionModeCloseDrawable"
+        android:src="@null"
         android:outlineProvider="none"
+        android:translationZ="6dp"
         android:padding="15dp"
         android:scaleType="center"
-        android:src="@null"
-        android:translationZ="6dp"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_setting_toolbar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar" />
+        app:layout_constraintTop_toTopOf="@+id/profile_setting_toolbar" />
 
     <TextView
-        android:id="@+id/headerTag"
+        android:id="@+id/profile_setting_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:outlineProvider="none"
-        android:text="PROFILE SETTINGS"
         android:textColor="@color/black"
         android:textSize="25sp"
+        android:text="PROFILE SETTINGS"
         android:translationZ="6dp"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        app:layout_constraintStart_toEndOf="@+id/exitButton"
-        app:layout_constraintTop_toTopOf="@+id/toolbar" />
-
-    <TextView
-        android:id="@+id/nicknameTag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="8dp"
-        android:text="Nickname:"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/name"
-        app:layout_constraintTop_toBottomOf="@+id/nameSwitch" />
-
-    <TextView
-        android:id="@+id/oldPasswordTag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="45dp"
-        android:layout_marginTop="24dp"
-        android:text="Old password :"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@+id/toolbar"
-        app:layout_constraintTop_toBottomOf="@+id/passwordSwitch" />
-
-    <TextView
-        android:id="@+id/newPasswordTag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="New password :"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/oldPasswordTag"
-        app:layout_constraintTop_toBottomOf="@+id/oldPasswordTag" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Re-type password :"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/newPasswordTag"
-        app:layout_constraintTop_toBottomOf="@+id/newPasswordTag" />
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_setting_toolbar"
+        app:layout_constraintStart_toEndOf="@+id/profile_setting_exit"
+        app:layout_constraintTop_toTopOf="@+id/profile_setting_toolbar" />
 
     <Switch
-        android:id="@+id/nameSwitch"
+        android:id="@+id/profile_setting_nickname_switch"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Change Nickname"
+        android:theme="@style/SwitchTheme"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:theme="@style/SwitchTheme"
+        android:text="Change Nickname"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_setting_toolbar" />
+
+    <TextView
+        android:id="@+id/profile_setting_nickname_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="Nickname:"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/profile_setting_nickname"
+        app:layout_constraintTop_toBottomOf="@+id/profile_setting_nickname_switch" />
+
+    <EditText
+        android:id="@+id/profile_setting_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/whiteTran"
+        android:backgroundTint="@color/white"
+        android:ems="10"
+        android:enabled="false"
+        android:inputType="textPersonName"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:hint="cannot be blank"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_setting_nickname_text"
+        app:layout_constraintEnd_toEndOf="@+id/profile_setting_old_pw"
+        app:layout_constraintTop_toTopOf="@+id/profile_setting_nickname_text" />
 
     <Switch
-        android:id="@+id/passwordSwitch"
+        android:id="@+id/profile_setting_pw_switch"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:text="Change Password"
+        android:theme="@style/SwitchTheme"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:theme="@style/SwitchTheme"
-        app:layout_constraintEnd_toEndOf="@+id/nameSwitch"
-        app:layout_constraintStart_toStartOf="@+id/nameSwitch"
-        app:layout_constraintTop_toBottomOf="@+id/nicknameTag" />
+        android:text="Change Password"
+        android:layout_marginTop="48dp"
+        app:layout_constraintEnd_toEndOf="@+id/profile_setting_nickname_switch"
+        app:layout_constraintStart_toStartOf="@+id/profile_setting_nickname_switch"
+        app:layout_constraintTop_toBottomOf="@+id/profile_setting_nickname_text" />
+
+    <TextView
+        android:id="@+id/profile_setting_old_pw_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="Old password :"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="@+id/profile_setting_toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/profile_setting_pw_switch" />
+
+    <EditText
+        android:id="@+id/profile_setting_old_pw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/whiteTran"
+        android:backgroundTint="@color/white"
+        android:ems="10"
+        android:enabled="false"
+        android:inputType="textPassword"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:hint="enter old password"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_setting_old_pw_text"
+        app:layout_constraintStart_toEndOf="@+id/profile_setting_old_pw_text"
+        app:layout_constraintTop_toTopOf="@+id/profile_setting_old_pw_text" />
+
+    <TextView
+        android:id="@+id/profile_setting_new_pw_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="New password :"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="@+id/profile_setting_old_pw_text"
+        app:layout_constraintTop_toBottomOf="@+id/profile_setting_old_pw_text" />
+
+    <EditText
+        android:id="@+id/profile_setting_new_pw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/whiteTran"
+        android:backgroundTint="@color/white"
+        android:ems="10"
+        android:enabled="false"
+        android:inputType="textPassword"
+        android:textColor="@color/white"
+        android:hint="enter new password"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_setting_new_pw_text"
+        app:layout_constraintStart_toEndOf="@+id/profile_setting_new_pw_text"
+        app:layout_constraintTop_toTopOf="@+id/profile_setting_new_pw_text" />
+
+    <TextView
+        android:id="@+id/profile_setting_re_pw_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="Re-type password :"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="@+id/profile_setting_new_pw_text"
+        app:layout_constraintTop_toBottomOf="@+id/profile_setting_new_pw_text" />
+
+    <EditText
+        android:id="@+id/profile_setting_re_pw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/whiteTran"
+        android:backgroundTint="@color/white"
+        android:ems="10"
+        android:enabled="false"
+        android:inputType="textPassword"
+        android:textColor="@color/white"
+        android:hint="enter again"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_setting_re_pw_text"
+        app:layout_constraintStart_toEndOf="@+id/profile_setting_re_pw_text"
+        app:layout_constraintTop_toTopOf="@+id/profile_setting_re_pw_text" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/submit"
+        android:id="@+id/profile_setting_apply"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
         android:contentDescription="Apply Changes"
         android:elevation="10dp"
-        android:text="APPLY CHANGES"
         android:textAlignment="center"
+        android:text="APPLY CHANGES"
+        android:layout_marginBottom="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:enabled="false"
-        android:hint="cannot be blank"
-        android:inputType="textPersonName"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/whiteTran"
-        android:backgroundTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/nicknameTag"
-        app:layout_constraintEnd_toEndOf="@+id/oldPw"
-        app:layout_constraintTop_toTopOf="@+id/nicknameTag" />
-
-    <EditText
-        android:id="@+id/oldPw"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:ems="10"
-        android:enabled="false"
-        android:hint="enter old password"
-        android:inputType="textPassword"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/whiteTran"
-        android:backgroundTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/oldPasswordTag"
-        app:layout_constraintStart_toEndOf="@+id/oldPasswordTag"
-        app:layout_constraintTop_toTopOf="@+id/oldPasswordTag" />
-
-    <EditText
-        android:id="@+id/newPw"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:ems="10"
-        android:enabled="false"
-        android:hint="enter new password"
-        android:inputType="textPassword"
-        android:textColor="@color/white"
-        android:textColorHint="@color/whiteTran"
-        android:backgroundTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/newPasswordTag"
-        app:layout_constraintStart_toEndOf="@+id/newPasswordTag"
-        app:layout_constraintTop_toTopOf="@+id/newPasswordTag" />
-
-    <EditText
-        android:id="@+id/newPw2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:ems="10"
-        android:enabled="false"
-        android:hint="enter again"
-        android:inputType="textPassword"
-        android:textColor="@color/white"
-        android:textColorHint="@color/whiteTran"
-        android:backgroundTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/textView5"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
-        app:layout_constraintTop_toTopOf="@+id/textView5" />
-
     <TextView
-        android:id="@+id/nameErrorTag"
+        android:id="@+id/profile_setting_nickname_err"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="*ErrorMessage"
         android:textColor="#FF0000"
         android:textColorHint="#00FF0000"
-        app:layout_constraintStart_toStartOf="@+id/name"
-        app:layout_constraintTop_toBottomOf="@+id/name" />
+        app:layout_constraintStart_toStartOf="@+id/profile_setting_nickname"
+        app:layout_constraintTop_toBottomOf="@+id/profile_setting_nickname" />
 
     <TextView
-        android:id="@+id/oldPwErrorTag"
+        android:id="@+id/profile_setting_old_pw_err"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="*ErrorMessage"
         android:textColor="#FF0000"
-        app:layout_constraintStart_toStartOf="@+id/oldPw"
-        app:layout_constraintTop_toBottomOf="@+id/oldPw" />
+        app:layout_constraintStart_toStartOf="@+id/profile_setting_old_pw"
+        app:layout_constraintTop_toBottomOf="@+id/profile_setting_old_pw" />
 
     <TextView
-        android:id="@+id/newPwErrorTag"
+        android:id="@+id/profile_setting_new_pw_err"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="*ErrorMessage"
         android:textColor="#FF0000"
-        app:layout_constraintStart_toStartOf="@+id/newPw"
-        app:layout_constraintTop_toBottomOf="@+id/newPw" />
+        app:layout_constraintStart_toStartOf="@+id/profile_setting_new_pw"
+        app:layout_constraintTop_toBottomOf="@+id/profile_setting_new_pw" />
 
     <TextView
-        android:id="@+id/newPw2ErrorTag"
+        android:id="@+id/profile_setting_re_pw_err"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="*ErrorMessage"
         android:textColor="#FF0000"
-        app:layout_constraintStart_toStartOf="@+id/newPw2"
-        app:layout_constraintTop_toBottomOf="@+id/newPw2" />
+        app:layout_constraintStart_toStartOf="@+id/profile_setting_re_pw"
+        app:layout_constraintTop_toBottomOf="@+id/profile_setting_re_pw" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

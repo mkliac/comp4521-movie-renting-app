@@ -65,15 +65,15 @@ public class CartFragment extends Fragment {
         final View root = inflater.inflate(R.layout.fragment_cart, container, false);
         if(start){
             {
-                priceTV = root.findViewById(R.id.priceValue);
-                creditsTV = root.findViewById(R.id.creditsValue);
-                emptyNotification = root.findViewById(R.id.emptyNotification);
-                checkout = root.findViewById(R.id.checkout);
+                priceTV = root.findViewById(R.id.cartf_movie_price);
+                creditsTV = root.findViewById(R.id.cartf_credit_remain);
+                emptyNotification = root.findViewById(R.id.cartf_empty_notification);
+                checkout = root.findViewById(R.id.cartf_checkout);
             }
 
             cartRef = rootRef.child("purchaseStatus").child(user);
             cartList = new ArrayList<>();
-            RecyclerView cartRV = root.findViewById(R.id.cartView);
+            RecyclerView cartRV = root.findViewById(R.id.cartf_cartView);
             myAdapter = new CartAdapter(this, cartList, user);
             cartRV.setAdapter(myAdapter);
 

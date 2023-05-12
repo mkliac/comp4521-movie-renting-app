@@ -54,9 +54,9 @@ public class HomePage extends AppCompatActivity {
         library.setCart(cart);
         library.setProfile(profile);
 
-        setting = findViewById(R.id.floating_action_button);
-        dimBox = findViewById(R.id.dimBox);
-        logout = findViewById(R.id.submit);
+        setting = findViewById(R.id.home_setting_logout);
+        dimBox = findViewById(R.id.home_dimbox);
+        logout = findViewById(R.id.home_log_out);
 
         dimBox.setVisibility(View.INVISIBLE);
         logout.setVisibility(View.INVISIBLE);
@@ -69,7 +69,7 @@ public class HomePage extends AppCompatActivity {
                 Snackbar.LENGTH_LONG)
                 .show();
 
-        BottomNavigationView navigation = findViewById(R.id.nav_view);
+        BottomNavigationView navigation = findViewById(R.id.home_navigation_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         fm.beginTransaction().add(R.id.main_container, library, "library").hide(library).commit();
         fm.beginTransaction().add(R.id.main_container, cart, "cart").hide(cart).commit();
@@ -83,7 +83,7 @@ public class HomePage extends AppCompatActivity {
         dimBox.setOnClickListener(view -> rotateSettingBackward());
 
         logout.setOnClickListener(view -> {
-            SharedPreferences preferences = getSharedPreferences("groupProjectLoginPref", MODE_PRIVATE);
+            SharedPreferences preferences = getSharedPreferences("login info", MODE_PRIVATE);
             preferences.edit().clear().apply();
             startActivity(new Intent(HomePage.this, login.class));
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

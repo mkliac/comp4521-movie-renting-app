@@ -26,7 +26,7 @@ public class ProfileSetting extends AppCompatActivity {
     private DatabaseReference nicknameRef;
     private DatabaseReference passwordRef;
     ExtendedFloatingActionButton submit;
-    Switch nameSwitch, passwordSwitch;
+    Switch nicknameSwitch, passwordSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,19 +38,19 @@ public class ProfileSetting extends AppCompatActivity {
         passwordRef = rootRef.child("users").child(username).child("password");
 
         {
-            nameErrMsg = findViewById(R.id.nameErrorTag);
-            oldPwErrMsg = findViewById(R.id.oldPwErrorTag);
-            newPwErrMsg = findViewById(R.id.newPwErrorTag);
-            newRePwErrMsg = findViewById(R.id.newPw2ErrorTag);
+            nameErrMsg = findViewById(R.id.profile_setting_nickname_err);
+            oldPwErrMsg = findViewById(R.id.profile_setting_old_pw_err);
+            newPwErrMsg = findViewById(R.id.profile_setting_new_pw_err);
+            newRePwErrMsg = findViewById(R.id.profile_setting_re_pw_err);
 
-            name = findViewById(R.id.name);
-            oldPw = findViewById(R.id.oldPw);
-            newPw = findViewById(R.id.newPw);
-            newRePw = findViewById(R.id.newPw2);
+            name = findViewById(R.id.profile_setting_nickname);
+            oldPw = findViewById(R.id.profile_setting_old_pw);
+            newPw = findViewById(R.id.profile_setting_new_pw);
+            newRePw = findViewById(R.id.profile_setting_re_pw);
 
-            submit = findViewById(R.id.submit);
-            nameSwitch = findViewById(R.id.nameSwitch);
-            passwordSwitch = findViewById(R.id.passwordSwitch);
+            submit = findViewById(R.id.profile_setting_apply);
+            nicknameSwitch = findViewById(R.id.profile_setting_nickname_switch);
+            passwordSwitch = findViewById(R.id.profile_setting_pw_switch);
         }
 
         nicknameRef.addValueEventListener(new ValueEventListener() {
@@ -78,10 +78,10 @@ public class ProfileSetting extends AppCompatActivity {
             newPwErrMsg.setVisibility(View.INVISIBLE);
             newRePwErrMsg.setVisibility(View.INVISIBLE);
 
-            name.setEnabled(nameSwitch.isChecked());
-            oldPw.setEnabled(nameSwitch.isChecked());
-            newPw.setEnabled(nameSwitch.isChecked());
-            newRePw.setEnabled(nameSwitch.isChecked());
+            name.setEnabled(nicknameSwitch.isChecked());
+            oldPw.setEnabled(nicknameSwitch.isChecked());
+            newPw.setEnabled(nicknameSwitch.isChecked());
+            newRePw.setEnabled(nicknameSwitch.isChecked());
 
             name.setHint(nickname);
             submit.setEnabled(false);
@@ -92,11 +92,11 @@ public class ProfileSetting extends AppCompatActivity {
         newPw.setOnFocusChangeListener((view, b) -> newPwErrMsg.setVisibility(View.INVISIBLE));
         newRePw.setOnFocusChangeListener((view, b) -> newRePwErrMsg.setVisibility(View.INVISIBLE));
 
-        (findViewById(R.id.exitButton)).setOnClickListener(view -> {
+        findViewById(R.id.profile_setting_exit).setOnClickListener(view -> {
             finish();
             overridePendingTransition(0, android.R.anim.slide_out_right);
         });
-        ((Switch) findViewById(R.id.nameSwitch)).setOnCheckedChangeListener((compoundButton, isChecked) -> {
+        ((Switch) findViewById(R.id.profile_setting_nickname_switch)).setOnCheckedChangeListener((compoundButton, isChecked) -> {
                 name.setEnabled(isChecked);
 
                 if(!isChecked) nameErrMsg.setVisibility(View.INVISIBLE);
@@ -105,7 +105,7 @@ public class ProfileSetting extends AppCompatActivity {
                 else if(!passwordSwitch.isChecked()) submit.setEnabled(false);
         });
 
-        ((Switch) findViewById(R.id.passwordSwitch)).setOnCheckedChangeListener((compoundButton, isChecked) -> {
+        ((Switch) findViewById(R.id.profile_setting_pw_switch)).setOnCheckedChangeListener((compoundButton, isChecked) -> {
             oldPw.setEnabled(isChecked);
             newPw.setEnabled(isChecked);
             newRePw.setEnabled(isChecked);
@@ -117,19 +117,18 @@ public class ProfileSetting extends AppCompatActivity {
             }
 
             if(isChecked) submit.setEnabled(true);
-            else if(!nameSwitch.isChecked()) submit.setEnabled(false);
+            else if(!nicknameSwitch.isChecked()) submit.setEnabled(false);
         });
 
-        (findViewById(R.id.submit)).setOnClickListener(view -> {
+        findViewById(R.id.profile_setting_apply).setOnClickListener(view -> {
             if(check()){
                 if(passwordSwitch.isChecked())
                     passwordRef.setValue(newPw.getText().toString());
 
-                if(nameSwitch.isChecked())
+                if(nicknameSwitch.isChecked())
                     nicknameRef.setValue(name.getText().toString());
 
-                Toast toast = Toast.makeText(getApplicationContext(), "change applied", Toast.LENGTH_LONG);
-                toast.show();
+                Toast.makeText(getApplicationContext(), "change applied", Toast.LENGTH_LONG).show();
                 finish();
                 overridePendingTransition(0, android.R.anim.slide_out_right);
             }
@@ -137,17 +136,17 @@ public class ProfileSetting extends AppCompatActivity {
 
     }
     private boolean check(){
-        boolean hasError = false;
-        if(nameSwitch.isChecked()){
+        boolean containErr = false;
+        if(nicknameSwitch.isChecked()){
             if(name.getText().toString().equals("")){
                 nameErrMsg.setText("*Please Type in");
                 nameErrMsg.setVisibility(View.VISIBLE);
-                hasError = true;
+                containErr = true;
             }
             if(nickname.equals(name.getText().toString())){
                 nameErrMsg.setText("*Same nickname");
                 nameErrMsg.setVisibility(View.VISIBLE);
-                hasError = true;
+                containErr = true;
             }
         }
 
@@ -155,34 +154,32 @@ public class ProfileSetting extends AppCompatActivity {
             if(oldPw.getText().toString().equals("")){
                 oldPwErrMsg.setText("*Please type in");
                 oldPwErrMsg.setVisibility(View.VISIBLE);
-                hasError = true;
+                containErr = true;
             }
             else if(!password.equals(oldPw.getText().toString())){
                 oldPwErrMsg.setText("*Incorrect password");
                 oldPwErrMsg.setVisibility(View.VISIBLE);
-                hasError = true;
+                containErr = true;
             }
             else{
                 if(newPw.getText().toString().equals("")){
                     newPwErrMsg.setText("*Please type in");
-                    hasError = true;
+                    containErr = true;
                 }
                 if(!newPw.getText().toString().equals(newRePw.getText().toString())){
                     newRePwErrMsg.setText("*password not match");
                     newRePwErrMsg.setVisibility(View.VISIBLE);
-                    hasError = true;
+                    containErr = true;
                 }
                 if(password.equals(newPw.getText().toString())){
                     newPwErrMsg.setText("*Same as old password");
                     newPwErrMsg.setVisibility(View.VISIBLE);
-                    hasError = true;
+                    containErr = true;
                 }
             }
         }
 
-        if(hasError){
-            return false;
-        }
+        if(containErr) return false;
         else return true;
     }
 }

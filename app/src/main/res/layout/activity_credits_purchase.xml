@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    tools:context=".view.profile.CreditsPurchase">
+
+    <TextView
+        android:id="@+id/credit_purchase_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:translationZ="6dp"
+        android:text="CREDIT PURCHASE"
+        android:textColor="#FFFFFF"
+        android:layout_marginStart="8dp"
+        android:outlineProvider="none"
+        app:layout_constraintBottom_toBottomOf="@+id/cartf_toolbar"
+        app:layout_constraintStart_toEndOf="@+id/profile_setting_exit"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/profile_setting_exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:outlineProvider="none"
+        android:padding="15dp"
+        android:scaleType="center"
+        android:src="@null"
+        android:translationZ="6dp"
+        android:background="?attr/actionModeCloseDrawable"
+        android:backgroundTint="#FFFFFF"
+        android:layout_marginStart="6dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cartf_toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cartf_toolbar" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/cartf_toolbar"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        android:translationZ="5dp"
+        android:background="#707070"
+        app:layout_constraintHorizontal_bias="0.515"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/credit_purchase_textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:text="Oh! Seems like you found a credit backdoor!"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cartf_toolbar" />
+
+    <TextView
+        android:id="@+id/credit_purchase_textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:text="With this backdoor you can get credits..."
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/credit_purchase_textView1"
+        app:layout_constraintStart_toStartOf="@+id/credit_purchase_textView1"
+        app:layout_constraintTop_toBottomOf="@+id/credit_purchase_textView1" />
+
+    <TextView
+        android:id="@+id/credit_purchase_free_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#00FF04"
+        android:textSize="30sp"
+        android:text="FOR FREE!!!"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/credit_purchase_textView2"
+        app:layout_constraintStart_toStartOf="@+id/credit_purchase_textView2"
+        app:layout_constraintTop_toBottomOf="@+id/credit_purchase_textView2" />
+
+    <TextView
+        android:id="@+id/credit_purchase_reason_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#949494"
+        android:text="As we do not own the real video, real payment methods are not provided."
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/credit_purchase_free_textView" />
+
+    <TextView
+        android:id="@+id/credit_purchase_plus_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="25sp"
+        android:text="+"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/credit_purchase_credit_input"
+        app:layout_constraintEnd_toStartOf="@+id/credit_purchase_credit_input"
+        app:layout_constraintTop_toTopOf="@+id/credit_purchase_credit_input" />
+
+    <EditText
+        android:id="@+id/credit_purchase_credit_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:foregroundTint="#FFFFFF"
+        android:hint="how many credits?"
+        android:inputType="number"
+        android:textColor="#FFFFFF"
+        android:textSize="25sp"
+        android:backgroundTint="#FFFFFF"
+        android:textColorHint="#8BFFFFFF"
+        android:drawableTint="#FFFFFF"
+        android:ems="10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.30"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/credit_purchase_reason_textView" />
+
+    <TextView
+        android:id="@+id/credit_purchase_hkd_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="25sp"
+        android:text="HKD"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/credit_purchase_credit_input"
+        app:layout_constraintStart_toEndOf="@+id/credit_purchase_credit_input"
+        app:layout_constraintTop_toTopOf="@+id/credit_purchase_credit_input" />
+
+    <TextView
+        android:id="@+id/credit_purchase_wallet_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="25sp"
+        android:text="ON MY WALLET!!!"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/credit_purchase_credit_input" />
+
+    <TextView
+        android:id="@+id/credit_purchase_warning_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="#FF0000"
+        android:text="that line which mocks you"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/credit_purchase_submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/credit_purchase_submit"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:contentDescription="Apply Changes"
+        android:text="PROCEED BACKDOOR"
+        android:textAlignment="center"
+        android:elevation="10dp"
+        android:layout_marginBottom="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -103,7 +103,7 @@ public class Library extends Fragment implements MovieAdapter.onCardListener{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.all_library_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.library_fragment, container, false);
         v = rootView;
         final FragmentManager fm = getFragmentManager();
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -122,8 +122,8 @@ public class Library extends Fragment implements MovieAdapter.onCardListener{
             }
         };
         if(start){
-            rootView.findViewById(R.id.exitButton2).setOnClickListener(view -> fm.beginTransaction().hide(Library.this).commit());
-            RecyclerView libraryRV = rootView.findViewById(R.id.all_library_view);
+            rootView.findViewById(R.id.libraryf_exit).setOnClickListener(view -> fm.beginTransaction().hide(Library.this).commit());
+            RecyclerView libraryRV = rootView.findViewById(R.id.library_movie_view);
             myAdapter = new MovieAdapter(rootView.getContext(), movieBriefList, user, this);
             libraryRV.setAdapter(myAdapter);
             RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);

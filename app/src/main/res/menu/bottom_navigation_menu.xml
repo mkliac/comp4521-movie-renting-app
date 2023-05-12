@@ -3,18 +3,18 @@
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/black_home"
         android:iconTint="#FFFFFF"
         android:title="@string/title_home" />
 
     <item
         android:id="@+id/navigation_cart"
-        android:icon="@drawable/custom_ic_shopping_cart_24dp"
+        android:icon="@drawable/cart"
         android:title="@string/title_cart" />
 
     <item
         android:id="@+id/navigation_profile"
-        android:icon="@drawable/custom_ic_profile_highdp"
+        android:icon="@drawable/profile"
         android:title="@string/title_profile" />
 
     <item

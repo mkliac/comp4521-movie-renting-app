@@ -41,8 +41,8 @@ public class InitialPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial_page);
-        progressBarText = findViewById(R.id.loadingText);
-        progressBar = findViewById(R.id.loadingBar);
+        progressBarText = findViewById(R.id.init_progress_text);
+        progressBar = findViewById(R.id.init_progressBar);
         progressBar.setMax(100);
         progressBar.setProgress(0);
 
@@ -55,7 +55,7 @@ public class InitialPage extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             progressBar.setProgress(10);
 
-            SharedPreferences pref = getSharedPreferences("groupProjectLoginPref",MODE_PRIVATE);
+            SharedPreferences pref = getSharedPreferences("login info",MODE_PRIVATE);
             username = pref.getString("username", null);
             password = pref.getString("password", null);
 
@@ -88,12 +88,11 @@ public class InitialPage extends AppCompatActivity {
                                 credits = Float.parseFloat(dataSnapshot.child("credits").getValue().toString());
                                 user = new Users(username, password, nickname, credits);
 
-                                Intent i = new Intent();
-                                i.setClass(getApplicationContext(), HomePage.class);
+                                Intent intent = new Intent(getApplicationContext(), HomePage.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putParcelable("user", user);
-                                i.putExtras(bundle);
-                                prepareHome(i);
+                                intent.putExtras(bundle);
+                                prepareHome(intent);
                             }
                         }
                     }

@@ -104,11 +104,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            movieImage = itemView.findViewById(R.id.movieImage);
-            title = itemView.findViewById(R.id.Title);
-            year = itemView.findViewById(R.id.yearValue);
-            price = itemView.findViewById(R.id.priceValue);
-            remove = itemView.findViewById(R.id.remove);
+            movieImage = itemView.findViewById(R.id.cart_view_movie_image);
+            title = itemView.findViewById(R.id.cart_view_movie_name);
+            year = itemView.findViewById(R.id.cart_view_year);
+            price = itemView.findViewById(R.id.cart_view_movie_price);
+            remove = itemView.findViewById(R.id.cart_view_remove);
 
         }
     }

@@ -8,7 +8,7 @@
     tools:context=".InitialPage">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/init_app_logo"
         android:layout_width="265dp"
         android:layout_height="279dp"
         android:layout_marginTop="124dp"
@@ -18,35 +18,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        android:src="@drawable/custom_ic_temp_icon_superdp" />
+        android:src="@drawable/project_icon" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/init_app_name"
         android:layout_width="264dp"
         android:layout_height="108dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/init_app_logo"
         android:src="@drawable/movie_store__1_" />
 
+    <ProgressBar
+        android:id="@+id/init_progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="171dp"
+        android:layout_height="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/init_progress_text"
+        app:layout_constraintEnd_toEndOf="@+id/init_progress_text"
+        app:layout_constraintStart_toStartOf="@+id/init_progress_text" />
+
     <TextView
-        android:id="@+id/loadingText"
+        android:id="@+id/init_progress_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="104dp"
-        android:text="Loading......"
         android:textColor="#000000"
+        android:text="Loading......"
+        android:layout_marginBottom="104dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <ProgressBar
-        android:id="@+id/loadingBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="171dp"
-        android:layout_height="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/loadingText"
-        app:layout_constraintEnd_toEndOf="@+id/loadingText"
-        app:layout_constraintStart_toStartOf="@+id/loadingText" />
 </androidx.constraintlayout.widget.ConstraintLayout>
