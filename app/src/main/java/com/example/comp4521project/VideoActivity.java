@@ -13,6 +13,8 @@ public class VideoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
+
+        // ref from https://www.youtube.com/watch?v=B1s2GFI-1H0
         VideoView videoView = findViewById(R.id.videoView);
         Bundle extras = getIntent().getExtras();
         Uri uri = Uri.parse(extras.getString("videoUri"));

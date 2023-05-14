@@ -33,6 +33,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
     private String user;
     private List<MovieBrief> mData;
     private onCardListener onCardListener;
+    final long IN_MB = 1024 * 1024;
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
@@ -93,7 +94,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         String path = "movies/"+id+"/"+id+".jpg";
         StorageReference imageRef = storageRef.child(path);
         holder.popularity.setText(mData.get(position).getPopularity().toString());
-        final long IN_MB = 1024 * 1024;
         imageRef.getBytes(IN_MB).addOnSuccessListener(bytes -> {
             Bitmap a = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             holder.movieThumbnail.setBackground(new BitmapDrawable(mContext.getResources(), a));

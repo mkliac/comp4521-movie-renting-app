@@ -200,8 +200,7 @@ public class MovieDetail extends AppCompatActivity {
     public void getThumbnailFromFirebase(final String id){
         String path = "movies/"+id+"/"+id+".jpg";
         StorageReference imageRef = storageRef.child(path);
-        final long ONE_MEGABYTE = 1024 * 1024;
-        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+        imageRef.getBytes(IN_MB).addOnSuccessListener(bytes -> {
             Bitmap a = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             movieImage.setImageBitmap(a);
         });

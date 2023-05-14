@@ -35,6 +35,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
     private String user;
     private Float price;
     private List<MovieBrief> mData;
+    final long IN_MB = 1024 * 1024;
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
@@ -60,7 +61,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         final String id = mData.get(position).getId();
         String path = "movies/" + id + "/" + id + ".jpg";
         final StorageReference jpgRef = storageRef.child(path);
-        final long IN_MB = 1024 * 1024;
         jpgRef.getBytes(IN_MB).addOnSuccessListener(bytes -> {
             Bitmap a = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             holder.movieImage.setImageResource(android.R.color.transparent);
@@ -122,6 +122,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             break;
         }
         // if no duplicate id found, save to add
+        Log.e("debug", "addItem: "+movie_id);
         if(!idExist){
             DatabaseReference movieRef = rootRef.child("movies").child(movie_id);
             movieRef.addListenerForSingleValueEvent(new ValueEventListener() {

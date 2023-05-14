@@ -201,7 +201,7 @@ public class register extends AppCompatActivity {
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         progressBar.setVisibility(View.INVISIBLE);
                         Log.d("debug", databaseError.getMessage());
-                        Toast.makeText(getApplicationContext(), "serverside error", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "firebase error", Toast.LENGTH_LONG).show();
                     }
                 });
             }
