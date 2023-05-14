@@ -72,7 +72,7 @@ public class HomeFragment extends Fragment {
             };
             handler.postDelayed(runnable, 4000);
 
-            setButtons();
+            initAllButtons();
         }
 
 
@@ -90,7 +90,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void setButtons(){
+    private void initAllButtons(){
         allButton.setOnClickListener(view -> {
             active = false;
             libraryPage.renderByCategory("********");

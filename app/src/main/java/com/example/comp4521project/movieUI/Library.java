@@ -62,18 +62,6 @@ public class Library extends Fragment implements MovieAdapter.onCardListener{
         start = true;
     }
 
-    public void setHome(HomeFragment home) {
-        this.home = home;
-    }
-
-    public void setCart(CartFragment cart) {
-        this.cart = cart;
-    }
-
-    public void setProfile(ProfileFragment profile) {
-        this.profile = profile;
-    }
-
     ChildEventListener childEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -189,6 +177,22 @@ public class Library extends Fragment implements MovieAdapter.onCardListener{
         return isMatch;
     }
 
+    public void setListener(){
+        movieRef = rootRef.child("movies");
+        movieRef.addChildEventListener(childEventListener);
+    }
+    public void changeListener(){
+        myAdapter.removeAllItem();
+        movieRef.removeEventListener(childEventListener);
+        addChildListener();
+        setListener();
+    }
+    public void changeFilter(){
+        this.byCategory = false;
+        this.byUser = false;
+        this.bySearch = false;
+    }
+
     public void renderByCategory(String genre){
         changeFilter();
         setCategoryBCode(genre);
@@ -206,21 +210,6 @@ public class Library extends Fragment implements MovieAdapter.onCardListener{
         changeListener();
     }
 
-    public void setListener(){
-        movieRef = rootRef.child("movies");
-        movieRef.addChildEventListener(childEventListener);
-    }
-    public void changeListener(){
-        myAdapter.removeAllItem();
-        movieRef.removeEventListener(childEventListener);
-        addChildListener();
-        setListener();
-    }
-    public void changeFilter(){
-        this.byCategory = false;
-        this.byUser = false;
-        this.bySearch = false;
-    }
     public void setUser(){
         this.byUser = true;
     }
@@ -253,10 +242,6 @@ public class Library extends Fragment implements MovieAdapter.onCardListener{
             return true;
         }
         else return false;
-    }
-    public void setCategoryBCode(String categoryBCode){
-        this.categoryBCode = categoryBCode;
-        this.byCategory = true;
     }
 
     public void addChildListener(){
@@ -326,5 +311,22 @@ public class Library extends Fragment implements MovieAdapter.onCardListener{
 
             }
         };
+    }
+
+    public void setHome(HomeFragment home) {
+        this.home = home;
+    }
+
+    public void setCart(CartFragment cart) {
+        this.cart = cart;
+    }
+
+    public void setProfile(ProfileFragment profile) {
+        this.profile = profile;
+    }
+
+    public void setCategoryBCode(String categoryBCode){
+        this.categoryBCode = categoryBCode;
+        this.byCategory = true;
     }
 }

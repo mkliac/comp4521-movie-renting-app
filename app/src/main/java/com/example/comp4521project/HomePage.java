@@ -91,28 +91,6 @@ public class HomePage extends AppCompatActivity {
             finish();
         });
     }
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = item -> {
-                switch (item.getItemId()) {
-                    case R.id.navigation_home:
-                        fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(home).commit();
-                        active = home;
-                        return true;
-
-                    case R.id.navigation_cart:
-                        fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(cart).commit();
-                        active = cart;
-                        return true;
-
-                    case R.id.navigation_profile:
-                        fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(profile).commit();
-                        active = profile;
-                        return true;
-                }
-                return false;
-            };
-
     public void rotateSettingForward() {
         ViewCompat.animate(setting)
                 .rotation(-180.0F)
@@ -132,7 +110,6 @@ public class HomePage extends AppCompatActivity {
                 .setDuration(300L)
                 .start();
     }
-
     public void rotateSettingBackward() {
         ViewCompat.animate(dimBox)
                 .alpha(0F)
@@ -156,9 +133,25 @@ public class HomePage extends AppCompatActivity {
             dimBox.setVisibility(View.INVISIBLE);
             logout.setVisibility(View.INVISIBLE);
         }, 300);
-
     }
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = item -> {
+                switch (item.getItemId()) {
+                    case R.id.navigation_home:
+                        fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(home).commit();
+                        active = home;
+                        return true;
 
+                    case R.id.navigation_cart:
+                        fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(cart).commit();
+                        active = cart;
+                        return true;
 
-
+                    case R.id.navigation_profile:
+                        fm.beginTransaction().hide(active).hide(fm.findFragmentByTag("library")).show(profile).commit();
+                        active = profile;
+                        return true;
+                }
+                return false;
+            };
 }

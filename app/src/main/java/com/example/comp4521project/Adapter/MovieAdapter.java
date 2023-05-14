@@ -111,6 +111,19 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         return mData.size();
     }
 
+    public void changeStatus(String movieId){
+        for(int i = 0; i < getItemCount(); i++){
+            notifyItemChanged(i);
+        }
+
+    }
+
+    public List<MovieBrief> returnList(){return mData;}
+
+    public interface onCardListener{
+        void onCardClick(int position);
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView icon;
         ImageView movieThumbnail;
@@ -146,18 +159,4 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         mData.clear();
         notifyItemRangeRemoved(0, size);
     }
-
-    public void changeStatus(String movieId){
-        for(int i = 0; i < getItemCount(); i++){
-            notifyItemChanged(i);
-        }
-
-    }
-
-    public List<MovieBrief> returnList(){return mData;}
-
-    public interface onCardListener{
-        void onCardClick(int position);
-    }
-
 }

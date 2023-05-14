@@ -7,6 +7,7 @@ public class MovieBrief {
     private Float price = 0F;
     private Integer popularity = 0;
 
+    public MovieBrief(String id, Float price){this.id = id; this.price = price;}
     public MovieBrief(String id, String name, String year, Integer popularity, Float price){
         setName(name);
         setId(id);
@@ -14,9 +15,6 @@ public class MovieBrief {
         setPrice(price);
         setPopularity(popularity);
     }
-
-    public MovieBrief(String id, Float price){this.id = id; this.price = price;}
-
 
     public void setId(String id) { this.id = id; }
     public void setName(String name){

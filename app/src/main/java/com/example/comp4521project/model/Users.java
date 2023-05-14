@@ -15,12 +15,6 @@ public class Users implements Parcelable {
         this.nickname = nickname;
         this.credits = credits;
     }
-    public Users(){
-        username = "dummyAccount";
-        password = "";
-        nickname = "Dummy01";
-        credits = 0F;
-    }
 
     protected Users(Parcel in) {
         username = in.readString();
@@ -45,32 +39,6 @@ public class Users implements Parcelable {
         }
     };
 
-    public String getUsername(){
-        return username;
-    }
-    public String getPassword(){
-        return password;
-    }
-    public String getNickname(){
-        return  nickname;
-    }
-    public Float getCredits(){
-        return credits;
-    }
-
-    public void setUsername(String username){
-        this.username = username;
-    }
-    public void setPassword(String password){
-        this.password = password;
-    }
-    public void setNickname(String nickname){
-        this.nickname = nickname;
-    }
-    public void setCredits(Float credits){
-        this.credits = credits;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -87,5 +55,21 @@ public class Users implements Parcelable {
             parcel.writeByte((byte) 1);
             parcel.writeFloat(credits);
         }
+    }
+    public String getUsername(){
+        return username;
+    }
+    public String getPassword(){
+        return password;
+    }
+    public String getNickname(){
+        return  nickname;
+    }
+    public Float getCredits(){
+        return credits;
+    }
+
+    public void setUsername(String username){
+        this.username = username;
     }
 }

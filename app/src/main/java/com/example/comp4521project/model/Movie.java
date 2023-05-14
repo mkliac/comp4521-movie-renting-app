@@ -37,14 +37,8 @@ public class Movie implements Parcelable {
         }
     };
 
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public void setId(String id) { this.id = id; }
-    public void setName(String name) { this.name = name; }
-
     @Override
     public int describeContents() { return 0; }
-
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(id);
@@ -60,4 +54,10 @@ public class Movie implements Parcelable {
         parcel.writeString(trailerURL);
         parcel.writeFloat(price);
     }
+
+    public String getId() { return id; }
+    public String getName() { return name; }
+    public void setId(String id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+
 }

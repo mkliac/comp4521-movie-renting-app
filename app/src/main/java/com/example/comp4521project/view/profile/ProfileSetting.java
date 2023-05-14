@@ -96,7 +96,7 @@ public class ProfileSetting extends AppCompatActivity {
             finish();
             overridePendingTransition(0, android.R.anim.slide_out_right);
         });
-        ((Switch) findViewById(R.id.profile_setting_nickname_switch)).setOnCheckedChangeListener((compoundButton, isChecked) -> {
+        ((Switch)findViewById(R.id.profile_setting_nickname_switch)).setOnCheckedChangeListener((compoundButton, isChecked) -> {
                 name.setEnabled(isChecked);
 
                 if(!isChecked) nameErrMsg.setVisibility(View.INVISIBLE);
@@ -105,7 +105,7 @@ public class ProfileSetting extends AppCompatActivity {
                 else if(!passwordSwitch.isChecked()) submit.setEnabled(false);
         });
 
-        ((Switch) findViewById(R.id.profile_setting_pw_switch)).setOnCheckedChangeListener((compoundButton, isChecked) -> {
+        ((Switch)findViewById(R.id.profile_setting_pw_switch)).setOnCheckedChangeListener((compoundButton, isChecked) -> {
             oldPw.setEnabled(isChecked);
             newPw.setEnabled(isChecked);
             newRePw.setEnabled(isChecked);

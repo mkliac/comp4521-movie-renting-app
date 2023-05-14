@@ -127,60 +127,6 @@ public class CartFragment extends Fragment {
 
         return root;
     }
-    public void notification(Float amount){
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this.getContext(), "check out");
-        builder.setContentTitle("Transaction Accepted");
-        builder.setContentText("Purchased successfully! $" + amount + " was deducted from your wallet.");
-        builder.setSmallIcon(R.mipmap.ic_launcher);
-        builder.setAutoCancel(true);
-
-        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this.getContext());
-        managerCompat.notify(1, builder.build());
-    }
-
-    public void emptyHandling(){
-        if(myAdapter.getItemCount()==0){
-            emptyNotification.setVisibility(View.VISIBLE);
-            checkout.setEnabled(false);
-        }
-        else {
-            emptyNotification.setVisibility(View.INVISIBLE);
-            checkout.setEnabled(true);
-        }
-
-    }
-    private void boundUserCredits(){
-        userRef = rootRef.child("users").child(user).child("credits");
-        userRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                creditsTV.setText(dataSnapshot.getValue(Float.class).toString());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-    }
-
-    public void calculateAndRenderPrice(String movie_id, final String identity){
-        DatabaseReference priceRef = rootRef.child("movies").child(movie_id).child("price");
-        priceRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    if(identity.equals("ADD"))
-                        price+=dataSnapshot.getValue(Float.class);
-                    else if(identity.equals("MINUS"))
-                        price-=dataSnapshot.getValue(Float.class);
-                    else price=0F;
-                }
-                priceTV.setText(price.toString());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
-    }
 
     public void detectCartDBChange(){
         price = 0F;
@@ -237,4 +183,59 @@ public class CartFragment extends Fragment {
         });
 
     }
+    public void notification(Float amount){
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this.getContext(), "check out");
+        builder.setContentTitle("Transaction Accepted");
+        builder.setContentText("Purchased successfully! $" + amount + " was deducted from your wallet.");
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setAutoCancel(true);
+
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this.getContext());
+        managerCompat.notify(1, builder.build());
+    }
+
+    public void emptyHandling(){
+        if(myAdapter.getItemCount()==0){
+            emptyNotification.setVisibility(View.VISIBLE);
+            checkout.setEnabled(false);
+        }
+        else {
+            emptyNotification.setVisibility(View.INVISIBLE);
+            checkout.setEnabled(true);
+        }
+
+    }
+    private void boundUserCredits(){
+        userRef = rootRef.child("users").child(user).child("credits");
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                creditsTV.setText(dataSnapshot.getValue(Float.class).toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
+
+    public void calculateAndRenderPrice(String movie_id, final String identity){
+        DatabaseReference priceRef = rootRef.child("movies").child(movie_id).child("price");
+        priceRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    if(identity.equals("ADD"))
+                        price += dataSnapshot.getValue(Float.class);
+                    else if(identity.equals("MINUS"))
+                        price -= dataSnapshot.getValue(Float.class);
+                    else price = 0F;
+                }
+                priceTV.setText(price.toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
+
 }

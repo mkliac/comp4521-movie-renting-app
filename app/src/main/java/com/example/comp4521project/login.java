@@ -42,7 +42,6 @@ public class login extends AppCompatActivity{
         getSupportActionBar().hide();
 
         loginButton.setOnClickListener(v -> {
-            Toast toast;
             if(usernameET.getText().toString().equals(""))
                 Toast.makeText(getApplicationContext(), "please input username", Toast.LENGTH_LONG).show();
             else if(passwordET.getText().toString().equals(""))

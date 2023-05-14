@@ -113,12 +113,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
         }
     }
 
-    public void removeCartItem(String movie_id)
-    {
-        Log.e("debug", "removeCartItem: "+movie_id);
-        rootRef.child("purchaseStatus").child(user).child(movie_id).removeValue();
-    }
-
     public void addItem(String movie_id){
         boolean idExist = false;
         for(int i = 0; i < getItemCount(); i++){
@@ -158,6 +152,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
             break;
         }
         cartFragment.emptyHandling();
+    }
+
+    public void removeCartItem(String movie_id)
+    {
+        Log.e("debug", "removeCartItem: "+movie_id);
+        rootRef.child("purchaseStatus").child(user).child(movie_id).removeValue();
     }
 
 }

@@ -38,8 +38,6 @@ public class CreditsPurchase extends AppCompatActivity {
         submitButton = findViewById(R.id.credit_purchase_submit);
         warningTV.setVisibility(View.INVISIBLE);
 
-
-
         inputCreditsET.setOnFocusChangeListener((view, b) -> {
             if(!b){
                 if(inputCreditsET.getText().toString()==""){
